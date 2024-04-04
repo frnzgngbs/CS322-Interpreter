@@ -13,10 +13,10 @@ public class Token {
         INT, FLOAT, CHAR, BOOL,
 
         // Literals
-        IDENTIFIER, CHARACTER, NUMBER, LOGICAL, START, END,
+        IDENTIFIER, CHARACTER, NUMBER, LOGICAL,
 
         // KEYWORDS
-        IF, ELSEIF, ELSE, NOT, AND, OR, DISPLAY,
+        IF, ELSEIF, ELSE, NOT, AND, OR, DISPLAY,BEGIN_CODE, END_CODE,
 
         EOF,
     }

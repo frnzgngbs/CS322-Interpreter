@@ -25,7 +25,8 @@ public class Lexer {
         keywords.put("ELSE IF",   Token.TokenType.ELSEIF);
         keywords.put("ELSE",    Token.TokenType.ELSE);
         keywords.put("DISPLAY:",  Token.TokenType.DISPLAY);
-
+        keywords.put("BEGIN CODE:",  Token.TokenType.BEGIN_CODE);
+        keywords.put("END CODE:",  Token.TokenType.END_CODE);
     }
 
     public Lexer(String source) {
@@ -103,6 +104,7 @@ public class Lexer {
                 addToken(match('=') ? Token.TokenType.ISEQUAL : Token.TokenType.EQUAL);
                 break;
             case '<':
+                System.out.println(current);
                 if (match('>')) addToken(Token.TokenType.NOTEQUAL);
                 else if (match('=')) addToken(Token.TokenType.LESSER_EQUAL);
                 else addToken(Token.TokenType.LESSER);
@@ -131,7 +133,6 @@ public class Lexer {
 
     private boolean match(char expected) {
         if (isAtEnd()) return false;
-        System.out.println(current);
         if (source.charAt(current) != expected) return false;
 
         current++;
@@ -206,7 +207,7 @@ public class Lexer {
     }
 
     private void getIdentifier() {
-        while (isAlphaNumeric(getCurrentValue())) {
+        while (isAlphaNumeric(getCurrentValue()) || getCurrentValue() == ' ') {
             advance();
         }
         String text = source.substring(start, current);
@@ -218,6 +219,9 @@ public class Lexer {
             else if (text.equals("BOOL")) type = Token.TokenType.BOOL;
             else if (text.equals("FLOAT")) type = Token.TokenType.FLOAT;
             else if (text.equals("CHAR")) type = Token.TokenType.CHAR;
+            else if (text.equals("DISPLAY:")) type = Token.TokenType.DISPLAY;
+            else if (text.equals("BEGIN CODE")) type = Token.TokenType.BEGIN_CODE;
+            else if (text.equals("END CODE")) type = Token.TokenType.END_CODE;
             else type = Token.TokenType.IDENTIFIER;
 
         }
