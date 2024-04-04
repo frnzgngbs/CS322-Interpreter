@@ -22,7 +22,7 @@ public class Lexer {
         keywords.put("OR",  Token.TokenType.OR);
         keywords.put("NOT",   Token.TokenType.NOT);
         keywords.put("IF",   Token.TokenType.IF);
-        keywords.put("ELSE IF",   Token.TokenType.ELSEIF);
+        keywords.put("ELSE IF",   Token.TokenType.ELSE_IF);
         keywords.put("ELSE",    Token.TokenType.ELSE);
         keywords.put("DISPLAY:",  Token.TokenType.DISPLAY);
         keywords.put("BEGIN CODE:",  Token.TokenType.BEGIN_CODE);
@@ -82,7 +82,7 @@ public class Lexer {
             case '*':
                 addToken(Token.TokenType.MULTIPLY);
                 break;
-            case '$':
+            case '$', '\n':
                 line++;
                 break;
             case '&':

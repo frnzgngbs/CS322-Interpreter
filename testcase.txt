@@ -1,1 +1,4 @@
 BEGIN CODE
+    INT a, b, c, d = 10
+    DISPLAY: bS
+END CODE
