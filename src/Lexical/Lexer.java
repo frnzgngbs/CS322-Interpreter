@@ -3,7 +3,9 @@ package Lexical;
 import ErrorHandling.Error;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Lexer {
     private final String source;
@@ -11,6 +13,20 @@ public class Lexer {
     private int start = 0;
     private int current = 0;
     private int line = 1;
+
+    private static final Map<String, Token.TokenType> keywords;
+
+    static {
+        keywords = new HashMap<>();
+        keywords.put("AND", Token.TokenType.AND);
+        keywords.put("OR",  Token.TokenType.OR);
+        keywords.put("NOT",   Token.TokenType.NOT);
+        keywords.put("IF",   Token.TokenType.IF);
+        keywords.put("ELSE IF",   Token.TokenType.ELSEIF);
+        keywords.put("ELSE",    Token.TokenType.ELSE);
+        keywords.put("DISPLAY:",  Token.TokenType.DISPLAY);
+
+    }
 
     public Lexer(String source) {
         this.source = source;
@@ -24,7 +40,6 @@ public class Lexer {
         tokens.add(new Token(Token.TokenType.EOF, "", null, line));
         return tokens;
     }
-
 
     private char advance() {
         return source.charAt(current++);
@@ -72,6 +87,8 @@ public class Lexer {
             case '&':
                 addToken(Token.TokenType.CONCAT);
                 break;
+            case ' ':
+                break;
             case '/':
                 addToken(Token.TokenType.DIVIDE);
                 break;
@@ -87,8 +104,8 @@ public class Lexer {
                 break;
             case '<':
                 if (match('>')) addToken(Token.TokenType.NOTEQUAL);
-                else if (match('=')) addToken(Token.TokenType.GREATER_EQUAL);
-                else addToken(Token.TokenType.GREATER);
+                else if (match('=')) addToken(Token.TokenType.LESSER_EQUAL);
+                else addToken(Token.TokenType.LESSER);
                 break;
             case '>':
                 addToken(match('=') ? Token.TokenType.GREATER_EQUAL : Token.TokenType.GREATER);
@@ -96,10 +113,12 @@ public class Lexer {
             case '"':
                 getLogicalValue();
             default:
-                if (isDigit(c))
-                    // TODO: Figure out how you can get the number literals.
-                    getNumberLiteral();
-                Error.error(line, "Unexpected character.");
+                if (isDigit(c)) getNumberValue();
+                else if (isAlpha(c)) {
+                    getIdentifier();
+                }
+                else Error.error(line, "Unexpected character.");
+                break;
 
         }
     }
@@ -110,6 +129,7 @@ public class Lexer {
 
     private boolean match(char expected) {
         if (isAtEnd()) return false;
+        System.out.println(current);
         if (source.charAt(current) != expected) return false;
 
         current++;
@@ -122,35 +142,51 @@ public class Lexer {
         return source.charAt(current);
     }
 
+    private char getNextValue() {
+        if (isAtEnd()) return '\0';
+        return source.charAt(current + 1);
+    }
+
     private boolean isDigit(char c) {
         return c >= '0' && c <= '9';
     }
 
-    private void getLogicalValue() {
-        System.out.println(source.charAt(current) + "" + source.charAt(current+1) + "" + source.charAt(current+2) + "" + source.charAt(current+3));
-        while (getCurrentValue() != '"' && isAtEnd()) {
-            if(source.charAt(current) == 'T' && source.charAt(current + 1) == 'R'
-                && source.charAt(current + 2) == 'U' && source.charAt(current + 3) == 'E') {
-                break;
-            }
-        }
-
-        String logical_val = source.substring(start, current+3);
-        current = -3;
-        advance();
-        advance();
-        advance();
-        addToken(Token.TokenType.LOGICAL, logical_val);
+    private boolean isAlpha(char c) {
+        return (c >= 'a' && c <= 'z') ||
+                (c >= 'A' && c <= 'Z') ||
+                c == '_' || c == ':';
     }
 
-    private void getNumberLiteral() {
+    private boolean isAlphaNumeric(char c) {
+        return isAlpha(c) || isDigit(c);
+    }
+
+    private void getLogicalValue() {
+        while (getCurrentValue() != '"' && !isAtEnd()) {
+            if (getCurrentValue() == '\n') line++;
+            advance();
+        }
+
+        if (isAtEnd()) {
+            Error.error(line, "Unterminated string.");
+            return;
+        }
+        // The closing ".
+        advance();
+
+        // Trim the surrounding quotes.
+        String value = source.substring(start + 1, current - 1);
+        addToken(Token.TokenType.BOOL, value);
+    }
+
+    private void getNumberValue() {
         // Continue iterating through the string, and update the current index if we are encountering a number
         while(isDigit(getCurrentValue())) {
             advance();
         }
         // Special case, if it is a float.
         // If we encounter '.', check the next character. if it is a number, continue.
-        if(getCurrentValue() == '.' && isDigit(source.charAt(current + 1))) {
+        if(getCurrentValue() == '.' && isDigit(getNextValue())) {
             // Example 12.1212, since we are still in the '.' at this part, we need to increment our current index.
             advance();
             // After calling advance() method, then we are now in '1'. Continue iterating.
@@ -160,12 +196,34 @@ public class Lexer {
             // Add token as double
             addToken(Token.TokenType.NUMBER,
                     Double.parseDouble(source.substring(start, current)));
+            return;
         }
-
         // Add token as integer
         addToken(Token.TokenType.NUMBER,
                 Integer.parseInt(source.substring(start, current)));
     }
+
+    private void getIdentifier() {
+        while (isAlphaNumeric(getCurrentValue())) {
+            advance();
+        }
+        boolean isDataType = false;
+
+        String text = source.substring(start, current);
+
+
+        Token.TokenType type = keywords.get(text);
+        if(type == null) {
+            if(text.equals("INT")) type = Token.TokenType.INT;
+            else if (text.equals("BOOL")) type = Token.TokenType.BOOL;
+            else if (text.equals("FLOAT")) type = Token.TokenType.FLOAT;
+            else if (text.equals("CHAR")) type = Token.TokenType.CHAR;
+            else type = Token.TokenType.IDENTIFIER;
+
+        }
+        addToken(type);
+    }
+
 
 //    private void checkString() {
 //        while (getCurrentValue() != '"' && !isAtEnd()) {

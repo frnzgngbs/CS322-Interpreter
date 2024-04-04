@@ -1,1 +1,1 @@
-"TRUE"
+BOOL B = "TRUE"

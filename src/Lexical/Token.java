@@ -10,13 +10,13 @@ public class Token {
         ISEQUAL, NOTEQUAL, GREATER, LESSER, GREATER_EQUAL, LESSER_EQUAL,
 
         // DATA TYPES
-        INT, FLOAT, CHAR, BOOl,
+        INT, FLOAT, CHAR, BOOL,
 
         // Literals
         IDENTIFIER, CHARACTER, NUMBER, LOGICAL, START, END,
 
         // KEYWORDS
-        IF, ELSE, NOT, AND, OR,
+        IF, ELSEIF, ELSE, NOT, AND, OR, DISPLAY,
 
         EOF,
     }

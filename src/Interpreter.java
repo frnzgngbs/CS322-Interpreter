@@ -11,14 +11,13 @@ public class Interpreter {
     public static void main(String[] args) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt"));
-
             String line;
             while((line = reader.readLine()) != null) {
                 System.out.println(line);
                 run(line);
             }
-        } catch (FileNotFoundException fe) {
-            fe.getStackTrace();
+        } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
+            System.out.println(fe.getMessage());
         } catch (IOException e) {
             e.getStackTrace();
         }
@@ -30,7 +29,7 @@ public class Interpreter {
 
 
         for (Token token : tokens) {
-            System.out.println(token);
+            System.out.println("TOKEN: " + token);
         }
     }
 }
