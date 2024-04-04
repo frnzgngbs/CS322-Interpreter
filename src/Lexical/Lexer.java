@@ -112,12 +112,14 @@ public class Lexer {
                 break;
             case '"':
                 getLogicalValue();
+                break;
             default:
                 if (isDigit(c)) getNumberValue();
                 else if (isAlpha(c)) {
                     getIdentifier();
+                } else {
+                    Error.error(line, "Unexpected character");
                 }
-                else Error.error(line, "Unexpected character.");
                 break;
 
         }
@@ -176,7 +178,7 @@ public class Lexer {
 
         // Trim the surrounding quotes.
         String value = source.substring(start + 1, current - 1);
-        addToken(Token.TokenType.BOOL, value);
+        addToken(Token.TokenType.LOGICAL, value);
     }
 
     private void getNumberValue() {
@@ -207,8 +209,6 @@ public class Lexer {
         while (isAlphaNumeric(getCurrentValue())) {
             advance();
         }
-        boolean isDataType = false;
-
         String text = source.substring(start, current);
 
 

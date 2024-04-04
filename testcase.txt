@@ -1,1 +1,1 @@
-BOOL B = "TRUE"
+"TRUE"
