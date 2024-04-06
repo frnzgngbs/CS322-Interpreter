@@ -27,6 +27,11 @@ public class Lexer {
         keywords.put("DISPLAY:",  Token.TokenType.DISPLAY);
         keywords.put("BEGIN CODE:",  Token.TokenType.BEGIN_CODE);
         keywords.put("END CODE:",  Token.TokenType.END_CODE);
+
+        keywords.put("CHAR",   Token.TokenType.CHAR);
+        keywords.put("INT",   Token.TokenType.INT);
+        keywords.put("FLOAT",   Token.TokenType.FLOAT);
+        keywords.put("BOOL",   Token.TokenType.BOOL);
     }
 
     public Lexer(String source) {
