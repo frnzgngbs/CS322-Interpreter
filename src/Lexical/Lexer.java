@@ -175,16 +175,11 @@ public class Lexer {
 
 
     private void getCharacterValue() {
-        if (getCurrentValue() == '\'' && isAtEnd()) {
-            // THIS MEANS EMPTY CHARACTER
-            Error.error(line, "CHAR data type should only contain single character..");
-        }
-
         int counter = 0;
         // IF MO REACH NIG 1, pasabot ana kay two or move character literals.
         while (getCurrentValue() != '\'' && !isAtEnd()) {
             if (counter == 1) {
-                Error.error(line, "A character should only contain a single character.");
+                Error.error(line, "Tanang masud sa '' kay dapat usa ra ka value");
                 break;
             }
             advance();
@@ -238,11 +233,10 @@ public class Lexer {
     }
 
     private void getIdentifier() {
-        while (isAlphaNumeric(getCurrentValue()) || getCurrentValue() == ' ') {
+        while (isAlphaNumeric(getCurrentValue())) {
             advance();
         }
         String text = source.substring(start, current);
-
 
         Token.TokenType type = keywords.get(text);
         if(type == null) {
@@ -254,7 +248,6 @@ public class Lexer {
             else if (text.equals("BEGIN CODE")) type = Token.TokenType.BEGIN_CODE;
             else if (text.equals("END CODE")) type = Token.TokenType.END_CODE;
             else type = Token.TokenType.IDENTIFIER;
-
         }
         addToken(type);
     }
