@@ -239,19 +239,19 @@ public class Lexer {
         String text = source.substring(start, current);
 
         Token.TokenType type = keywords.get(text);
-        if(type == null) {
-            if(text.equals("INT")) type = Token.TokenType.INT;
-            else if (text.equals("BOOL")) type = Token.TokenType.BOOL;
-            else if (text.equals("FLOAT")) type = Token.TokenType.FLOAT;
-            else if (text.equals("CHAR")) type = Token.TokenType.CHAR;
-            else if (text.equals("DISPLAY:")) type = Token.TokenType.DISPLAY;
-            else if (text.equals("BEGIN CODE")) type = Token.TokenType.BEGIN_CODE;
-            else if (text.equals("END CODE")) type = Token.TokenType.END_CODE;
-            else type = Token.TokenType.IDENTIFIER;
+        if (type == null) {
+            // Check if it's BEGIN CODE or END CODE
+            if (text.equals("BEGIN") && match(' ') && match('C') && match('O') && match('D') && match('E')) {
+                type = Token.TokenType.BEGIN_CODE;
+            } else if (text.equals("END") && match(' ') && match('C') && match('O') && match('D') && match('E')) {
+                type = Token.TokenType.END_CODE;
+            } else {
+                // It's a regular identifier
+                type = Token.TokenType.IDENTIFIER;
+            }
         }
         addToken(type);
     }
-
 
 //    private void checkString() {
 //        while (getCurrentValue() != '"' && !isAtEnd()) {
