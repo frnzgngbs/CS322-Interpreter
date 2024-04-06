@@ -112,6 +112,9 @@ public class Lexer {
             case '>':
                 addToken(match('=') ? Token.TokenType.GREATER_EQUAL : Token.TokenType.GREATER);
                 break;
+            case '\'':
+                getCharacterValue();
+                break;
             case '"':
                 getLogicalValue();
                 break;
@@ -162,6 +165,29 @@ public class Lexer {
 
     private boolean isAlphaNumeric(char c) {
         return isAlpha(c) || isDigit(c);
+    }
+
+
+
+    private void getCharacterValue() {
+        if (getCurrentValue() == '\'' && isAtEnd()) {
+            // THIS MEANS EMPTY CHARACTER
+            Error.error(line, "CHAR data type should only contain single character..");
+        }
+
+        int counter = 0;
+        // IF MO REACH NIG 1, pasabot ana kay two or move character literals.
+        while (getCurrentValue() != '\'' && !isAtEnd()) {
+            if (counter == 1) {
+                Error.error(line, "A character should only contain a single character.");
+                break;
+            }
+            advance();
+            counter++;
+        }
+        advance();
+        // Tokenize the character literal
+        addToken(Token.TokenType.CHARACTER);
     }
 
     private void getLogicalValue() {
