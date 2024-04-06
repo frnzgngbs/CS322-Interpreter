@@ -2,21 +2,32 @@ package Lexical;
 
 public class Token {
     enum TokenType {
-        // Single-character tokens.
-        LEFT_PAREN, RIGHT_PAREN, LEFT_SQUARE, RIGHT_SQUARE, MODULO,
-        COMMA, PLUS, MINUS, DIVIDE, MULTIPLY, COMMENT, EQUAL, CONCAT,
+        // ARITHMETIC OPERATORS
+        PLUS, MINUS, DIVIDE, MULTIPLY, MODULO,
 
-        // Two-character tokens.
+        // STRING OPERATOR
+        CONCAT,
+
+
+        // LOGICAL OPERATOR
+        AND, OR, NOT,
+
+
+        // GROUPINGS
+        LEFT_PAREN, RIGHT_PAREN, LEFT_SQUARE, RIGHT_SQUARE,
+        COMMA, COMMENT, EQUAL,
+
+        // RELATIONAL OPERATOR
         ISEQUAL, NOTEQUAL, GREATER, LESSER, GREATER_EQUAL, LESSER_EQUAL,
 
         // DATA TYPES
         INT, FLOAT, CHAR, BOOL,
 
         // Literals
-        IDENTIFIER, CHARACTER, NUMBER, LOGICAL,
+        IDENTIFIER, CHARACTER, NUMBER, TRUE, FALSE,
 
         // KEYWORDS
-        IF, ELSE_IF, ELSE, NOT, AND, OR, DISPLAY,BEGIN_CODE, END_CODE,BEGINIF, ENDIF,
+        IF, ELSE_IF, ELSE, DISPLAY,BEGIN_CODE, END_CODE, BEGINIF, ENDIF,
 
         EOF,
     }

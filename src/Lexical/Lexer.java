@@ -205,7 +205,14 @@ public class Lexer {
 
         // Trim the surrounding quotes.
         String value = source.substring(start + 1, current - 1);
-        addToken(Token.TokenType.LOGICAL, value);
+
+        if (value.equals("TRUE")) {
+            addToken(Token.TokenType.TRUE, value);
+        } else if (value.equals("FALSE")) {
+            addToken(Token.TokenType.FALSE, value);
+        } else {
+            Error.error(line, "Not a logical value.");
+        }
     }
 
     private void getNumberValue() {
