@@ -1,17 +1,15 @@
 package Lexical;
 
 public class Token {
-    enum TokenType {
+    public enum TokenType {
         // ARITHMETIC OPERATORS
         PLUS, MINUS, DIVIDE, MULTIPLY, MODULO,
 
         // STRING OPERATOR
         CONCAT,
 
-
         // LOGICAL OPERATOR
         AND, OR, NOT,
-
 
         // GROUPINGS
         LEFT_PAREN, RIGHT_PAREN, LEFT_SQUARE, RIGHT_SQUARE,
@@ -27,16 +25,15 @@ public class Token {
         IDENTIFIER, CHARACTER, NUMBER, TRUE, FALSE,
 
         // KEYWORDS
-        IF, ELSE_IF, ELSE, DISPLAY,BEGIN_CODE, END_CODE, BEGINIF, ENDIF,
+        IF, ELSE_IF, ELSE, DISPLAY, BEGIN_CODE, END_CODE, BEGINIF, ENDIF,
 
         EOF,
     }
 
-    final TokenType type;
-    final String lexeme;
+    public final TokenType type;
+    public final String lexeme;
     final Object literal;
-    final int line;
-
+    public final int line;
 
     public Token(TokenType type, String lexeme, Object literal, int line) {
         this.type = type;
