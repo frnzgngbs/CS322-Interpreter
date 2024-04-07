@@ -245,6 +245,12 @@ public class Lexer {
         }
         String text = source.substring(start, current);
 
+        if (text.equalsIgnoreCase("INT") || text.equalsIgnoreCase("BOOL")
+        || text.equalsIgnoreCase("FLOAT")  || text.equalsIgnoreCase("CHAR") ){
+            if (!text.equals("INT") || !text.equals("FLOAT") || !text.equals("BOOL") || !text.equals("CHAR")) {
+                Error.error(line, "Expected data type " + text.toUpperCase() + " but given " + text + ".");
+            }
+        }
         Token.TokenType type = keywords.get(text);
         if (type == null) {
             // Check if it's BEGIN CODE or END CODE
