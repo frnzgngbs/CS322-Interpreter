@@ -1,5 +1,8 @@
 import Lexical.Lexer;
 import Lexical.Token;
+import Semantic.Expr;
+import Semantic.Interpreter;
+import Semantic.Parser;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -8,6 +11,9 @@ import java.io.IOException;
 import java.util.List;
 
 public class Main {
+
+    private static final Interpreter interpreter = new Interpreter();
+
     public static void main(String[] args) {
         try {
             BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt"));
@@ -27,9 +33,14 @@ public class Main {
         Lexer lexer = new Lexer(source);
         List<Token> tokens = lexer.scanTokens();
 
-
         for (Token token : tokens) {
             System.out.println("TOKEN: " + token);
         }
+
+        Parser parser = new Parser(tokens);
+
+        Expr expression = parser.parse();
+
+        interpreter.interpret(expression);
     }
 }

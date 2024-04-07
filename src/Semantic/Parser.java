@@ -8,6 +8,7 @@ import java.util.List;
 import ErrorHandling.Error;
 import Lexical.Token;
 
+import static ErrorHandling.Error.report;
 import static Lexical.Token.TokenType.*;
 
 
@@ -22,6 +23,7 @@ public class Parser {
         this.tokens = tokens;
     }
 
+    // Parse the entire list of tokens and return a list of statements
     public Expr parse() {
         try {
             return expression();
@@ -56,13 +58,6 @@ public class Parser {
 
         return false;
     }
-
-    private Token consume(Token.TokenType type, String message) {
-        if (check(type)) return advance();
-
-        throw error(peek(), message);
-    }
-
 
     private boolean check(Token.TokenType type) {
         if (isAtEnd()) return false;
@@ -146,14 +141,21 @@ public class Parser {
             consume(RIGHT_PAREN, "Expect ')' after expression.");
             return new Expr.Grouping(expr);
         }
+
         throw error(peek(), "Expect expression.");
+
+    }
+
+    private Token consume(Token.TokenType type, String message) {
+        if (check(type)) return advance();
+
+        throw error(peek(), message);
     }
 
     private ParseError error(Token token, String message) {
         Error.error(token, message);
         return new ParseError();
     }
-
 
     private void synchronize() {
         advance();
