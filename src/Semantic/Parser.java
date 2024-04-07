@@ -1,6 +1,5 @@
 package Semantic;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import java.util.List;
 import ErrorHandling.Error;
 import Lexical.Token;
 
-import static ErrorHandling.Error.report;
 import static Lexical.Token.TokenType.*;
 
 
@@ -24,16 +22,59 @@ public class Parser {
     }
 
     // Parse the entire list of tokens and return a list of statements
-    public Expr parse() {
-        try {
-            return expression();
-        } catch (ParseError error) {
-            return null;
+    public List<Stmt> parse() {
+        List<Stmt> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            statements.add(declaration());
         }
+
+        return statements;
     }
 
     private Expr expression() {
         return equality();
+    }
+
+    private Stmt declaration() {
+        try {
+            if (match(INT)) return varDeclaration(INT);
+            else if (match(FLOAT)) return varDeclaration(FLOAT);
+            else if (match(CHAR)) return varDeclaration(CHAR);
+            else if (match(BOOL)) return varDeclaration(BOOL);
+
+
+            return statement();
+        } catch (ParseError error) {
+            synchronize();
+            return null;
+        }
+    }
+
+    private Stmt varDeclaration(Token.TokenType dataType) {
+        Token typeToken = consume(dataType, "Expect data type.");
+        Token name = consume(IDENTIFIER, "Expect variable name.");
+
+        Expr initializer = null;
+        if (match(EQUAL)) {
+            initializer = expression();
+        }
+
+        return new Stmt.Variable(typeToken, name, initializer);
+    }
+    private Stmt statement() {
+        if (match(DISPLAY)) return displayStatement();
+
+        return expressionStatement();
+    }
+
+    private Stmt displayStatement() {
+        Expr value = expression();
+        return new Stmt.Display(value);
+    }
+
+    private Stmt expressionStatement() {
+        Expr expr = expression();
+        return new Stmt.Expression(expr);
     }
 
     private Expr equality() {
@@ -129,8 +170,8 @@ public class Parser {
 
 
     private Expr primary() {
-        if (match(FALSE)) return new Expr.Literal(false);
-        if (match(TRUE)) return new Expr.Literal(true);
+        if (match(FALSE)) return new Expr.Literal("FALSE");
+        if (match(TRUE)) return new Expr.Literal("TRUE");
 
         if (match(NUMBER, CHARACTER, TRUE, FALSE)) {
             return new Expr.Literal(previous().literal);
@@ -140,6 +181,10 @@ public class Parser {
             Expr expr = expression();
             consume(RIGHT_PAREN, "Expect ')' after expression.");
             return new Expr.Grouping(expr);
+        }
+
+        if (match(IDENTIFIER)) {
+            return new Expr.Variable(previous());
         }
 
         throw error(peek(), "Expect expression.");
@@ -164,6 +209,7 @@ public class Parser {
 
             switch (peek().type) {
                 case IF:
+
                 case DISPLAY:
                     return;
             }

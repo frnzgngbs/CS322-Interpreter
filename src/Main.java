@@ -3,6 +3,7 @@ import Lexical.Token;
 import Semantic.Expr;
 import Semantic.Interpreter;
 import Semantic.Parser;
+import Semantic.Stmt;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -39,8 +40,8 @@ public class Main {
 
         Parser parser = new Parser(tokens);
 
-        Expr expression = parser.parse();
+        List<Stmt> statements = parser.parse();
 
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
     }
 }

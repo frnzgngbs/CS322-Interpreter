@@ -5,34 +5,109 @@ import Lexical.Token;
 import java.util.List;
 
 public abstract class Stmt {
-    public static class VariableDeclaration extends Stmt {
-        public final Token name;
-        public final Token type;
-        public final Expr initializer;
+    interface Visitor<R> {
+        R visitBlockStmt(Block stmt);
+        R visitExpressionStmt(Expression stmt);
+//        R visitIfStmt(If stmt);
+        R visitDisplayStmt(Display stmt);
 
-        public VariableDeclaration(Token name, Token type, Expr initializer) {
-            this.name = name;
-            this.type = type;
-            this.initializer = initializer;
-        }
+        R visitVariableStmt(Variable stmt);
+        R visitIfStmt(If stmt);
+
+
     }
 
-    public static class Block extends Stmt {
-        public final List<Stmt> statements;  // List of statements in the block
-
-        public Block(List<Stmt> statements) {
+    // Nested Stmt classes here...
+//> stmt-block
+    static class Block extends Stmt {
+        Block(List<Stmt> statements) {
             this.statements = statements;
         }
 
-        // Method to add a statement to the block
-        public void addStatement(Stmt statement) {
-            statements.add(statement);
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitBlockStmt(this);
         }
 
-        // Method to get the list of statements in the block
-        public List<Stmt> getStatements() {
-            return statements;
+        final List<Stmt> statements;
+    }
+//> stmt-expression
+    static class Expression extends Stmt {
+        Expression(Expr expression) {
+            this.expression = expression;
         }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitExpressionStmt(this);
+        }
+
+        final Expr expression;
+    }
+//    static class If extends Stmt {
+//        If(Expr condition, Stmt thenBranch, Stmt elseBranch) {
+//            this.condition = condition;
+//            this.thenBranch = thenBranch;
+//            this.elseBranch = elseBranch;
+//        }
+//
+//        @Override
+//        <R> R accept(Visitor<R> visitor) {
+//            return visitor.visitIfStmt(this);
+//        }
+//
+//        final Expr condition;
+//        final Stmt thenBranch;
+//        final Stmt elseBranch;
+//    }
+    //< stmt-if
+//> stmt-print
+    static class Display extends Stmt {
+        Display(Expr expression) {
+            this.expression = expression;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitDisplayStmt(this);
+        }
+
+        final Expr expression;
     }
 
+    static class If extends Stmt {
+        If(Expr condition, Stmt thenBranch, Stmt elseBranch) {
+            this.condition = condition;
+            this.thenBranch = thenBranch;
+            this.elseBranch = elseBranch;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitIfStmt(this);
+        }
+
+        final Expr condition;
+        final Stmt thenBranch;
+        final Stmt elseBranch;
+    }
+
+    static class Variable extends Stmt {
+        Variable(Token dataType, Token name, Expr initializer) {
+            this.dataType = dataType;
+            this.name = name;
+            this.initializer = initializer;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitVariableStmt(this);
+        }
+
+        final Token dataType;
+        final Token name;
+        final Expr initializer;
+    }
+
+    abstract <R> R accept(Visitor<R> visitor);
 }

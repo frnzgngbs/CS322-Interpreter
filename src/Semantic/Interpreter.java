@@ -4,12 +4,15 @@ import ErrorHandling.Error;
 import ErrorHandling.RuntimeError;
 import Lexical.Token;
 
-public class Interpreter implements Expr.Visitor<Object> {
+import java.util.List;
 
-    public void interpret(Expr expression) {
+public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+
+    public void interpret(List<Stmt> statements) {
         try {
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
         } catch (RuntimeError error) {
             Error.runtimeError(error);
         }
@@ -28,16 +31,20 @@ public class Interpreter implements Expr.Visitor<Object> {
         switch (expr.operator.type) {
             case GREATER:
                 checkNumberOperands(expr.operator, left, right);
-                return (double)left > (double)right;
+                if (left instanceof Double && right instanceof Double) return (double) left > (double) right;
+                if (left instanceof Integer && right instanceof Integer) return (int) left > (int) right;
             case GREATER_EQUAL:
                 checkNumberOperands(expr.operator, left, right);
-                return (double)left >= (double)right;
+                if (left instanceof Double && right instanceof Double) return (double) left >= (double) right;
+                if (left instanceof Integer && right instanceof Integer) return (int) left >= (int) right;
             case LESSER:
                 checkNumberOperands(expr.operator, left, right);
-                return (double)left < (double)right;
+                if (left instanceof Double && right instanceof Double) return (double) left < (double) right;
+                if (left instanceof Integer && right instanceof Integer) return (int) left < (int) right;
             case LESSER_EQUAL:
                 checkNumberOperands(expr.operator, left, right);
-                return (double)left <= (double)right;
+                if (left instanceof Double && right instanceof Double) return (double) left <= (double) right;
+                if (left instanceof Integer && right instanceof Integer) return (int) left <= (int) right;
             case NOTEQUAL: return !isEqual(left, right);
             case ISEQUAL: return isEqual(left, right);
             case MINUS:
@@ -143,4 +150,38 @@ public class Interpreter implements Expr.Visitor<Object> {
     private Object evaluate(Expr expr) {
         return expr.accept(this);
     }
+
+    private void execute(Stmt stmt) {
+        stmt.accept(this);
+    }
+
+    @Override
+    public Void visitBlockStmt(Stmt.Block stmt) {
+        return null;
+    }
+
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitDisplayStmt(Stmt.Display stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
+    }
+
+    @Override
+    public Void visitVariableStmt(Stmt.Variable stmt) {
+        return null;
+    }
+
+    @Override
+    public Void visitIfStmt(Stmt.If stmt) {
+        return null;
+    }
+
+
 }
