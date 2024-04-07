@@ -1,1 +1,2 @@
 INT a = 10
+DISPLAY: a
