@@ -245,10 +245,9 @@ public class Lexer {
         }
         String text = source.substring(start, current);
 
-        if (text.equalsIgnoreCase("INT") || text.equalsIgnoreCase("BOOL")
-        || text.equalsIgnoreCase("FLOAT")  || text.equalsIgnoreCase("CHAR") ){
-            if (!text.equals("INT") || !text.equals("FLOAT") || !text.equals("BOOL") || !text.equals("CHAR")) {
-                Error.error(line, "Expected data type " + text.toUpperCase() + " but given " + text + ".");
+        if (text.equalsIgnoreCase("int") || text.equalsIgnoreCase("float") || text.equalsIgnoreCase("char") || text.equalsIgnoreCase("bool")) {
+            if (!(text.equals("INT") || text.equals("FLOAT") || text.equals("CHAR") || text.equals("BOOL"))) {
+                Error.error(line, "Expected " + text.toUpperCase() + " but provided " + text + ".");
             }
         }
         Token.TokenType type = keywords.get(text);
