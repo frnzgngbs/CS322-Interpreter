@@ -1,1 +1,3 @@
-int a
+INT a
+a = 1
+DISPLAY: a
