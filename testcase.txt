@@ -1,3 +1,2 @@
-INT a
-a = 1
-DISPLAY: a
+BEGIN CODE
+END CODE

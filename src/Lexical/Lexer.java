@@ -87,7 +87,7 @@ public class Lexer {
             case '*':
                 addToken(Token.TokenType.MULTIPLY);
                 break;
-            case '$', '\n':
+            case '$', '\n', '\t':
                 line++;
                 break;
             case '&':
@@ -229,9 +229,9 @@ public class Lexer {
             while(isDigit(getCurrentValue())) {
                 advance();
             }
-            // Add token as double
+            // Add token as Float.
             addToken(Token.TokenType.NUMBER,
-                    Double.parseDouble(source.substring(start, current)));
+                    Float.parseFloat(source.substring(start, current)));
             return;
         }
         // Add token as integer
@@ -247,7 +247,7 @@ public class Lexer {
 
         if (text.equalsIgnoreCase("int") || text.equalsIgnoreCase("float") || text.equalsIgnoreCase("char") || text.equalsIgnoreCase("bool")) {
             if (!(text.equals("INT") || text.equals("FLOAT") || text.equals("CHAR") || text.equals("BOOL"))) {
-                Error.error(line, "Expected " + text.toUpperCase() + " but provided " + text + ".");
+                Error.error(line, "Expected " + text.toUpperCase() + " but found " + text + ".");
             }
         }
         Token.TokenType type = keywords.get(text);

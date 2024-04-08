@@ -6,32 +6,15 @@ import java.util.List;
 
 public abstract class Stmt {
     interface Visitor<R> {
-        R visitBlockStmt(Block stmt);
         R visitExpressionStmt(Expression stmt);
 //        R visitIfStmt(If stmt);
         R visitDisplayStmt(Display stmt);
-
         R visitVariableStmt(Variable stmt);
         R visitIfStmt(If stmt);
+        R visitCodeStructureStmt(CodeStructure stmt);
 
 
     }
-
-    // Nested Stmt classes here...
-//> stmt-block
-    static class Block extends Stmt {
-        Block(List<Stmt> statements) {
-            this.statements = statements;
-        }
-
-        @Override
-        <R> R accept(Visitor<R> visitor) {
-            return visitor.visitBlockStmt(this);
-        }
-
-        final List<Stmt> statements;
-    }
-//> stmt-expression
     static class Expression extends Stmt {
         Expression(Expr expression) {
             this.expression = expression;
@@ -105,6 +88,19 @@ public abstract class Stmt {
 
         final Token name;
         final Expr initializer;
+    }
+
+    static class CodeStructure extends Stmt {
+
+        CodeStructure(List<Stmt> statements) {
+            this.statements = statements;
+        }
+
+        final List<Stmt> statements;
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitCodeStructureStmt(this);
+        }
     }
 
     abstract <R> R accept(Visitor<R> visitor);

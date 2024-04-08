@@ -37,28 +37,28 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         switch (expr.operator.type) {
             case GREATER:
                 checkNumberOperands(expr.operator, left, right);
-                if (left instanceof Double && right instanceof Double) return (double) left > (double) right;
+                if (left instanceof Double && right instanceof Double) return (float) left > (float) right;
                 if (left instanceof Integer && right instanceof Integer) return (int) left > (int) right;
             case GREATER_EQUAL:
                 checkNumberOperands(expr.operator, left, right);
-                if (left instanceof Double && right instanceof Double) return (double) left >= (double) right;
+                if (left instanceof Float && right instanceof Float) return (float) left >= (float) right;
                 if (left instanceof Integer && right instanceof Integer) return (int) left >= (int) right;
             case LESSER:
                 checkNumberOperands(expr.operator, left, right);
-                if (left instanceof Double && right instanceof Double) return (double) left < (double) right;
+                if (left instanceof Float && right instanceof Float) return (float) left < (float) right;
                 if (left instanceof Integer && right instanceof Integer) return (int) left < (int) right;
             case LESSER_EQUAL:
                 checkNumberOperands(expr.operator, left, right);
-                if (left instanceof Double && right instanceof Double) return (double) left <= (double) right;
+                if (left instanceof Float && right instanceof Float) return (float) left <= (float) right;
                 if (left instanceof Integer && right instanceof Integer) return (int) left <= (int) right;
             case NOTEQUAL: return !isEqual(left, right);
             case ISEQUAL: return isEqual(left, right);
             case MINUS:
                 checkNumberOperands(expr.operator, left, right);
-                if (left instanceof Double && right instanceof Double) return (double)left - (double)right;
+                if (left instanceof Float && right instanceof Float) return (float)left - (float)right;
                 if (left instanceof Integer && right instanceof  Integer) return (int)left - (int)right;
             case PLUS:
-                if (left instanceof Double && right instanceof Double) return (double)left + (double)right;
+                if (left instanceof Float && right instanceof Float) return (float)left + (float)right;
                 if (left instanceof Integer && right instanceof  Integer) return (int)left + (int)right;
                 if (left instanceof String && right instanceof String) {
                     return (String)left + (String)right;
@@ -67,10 +67,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                         "Operands must be two numbers or two strings.");
             case DIVIDE:
                 checkNumberOperands(expr.operator, left, right);
-                return (double)left / (double)right;
+                return (float)left / (float)right;
             case MULTIPLY:
                 checkNumberOperands(expr.operator, left, right);
-                return (double)left * (double)right;
+                return (float)left * (float)right;
         }
 
         // Unreachable.
@@ -100,7 +100,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             case NOT:
                 return !isTruthy(right);
             case MINUS:
-                return -(double)right;
+                return -(float)right;
         }
 
         // Unreachable.
@@ -109,14 +109,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     private void checkNumberOperands(Token operator,
                                      Object left, Object right) {
-        if (left instanceof Double && right instanceof Double) return;
+        if (left instanceof Float && right instanceof Float) return;
         if (left instanceof Integer && right instanceof Integer) return;
 
         throw new RuntimeError(operator, "Operands must be numbers.");
     }
 
     private void checkNumberOperand(Token operator, Object operand) {
-        if (operand instanceof Double) return;
+        if (operand instanceof Float) return;
         if (operand instanceof Integer) return;
         throw new RuntimeError(operator, "Operand must be a number.");
     }
@@ -135,7 +135,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     private String stringify(Object object) {
-        if (object == null) return "nil";
+        if (object == null) return "null";
 
         if (object instanceof Double) {
             String text = object.toString();
@@ -161,10 +161,24 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
     @Override
-    public Void visitBlockStmt(Stmt.Block stmt) {
+    public Void visitCodeStructureStmt(Stmt.CodeStructure stmt) {
+        executeCodeStructure(stmt.statements, new Environment(environment));
         return null;
     }
 
+    void executeCodeStructure(List<Stmt> statements,
+                      Environment environment) {
+        Environment previous = this.environment;
+        try {
+            this.environment = environment;
+
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
+        } finally {
+            this.environment = previous;
+        }
+    }
     @Override
     public Void visitExpressionStmt(Stmt.Expression stmt) {
         evaluate(stmt.expression);
@@ -194,6 +208,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Void visitIfStmt(Stmt.If stmt) {
         return null;
     }
+
 
 
 }

@@ -44,10 +44,11 @@ public class Parser {
 
             if (expr instanceof Expr.Variable) {
                 Token name = ((Expr.Variable)expr).name;
+
                 return new Expr.Assign(name, value);
             }
 
-            error(equals, "Invalid assignment target.");
+            Error.error(equals, "Invalid assignment target.");
         }
 
         return expr;
@@ -59,7 +60,6 @@ public class Parser {
             else if (match(FLOAT)) return varDeclaration(FLOAT);
             else if (match(CHAR)) return varDeclaration(CHAR);
             else if (match(BOOL)) return varDeclaration(BOOL);
-
 
             return statement();
         } catch (ParseError error) {
@@ -76,11 +76,13 @@ public class Parser {
             initializer = expression();
         }
 
-
         return new Stmt.Variable(name, initializer);
     }
     private Stmt statement() {
         if (match(DISPLAY)) return displayStatement();
+        if (match(BEGIN_CODE)) {
+            return new Stmt.CodeStructure(codeStructure());
+        }
 
         return expressionStatement();
     }
@@ -94,6 +96,18 @@ public class Parser {
         Expr expr = expression();
         return new Stmt.Expression(expr);
     }
+
+    private List<Stmt> codeStructure() {
+        List<Stmt> statements = new ArrayList<>();
+
+        while (!check(END_CODE) && !isAtEnd()) {
+            statements.add(declaration());
+        }
+
+        consume(END_CODE, "Expect 'END CODE' after BEGIN CODE.");
+        return statements;
+    }
+
 
     private Expr equality() {
         Expr expr = comparison();
@@ -210,6 +224,8 @@ public class Parser {
     }
 
     private Token consume(Token.TokenType type, String message) {
+        System.out.println("TYPE: " + type);
+        System.out.println("CHECK TYPE: " + check(type));
         if (check(type)) return advance();
 
         throw error(peek(), message);
@@ -235,7 +251,5 @@ public class Parser {
             advance();
         }
     }
-
-
 
 }
