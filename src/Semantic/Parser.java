@@ -61,12 +61,14 @@ public class Parser {
             else if (match(CHAR)) return varDeclaration(CHAR);
             else if (match(BOOL)) return varDeclaration(BOOL);
             else if (match(COMMA)) return varDeclaration(lastDataType);
+
             return statement();
         } catch (ParseError error) {
             synchronize();
             return null;
         }
     }
+
 
     private Stmt varDeclaration(Token.TokenType dataType) {
     
@@ -77,7 +79,7 @@ public class Parser {
             initializer = expression();
         }
 
-        return new Stmt.Variable(data.  type, name, initializer);
+        return new Stmt.Variable(dataType, name, initializer);
     }
     private Stmt statement() {
         if (match(DISPLAY)) return displayStatement();

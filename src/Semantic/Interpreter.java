@@ -25,16 +25,23 @@
         @Override
         public Object visitAssignExpr(Expr.Assign expr) {
             Object value = evaluate(expr.value);
-            System.out.println(expr.value);
+            Object variableType = environment.getDataType(expr.name);
+
+            if (variableType == Token.TokenType.FLOAT && value instanceof Integer) {
+                value = ((Integer) value).floatValue();
+            } else if (variableType == Token.TokenType.INT && value instanceof Float) {
+                value = ((Float) value).intValue();
+            }
+
             environment.assign(expr.name, value);
             return value;
         }
+
 
         @Override
         public Object visitBinaryExpr(Expr.Binary expr) {
             Object left = evaluate(expr.left);
             Object right = evaluate(expr.right);
-
 
             if (expr.operator.type == Token.TokenType.CONCAT && left instanceof String && right instanceof String) {
                 return (String)left + (String)right;
@@ -197,13 +204,26 @@
         public Void visitVariableStmt(Stmt.Variable stmt) {
             Object value = null;
             if (stmt.initializer != null) {
-                value = evaluate(stmt.initializer);
+                Object initialValue = evaluate(stmt.initializer);
+                if (stmt.dataType == Token.TokenType.FLOAT) {
+                    if (initialValue instanceof Integer) {
+                        value = (float) ((Integer) initialValue);
+                    } else {
+                        value = initialValue; // No need for conversion
+                    }
+                } else if (stmt.dataType == Token.TokenType.INT) {
+                    if (initialValue instanceof Float) {
+                        value = (int) Math.floor((Float) initialValue);
+                    } else {
+                        value = initialValue; // No need for conversion
+                    }
+                }
             }
 
+            environment.defineDataType(stmt.name.lexeme, stmt.dataType);
             environment.define(stmt.name.lexeme, value);
             return null;
         }
-
 
         @Override
         public Void visitIfStmt(Stmt.If stmt) {

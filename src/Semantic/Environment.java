@@ -7,7 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Environment {
-    private final Map<String, Object> values = new HashMap<>();
+     private final Map<String, Object> values = new HashMap<>();
+     private final Map<String, Object> dataType = new HashMap<>();
     final Environment enclosing;
 
     Environment() {
@@ -16,6 +17,21 @@ public class Environment {
 
     Environment(Environment enclosing) {
         this.enclosing = enclosing;
+    }
+
+    void defineDataType(String name, Token.TokenType dataType) {
+        this.dataType.put(name, dataType);
+    }
+
+    Object getDataType(Token name) {
+        if (dataType.containsKey(name.lexeme)) {
+            return dataType.get(name.lexeme);
+        }
+
+        if (enclosing != null) return enclosing.getDataType(name);
+
+        throw new RuntimeError(name,
+                "Cannot find variable type for '" + name.lexeme + "'.");
     }
 
     void define(String name, Object value) {
