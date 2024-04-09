@@ -69,7 +69,7 @@ public class Parser {
     }
 
     private Stmt varDeclaration(Token.TokenType dataType) {
-
+    
         Token name = consume(IDENTIFIER, "Expect variable name.");
 
         Expr initializer = null;
@@ -77,7 +77,7 @@ public class Parser {
             initializer = expression();
         }
 
-        return new Stmt.Variable(dataType, name, initializer);
+        return new Stmt.Variable(data.  type, name, initializer);
     }
     private Stmt statement() {
         if (match(DISPLAY)) return displayStatement();

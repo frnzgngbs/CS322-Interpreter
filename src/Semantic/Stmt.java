@@ -76,8 +76,7 @@ public abstract class Stmt {
     }
 
     static class Variable extends Stmt {
-        Variable(Token.TokenType dataType, Token name, Expr initializer) {
-            this.dataType = dataType;
+        Variable(Token name, Expr initializer) {
             this.name = name;
             this.initializer = initializer;
         }
@@ -87,7 +86,6 @@ public abstract class Stmt {
             return visitor.visitVariableStmt(this);
         }
 
-        final Token.TokenType dataType;
         final Token name;
         final Expr initializer;
     }
