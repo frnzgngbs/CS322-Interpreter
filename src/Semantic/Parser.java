@@ -56,11 +56,11 @@ public class Parser {
 
     private Stmt declaration() {
         try {
-            if (match(INT)) return varDeclaration();
-            else if (match(FLOAT)) return varDeclaration();
-            else if (match(CHAR)) return varDeclaration();
-            else if (match(BOOL)) return varDeclaration();
-            else if (match(COMMA)) return varDeclaration();
+            if (match(INT)) return varDeclaration(INT);
+            else if (match(FLOAT)) return varDeclaration(FLOAT);
+            else if (match(CHAR)) return varDeclaration(CHAR);
+            else if (match(BOOL)) return varDeclaration(BOOL);
+            else if (match(COMMA)) return varDeclaration(lastDataType);
             return statement();
         } catch (ParseError error) {
             synchronize();
@@ -68,20 +68,8 @@ public class Parser {
         }
     }
 
-    private Stmt varDelcarationSeperatedByComma() {
-
-        Token name = consume(IDENTIFIER, "Expect variable name");
-        
-        Expr initializer = null;
-        
-        if (match(EQUAL)) {
-            initializer = expression();
-        }
-
-        return new Stmt.Variable(name, initializer);
-    }
-    private Stmt varDeclaration() {
-
+    private Stmt varDeclaration(Token.TokenType dataType) {
+    
         Token name = consume(IDENTIFIER, "Expect variable name.");
 
         Expr initializer = null;
@@ -89,7 +77,7 @@ public class Parser {
             initializer = expression();
         }
 
-        return new Stmt.Variable(name, initializer);
+        return new Stmt.Variable(data.  type, name, initializer);
     }
     private Stmt statement() {
         if (match(DISPLAY)) return displayStatement();

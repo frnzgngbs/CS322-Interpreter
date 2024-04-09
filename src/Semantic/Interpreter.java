@@ -25,6 +25,7 @@
         @Override
         public Object visitAssignExpr(Expr.Assign expr) {
             Object value = evaluate(expr.value);
+            System.out.println(expr.value);
             environment.assign(expr.name, value);
             return value;
         }
