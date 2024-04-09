@@ -1,2 +1,2 @@
-INT a, b, c, abc = 15
-DISPLAY: abc
+INT a = 10.2
+DISPLAY: a

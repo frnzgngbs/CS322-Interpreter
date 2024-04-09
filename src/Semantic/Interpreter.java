@@ -196,9 +196,21 @@
         public Void visitVariableStmt(Stmt.Variable stmt) {
             Object value = null;
             if (stmt.initializer != null) {
-                value = evaluate(stmt.initializer);
+                Object initialValue = evaluate(stmt.initializer);
+                if (stmt.dataType == Token.TokenType.FLOAT) {
+                    if (initialValue instanceof Integer) {
+                        value = (float) ((Integer) initialValue);
+                    } else {
+                        value = initialValue; // No need for conversion
+                    }
+                } else if (stmt.dataType == Token.TokenType.INT) {
+                    if (initialValue instanceof Float) {
+                        value = (int) Math.floor((Float) initialValue);
+                    } else {
+                        value = initialValue; // No need for conversion
+                    }
+                }
             }
-
             environment.define(stmt.name.lexeme, value);
             return null;
         }
