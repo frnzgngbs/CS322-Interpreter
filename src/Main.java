@@ -9,11 +9,13 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
 
     private static final Interpreter interpreter = new Interpreter();
+    private static List<Token> tokens = new ArrayList<>();
 
     public static void main(String[] args) {
         try {
@@ -21,8 +23,9 @@ public class Main {
             String line;
             while((line = reader.readLine()) != null) {
                 System.out.println(line);
-                run(line);
+                tokenize(line);
             }
+            parseToken(tokens);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
             System.out.println(fe.getMessage());
         } catch (IOException e) {
@@ -30,18 +33,16 @@ public class Main {
         }
     }
 
-    private static void run(String source) {
-        Lexer lexer = new Lexer(source);
-        List<Token> tokens = lexer.scanTokens();
-
-        for (Token token : tokens) {
-            System.out.println(token);
-        }
-
+    private static void parseToken(List<Token> tokens) {
         Parser parser = new Parser(tokens);
 
         List<Stmt> statements = parser.parse();
 
         interpreter.interpret(statements);
+    }
+
+    private static void tokenize(String source) {
+        Lexer lexer = new Lexer(source);
+        tokens = lexer.scanTokens();
     }
 }

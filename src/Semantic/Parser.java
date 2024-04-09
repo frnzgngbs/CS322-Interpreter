@@ -81,6 +81,7 @@ public class Parser {
     private Stmt statement() {
         if (match(DISPLAY)) return displayStatement();
         if (match(BEGIN_CODE)) {
+            System.out.println("DID WE COME IN HERE?");
             return new Stmt.CodeStructure(codeStructure());
         }
 
@@ -218,6 +219,7 @@ public class Parser {
         if (match(IDENTIFIER)) {
             return new Expr.Variable(previous());
         }
+
 
         throw error(peek(), "Expect expression.");
 

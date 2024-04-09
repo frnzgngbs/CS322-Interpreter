@@ -255,12 +255,16 @@ public class Lexer {
             // Check if it's BEGIN CODE or END CODE
             if (text.equals("BEGIN") && match(' ') && match('C') && match('O') && match('D') && match('E')) {
                 type = Token.TokenType.BEGIN_CODE;
-            } else if (text.equals("END") && match(' ') && match('C') && match('O') && match('D') && match('E')) {
-                type = Token.TokenType.END_CODE;
-            } else {
-                // It's a regular identifier
-                type = Token.TokenType.IDENTIFIER;
+                addToken(type);
+                return;
             }
+            if (text.equals("END") && match(' ') && match('C') && match('O') && match('D') && match('E')) {
+                type = Token.TokenType.END_CODE;
+                addToken(type);
+                return;
+            }
+            type = Token.TokenType.IDENTIFIER;
+
         }
         addToken(type);
     }
