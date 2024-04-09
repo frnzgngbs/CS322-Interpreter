@@ -1,3 +1,2 @@
-FLOAT a
-a = 10
+CHAR a = '1'
 DISPLAY: a

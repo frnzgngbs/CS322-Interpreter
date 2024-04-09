@@ -202,6 +202,9 @@
 
         @Override
         public Void visitVariableStmt(Stmt.Variable stmt) {
+
+            environment.defineDataType(stmt.name.lexeme, stmt.dataType);
+
             Object value = null;
             if (stmt.initializer != null) {
                 Object initialValue = evaluate(stmt.initializer);
@@ -217,13 +220,21 @@
                     } else {
                         value = initialValue; // No need for conversion
                     }
+                } else {
+                    // Handle error: initializer type does not match variable type
+                    if (initialValue instanceof Float || initialValue instanceof Integer) {
+                        Object dataType = environment.getDataType(stmt.name);
+                        Error.error(stmt.name, "Cannot assigned numbers in " + dataType.toString() + " type.");
+                    }
                 }
             }
 
             environment.defineDataType(stmt.name.lexeme, stmt.dataType);
             environment.define(stmt.name.lexeme, value);
+
             return null;
         }
+
 
         @Override
         public Void visitIfStmt(Stmt.If stmt) {

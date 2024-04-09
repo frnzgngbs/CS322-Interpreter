@@ -26,7 +26,11 @@ public class Main {
             while((line = reader.readLine()) != null) {
                 tokenize(line);
             }
+//            if (count == 0) {
+//                System.err.println("No begin code found.");
+//            }
 
+//            parseToken(tokens);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
             System.out.println(fe.getMessage());
         } catch (IOException e) {
