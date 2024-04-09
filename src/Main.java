@@ -1,3 +1,4 @@
+import ErrorHandling.Error;
 import Lexical.Lexer;
 import Lexical.Token;
 import Semantic.Expr;
@@ -21,16 +22,31 @@ public class Main {
         try {
             BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt"));
             String line;
+            int count = 0;
             while((line = reader.readLine()) != null) {
-                System.out.println(line);
                 tokenize(line);
             }
-            parseToken(tokens);
+//            if (count == 0) {
+//                System.err.println("No begin code found.");
+//            }
+
+//            parseToken(tokens);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
             System.out.println(fe.getMessage());
         } catch (IOException e) {
             e.getStackTrace();
         }
+    }
+
+    private static void tokenize(String source) {
+        Lexer lexer = new Lexer(source);
+        tokens = lexer.scanTokens();
+
+//        for (Token token : tokens) {
+//            System.out.print
+//            ln(token);
+//        }
+        parseToken(tokens);
     }
 
     private static void parseToken(List<Token> tokens) {
@@ -39,10 +55,5 @@ public class Main {
         List<Stmt> statements = parser.parse();
 
         interpreter.interpret(statements);
-    }
-
-    private static void tokenize(String source) {
-        Lexer lexer = new Lexer(source);
-        tokens = lexer.scanTokens();
     }
 }

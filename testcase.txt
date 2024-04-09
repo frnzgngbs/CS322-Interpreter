@@ -1,5 +1,2 @@
-BEGIN CODE
-INT a = 10
-DISPLAY: a
-END CODE
-DISPLAY: 1
+INT a, b, c, abc = 15
+DISPLAY: abc

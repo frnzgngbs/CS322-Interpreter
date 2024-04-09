@@ -3,7 +3,6 @@ package Semantic;
 import java.util.ArrayList;
 import java.util.List;
 
-// Import Lexical and Syntax packages containing Token and AST classes
 import ErrorHandling.Error;
 import Lexical.Token;
 
@@ -13,6 +12,8 @@ import static Lexical.Token.TokenType.*;
 public class Parser {
     private final List<Token> tokens;
     private int current = 0;
+    private Token.TokenType lastDataType;
+
 
     private static class ParseError extends RuntimeException {
     }
@@ -21,7 +22,6 @@ public class Parser {
         this.tokens = tokens;
     }
 
-    // Parse the entire list of tokens and return a list of statements
     public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
         while (!isAtEnd()) {
@@ -35,6 +35,7 @@ public class Parser {
         return assignment();
     }
 
+
     private Expr assignment() {
         Expr expr = equality();
 
@@ -43,24 +44,23 @@ public class Parser {
             Expr value = assignment();
 
             if (expr instanceof Expr.Variable) {
-                Token name = ((Expr.Variable)expr).name;
+                Token name = ((Expr.Variable) expr).name;
 
                 return new Expr.Assign(name, value);
             }
 
             Error.error(equals, "Invalid assignment target.");
         }
-
         return expr;
     }
 
     private Stmt declaration() {
         try {
-            if (match(INT)) return varDeclaration(INT);
-            else if (match(FLOAT)) return varDeclaration(FLOAT);
-            else if (match(CHAR)) return varDeclaration(CHAR);
-            else if (match(BOOL)) return varDeclaration(BOOL);
-
+            if (match(INT)) return varDeclaration();
+            else if (match(FLOAT)) return varDeclaration();
+            else if (match(CHAR)) return varDeclaration();
+            else if (match(BOOL)) return varDeclaration();
+            else if (match(COMMA)) return varDeclaration();
             return statement();
         } catch (ParseError error) {
             synchronize();
@@ -68,7 +68,20 @@ public class Parser {
         }
     }
 
-    private Stmt varDeclaration(Token.TokenType dataType) {
+    private Stmt varDelcarationSeperatedByComma() {
+
+        Token name = consume(IDENTIFIER, "Expect variable name");
+        
+        Expr initializer = null;
+        
+        if (match(EQUAL)) {
+            initializer = expression();
+        }
+
+        return new Stmt.Variable(name, initializer);
+    }
+    private Stmt varDeclaration() {
+
         Token name = consume(IDENTIFIER, "Expect variable name.");
 
         Expr initializer = null;
@@ -81,7 +94,6 @@ public class Parser {
     private Stmt statement() {
         if (match(DISPLAY)) return displayStatement();
         if (match(BEGIN_CODE)) {
-            System.out.println("DID WE COME IN HERE?");
             return new Stmt.CodeStructure(codeStructure());
         }
 
@@ -226,8 +238,6 @@ public class Parser {
     }
 
     private Token consume(Token.TokenType type, String message) {
-        System.out.println("TYPE: " + type);
-        System.out.println("CHECK TYPE: " + check(type));
         if (check(type)) return advance();
 
         throw error(peek(), message);
