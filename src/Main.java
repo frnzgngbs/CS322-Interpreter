@@ -43,9 +43,9 @@ public class Main {
         tokens = lexer.scanTokens();
 
 //        for (Token token : tokens) {
-//            System.out.print
-//            ln(token);
+//            System.out.println(token);
 //        }
+
         parseToken(tokens);
     }
 

@@ -31,7 +31,14 @@
                 value = ((Integer) value).floatValue();
             } else if (variableType == Token.TokenType.INT && value instanceof Float) {
                 value = ((Float) value).intValue();
+            } else if(variableType == Token.TokenType.CHAR && (value instanceof Float || value instanceof Boolean || value instanceof Integer)) {
+                Error.error(expr.name, "Invalid value for CHAR type.");
+            } else if(variableType == Token.TokenType.BOOL && (value instanceof Float || value instanceof  Boolean || value instanceof Character)) {
+                Error.error(expr.name, "Invalid value for BOOL type.");
             }
+
+            System.out.println(value.getClass());
+            System.out.println(variableType);
 
             environment.assign(expr.name, value);
             return value;
@@ -211,20 +218,22 @@
                 if (stmt.dataType == Token.TokenType.FLOAT) {
                     if (initialValue instanceof Integer) {
                         value = (float) ((Integer) initialValue);
-                    } else {
+                    } else if (initialValue instanceof Float){
                         value = initialValue; // No need for conversion
+                    } else {
+                        Error.error(stmt.name, "Invalid value for FLOAT type.");
                     }
                 } else if (stmt.dataType == Token.TokenType.INT) {
                     if (initialValue instanceof Float) {
                         value = (int) Math.floor((Float) initialValue);
-                    } else {
+                    } else if (initialValue instanceof Integer){
                         value = initialValue; // No need for conversion
+                    } else {
+                        Error.error(stmt.name, "Invalid value for INT type.");
                     }
-                } else {
-                    // Handle error: initializer type does not match variable type
-                    if (initialValue instanceof Float || initialValue instanceof Integer) {
-                        Object dataType = environment.getDataType(stmt.name);
-                        Error.error(stmt.name, "Cannot assigned numbers in " + dataType.toString() + " type.");
+                } else if (stmt.dataType == Token.TokenType.CHAR) {
+                    if (initialValue instanceof Boolean || initialValue instanceof Integer || initialValue instanceof Float || initialValue instanceof String) {
+                        Error.error(stmt.name, "Invalid value for CHAR type.");
                     }
                 }
             }
