@@ -94,13 +94,16 @@ public class Parser {
     private Stmt displayStatement() {
         List<Expr> expressions = new ArrayList<>();
 
+        // 1 $ 5 & 6
         do {
-            if(check(NEW_LINE)) {
-                System.out.println("IT IS A NEW LINE");
+            if(previous().type == NEW_LINE) {
+                expressions.add(new Expr.Literal('\n'));
             }
             expressions.add(expression());
+
         } while (match(CONCAT) || match(NEW_LINE));
 
+        if (expressions.isEmpty()) expressions.add(expression());
         return new Stmt.Display(expressions);
     }
 
@@ -219,10 +222,6 @@ public class Parser {
 
         if (match(NUMBER, CHARACTER, TRUE, FALSE)) {
             return new Expr.Literal(previous().literal);
-        }
-
-        if(match(NEW_LINE)) {
-            return new Expr.Literal("\n");
         }
 
         if (match(LEFT_PAREN)) {
