@@ -1,2 +1,3 @@
-INT a = 10, b = 20, c = 30
-DISPLAY: a
+INT a = 10, b = 15
+FLOAT b = 10.2
+DISPLAY: a$b

@@ -213,14 +213,22 @@
 
             }
 
-
-            System.out.println(builder.toString());
+            System.out.print(builder.toString());
             return null;
         }
 
         @Override
         public Void visitVariableStmt(Stmt.Variable stmt) {
 
+            if (environment.isDefined(stmt.name.lexeme)) {
+                // Check if the existing variable has the same data type
+                Token.TokenType existingDataType = (Token.TokenType) environment.getDataType(stmt.name);
+                if (existingDataType != stmt.dataType) {
+                    Error.error(stmt.name, "Variable '" + stmt.name.lexeme + "' already declared with a different data type.");
+                }
+            }
+
+            environment.defineDataType(stmt.name.lexeme, stmt.dataType);
             environment.defineDataType(stmt.name.lexeme, stmt.dataType);
 
             Object value = null;

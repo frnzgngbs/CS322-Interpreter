@@ -257,7 +257,6 @@ public class Parser {
 
             switch (peek().type) {
                 case IF:
-
                 case DISPLAY:
                     return;
             }
