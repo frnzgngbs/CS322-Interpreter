@@ -208,8 +208,11 @@
 
             for (Expr expression : stmt.expression) {
                 Object value = evaluate(expression);
+                System.out.println(value);
                 builder.append(stringify(value));
+
             }
+
 
             System.out.println(builder.toString());
             return null;

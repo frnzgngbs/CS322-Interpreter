@@ -42,11 +42,11 @@ public class Main {
         Lexer lexer = new Lexer(source);
         tokens = lexer.scanTokens();
 
-//        for (Token token : tokens) {
-//            System.out.println(token);
-//        }
+        for (Token token : tokens) {
+            System.out.println(token);
+        }
 
-        parseToken(tokens);
+//        parseToken(tokens);
     }
 
     private static void parseToken(List<Token> tokens) {

@@ -87,7 +87,10 @@ public class Lexer {
             case '*':
                 addToken(Token.TokenType.MULTIPLY);
                 break;
-            case '$', '\n', '\t':
+            case '$':
+                addToken(Token.TokenType.NEW_LINE);
+                break;
+            case '\n', '\t':
                 line++;
                 break;
             case '&':

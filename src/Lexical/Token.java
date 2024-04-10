@@ -6,7 +6,7 @@ public class Token {
         PLUS, MINUS, DIVIDE, MULTIPLY, MODULO,
 
         // STRING OPERATOR
-        CONCAT,
+        CONCAT, NEW_LINE,
 
 
         // LOGICAL OPERATOR

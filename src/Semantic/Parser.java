@@ -95,8 +95,11 @@ public class Parser {
         List<Expr> expressions = new ArrayList<>();
 
         do {
+            if(check(NEW_LINE)) {
+                System.out.println("IT IS A NEW LINE");
+            }
             expressions.add(expression());
-        } while (match(CONCAT));
+        } while (match(CONCAT) || match(NEW_LINE));
 
         return new Stmt.Display(expressions);
     }
@@ -216,6 +219,10 @@ public class Parser {
 
         if (match(NUMBER, CHARACTER, TRUE, FALSE)) {
             return new Expr.Literal(previous().literal);
+        }
+
+        if(match(NEW_LINE)) {
+            return new Expr.Literal("\n");
         }
 
         if (match(LEFT_PAREN)) {
