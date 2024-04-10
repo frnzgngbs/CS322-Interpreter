@@ -105,6 +105,12 @@ public class Lexer {
             case '%':
                 addToken(Token.TokenType.MODULO);
                 break;
+            case '"':
+                getLogicalValue();
+                break;
+            case '\'':
+                getCharacterValue();
+                break;
             case '=':
                 addToken(match('=') ? Token.TokenType.ISEQUAL : Token.TokenType.EQUAL);
                 break;
@@ -116,12 +122,6 @@ public class Lexer {
                 break;
             case '>':
                 addToken(match('=') ? Token.TokenType.GREATER_EQUAL : Token.TokenType.GREATER);
-                break;
-            case '\'':
-                getCharacterValue();
-                break;
-            case '"':
-                getLogicalValue();
                 break;
             default:
                 if (isDigit(c)) getNumberValue();
@@ -175,20 +175,25 @@ public class Lexer {
 
 
     private void getCharacterValue() {
-        int counter = 0;
-        // IF MO REACH NIG 1, pasabot ana kay two or move character literals.
-        while (getCurrentValue() != '\'' && !isAtEnd()) {
-            if (counter == 1) {
-                Error.error(line, "Tanang masud sa '' kay dapat usa ra ka value");
-                break;
-            }
-            advance();
-            counter++;
+        if (getCurrentValue() == '\'') {
+            Error.error(line, "CHAR type cannot be empty.");
         }
+
+        char character = getCurrentValue();
+
         advance();
-        // Tokenize the character literal
-        addToken(Token.TokenType.CHARACTER);
+        if (getCurrentValue() != '\'') {
+            Error.error(line, "CHAR type can ony hold 1 character value.");
+        }
+        System.out.println(character);
+        addToken(Token.TokenType.CHARACTER, character);
+        if (!isAtEnd()) {
+            advance();
+        }
     }
+
+
+
 
     private void getLogicalValue() {
         while (getCurrentValue() != '"' && !isAtEnd()) {
@@ -207,9 +212,9 @@ public class Lexer {
         String value = source.substring(start + 1, current - 1);
 
         if (value.equals("TRUE")) {
-            addToken(Token.TokenType.TRUE, value);
+            addToken(Token.TokenType.TRUE, true);
         } else if (value.equals("FALSE")) {
-            addToken(Token.TokenType.FALSE, value);
+            addToken(Token.TokenType.FALSE, false);
         } else {
             Error.error(line, "Not a logical value.");
         }

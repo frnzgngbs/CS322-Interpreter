@@ -1,2 +1,2 @@
-CHAR a = '1'
+CHAR a = 'b'
 DISPLAY: a
