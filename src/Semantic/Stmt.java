@@ -46,7 +46,7 @@ public abstract class Stmt {
     //< stmt-if
 //> stmt-print
     static class Display extends Stmt {
-        Display(Expr expression) {
+        Display(List<Expr> expression) {
             this.expression = expression;
         }
 
@@ -55,7 +55,7 @@ public abstract class Stmt {
             return visitor.visitDisplayStmt(this);
         }
 
-        final Expr expression;
+        final List<Expr> expression;
     }
 
     static class If extends Stmt {

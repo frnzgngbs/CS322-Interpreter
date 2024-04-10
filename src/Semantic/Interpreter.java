@@ -204,8 +204,14 @@
 
         @Override
         public Void visitDisplayStmt(Stmt.Display stmt) {
-            Object value = evaluate(stmt.expression);
-            System.out.println(stringify(value));
+            StringBuilder builder = new StringBuilder();
+
+            for (Expr expression : stmt.expression) {
+                Object value = evaluate(expression);
+                builder.append(stringify(value));
+            }
+
+            System.out.println(builder.toString());
             return null;
         }
 

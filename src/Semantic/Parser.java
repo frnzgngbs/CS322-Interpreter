@@ -92,8 +92,13 @@ public class Parser {
     }
 
     private Stmt displayStatement() {
-        Expr value = expression();
-        return new Stmt.Display(value);
+        List<Expr> expressions = new ArrayList<>();
+
+        do {
+            expressions.add(expression());
+        } while (match(CONCAT));
+
+        return new Stmt.Display(expressions);
     }
 
     private Stmt expressionStatement() {
