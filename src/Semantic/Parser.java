@@ -101,9 +101,8 @@ public class Parser {
             }
             expressions.add(expression());
 
-        } while (match(CONCAT) || match(NEW_LINE));
+        } while (match(CONCAT));
 
-        if (expressions.isEmpty()) expressions.add(expression());
         return new Stmt.Display(expressions);
     }
 
@@ -217,10 +216,10 @@ public class Parser {
 
 
     private Expr primary() {
-        if (match(FALSE)) return new Expr.Literal("FALSE");
-        if (match(TRUE)) return new Expr.Literal("TRUE");
+        if (match(FALSE)) return new Expr.Literal(false);
+        if (match(TRUE)) return new Expr.Literal(true);
 
-        if (match(NUMBER, CHARACTER, TRUE, FALSE)) {
+        if (match(NUMBER, CHARACTER, TRUE, FALSE, STRING)) {
             return new Expr.Literal(previous().literal);
         }
 

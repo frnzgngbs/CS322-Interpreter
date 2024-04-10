@@ -1,1 +1,1 @@
-DISPLAY: a
+DISPLAY: "ABCD"

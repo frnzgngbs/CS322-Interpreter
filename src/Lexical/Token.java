@@ -24,7 +24,7 @@ public class Token {
         INT, FLOAT, CHAR, BOOL,
 
         // Literals
-        IDENTIFIER, CHARACTER, NUMBER, TRUE, FALSE,
+        IDENTIFIER, CHARACTER, NUMBER, TRUE, FALSE, STRING,
 
         // KEYWORDS
         IF, ELSE_IF, ELSE, DISPLAY,BEGIN_CODE, END_CODE, BEGINIF, ENDIF,

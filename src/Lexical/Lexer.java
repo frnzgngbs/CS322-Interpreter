@@ -91,20 +91,16 @@ public class Lexer {
             case '$':
                 addToken(Token.TokenType.NEW_LINE);
                 break;
-            case '\n', '\t':
+            case '\n', '\t', ' ':
                 break;
             case '&':
                 addToken(Token.TokenType.CONCAT);
-                break;
-            case ' ':
                 break;
             case '/':
                 addToken(Token.TokenType.DIVIDE);
                 break;
             case '#':
-                addToken(Token.TokenType.COMMENT);
-                while(getCurrentValue() != '\n') advance();
-                break;
+                return;
             case '%':
                 addToken(Token.TokenType.MODULO);
                 break;
@@ -192,8 +188,6 @@ public class Lexer {
     }
 
 
-
-
     private void getLogicalValue() {
         while (getCurrentValue() != '"' && !isAtEnd()) {
             if (getCurrentValue() == '\n') line++;
@@ -215,7 +209,7 @@ public class Lexer {
         } else if (value.equals("FALSE")) {
             addToken(Token.TokenType.FALSE, false);
         } else {
-            Error.error(line, "Not a logical value.");
+            addToken(Token.TokenType.STRING, value);
         }
     }
 

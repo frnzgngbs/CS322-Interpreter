@@ -229,7 +229,6 @@
             }
 
             environment.defineDataType(stmt.name.lexeme, stmt.dataType);
-            environment.defineDataType(stmt.name.lexeme, stmt.dataType);
 
             Object value = null;
             if (stmt.initializer != null) {
@@ -255,10 +254,17 @@
                 } else if (dataType == Token.TokenType.CHAR) {
                     if (initialValue instanceof Boolean || initialValue instanceof Integer || initialValue instanceof Float || initialValue instanceof String) {
                         Error.error(stmt.name, "Invalid value for CHAR type.");
+                    } else {
+                        value = initialValue;
                     }
-                } else {
+                } else if (dataType == Token.TokenType.BOOL){
                     if (initialValue instanceof Character || initialValue instanceof Integer || initialValue instanceof Float) {
                         Error.error(stmt.name, "Invalid value for BOOL type.");
+                    } else {
+                        value = initialValue;
+                        if (value instanceof Boolean) {
+                            System.out.println("BOOLLYY");
+                        }
                     }
                 }
             }
