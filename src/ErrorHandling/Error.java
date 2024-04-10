@@ -8,6 +8,7 @@ public class Error {
 
     static boolean isError = false;
     static boolean hadRuntimeError = false;
+    static final String filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt";
 
 
     public static void error(int line, String message) {
@@ -28,13 +29,12 @@ public class Error {
         if (token.type == Token.TokenType.EOF) {
             report(token.line, " at end", message);
         } else {
-            report(token.line, " at '" + token.lexeme + "'", message);
+            report(token.line, " at line " + token.line, message);
         }
     }
 
     public static void runtimeError(RuntimeError error) {
-        System.err.println(error.getMessage() +
-                "\n[line " + error.token.line + "]");
+        error(error.token, error.getMessage());
         hadRuntimeError = true;
         if (hadRuntimeError) System.exit(70);
     }

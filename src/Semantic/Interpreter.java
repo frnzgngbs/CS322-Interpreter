@@ -224,7 +224,7 @@
                 // Check if the existing variable has the same data type
                 Token.TokenType existingDataType = (Token.TokenType) environment.getDataType(stmt.name);
                 if (existingDataType != stmt.dataType) {
-                    Error.error(stmt.name, "Variable '" + stmt.name.lexeme + "' already declared with a different data type.");
+                    throw new RuntimeError(stmt.name, "Variable '" + stmt.name.lexeme + "' already declared with a different data type.");
                 }
             }
 

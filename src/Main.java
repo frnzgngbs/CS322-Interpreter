@@ -22,9 +22,9 @@ public class Main {
         try {
             BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt"));
             String line;
-            int count = 0;
+            int code_line = 1;
             while((line = reader.readLine()) != null) {
-                tokenize(line);
+                tokenize(line, code_line++);
             }
 //            if (count == 0) {
 //                System.err.println("No begin code found.");
@@ -38,8 +38,8 @@ public class Main {
         }
     }
 
-    private static void tokenize(String source) {
-        Lexer lexer = new Lexer(source);
+    private static void tokenize(String source, int line) {
+        Lexer lexer = new Lexer(source, line);
         tokens = lexer.scanTokens();
 
         for (Token token : tokens) {

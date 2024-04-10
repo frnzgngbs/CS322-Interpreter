@@ -32,7 +32,7 @@ public class Environment {
         if (enclosing != null) return enclosing.getDataType(name);
 
         throw new RuntimeError(name,
-                "Cannot find variable type for '" + name.lexeme + "'.");
+                 "'" +name.lexeme + "' is undefined.");
     }
 
     void define(String name, Object value) {
