@@ -1,1 +1,2 @@
-INT a = 'c'
+INT a = 10, b = 20, c = 30
+DISPLAY: a&b&c

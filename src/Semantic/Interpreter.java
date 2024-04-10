@@ -57,7 +57,7 @@
             switch (expr.operator.type) {
                 case GREATER:
                     checkNumberOperands(expr.operator, left, right);
-                    if (left instanceof Double && right instanceof Double) return (float) left > (float) right;
+                    if (left instanceof Float && right instanceof Float) return (float) left > (float) right;
                     if (left instanceof Integer && right instanceof Integer) return (int) left > (int) right;
                 case GREATER_EQUAL:
                     checkNumberOperands(expr.operator, left, right);
@@ -87,10 +87,12 @@
                             "Operands must be two numbers or two strings.");
                 case DIVIDE:
                     checkNumberOperands(expr.operator, left, right);
-                    return (float)left / (float)right;
+                    if (left instanceof Float && right instanceof  Float) return (float)left / (float)right;
+                    if (left instanceof Integer && right instanceof  Integer) return (int)left / (int)right;
                 case MULTIPLY:
                     checkNumberOperands(expr.operator, left, right);
-                    return (float)left * (float)right;
+                    if (left instanceof Float && right instanceof  Float) return (float)left * (float)right;
+                    if (left instanceof Integer && right instanceof  Integer) return (int)left * (int)right;
             }
 
             // Unreachable.
@@ -215,7 +217,9 @@
             Object value = null;
             if (stmt.initializer != null) {
                 Object initialValue = evaluate(stmt.initializer);
-                if (stmt.dataType == Token.TokenType.FLOAT) {
+                Object dataType = environment.getDataType(stmt.name);
+                System.out.println(dataType);
+                if (dataType == Token.TokenType.FLOAT) {
                     if (initialValue instanceof Integer) {
                         value = (float) ((Integer) initialValue);
                     } else if (initialValue instanceof Float){
@@ -223,7 +227,7 @@
                     } else {
                         Error.error(stmt.name, "Invalid value for FLOAT type.");
                     }
-                } else if (stmt.dataType == Token.TokenType.INT) {
+                } else if (dataType == Token.TokenType.INT) {
                     if (initialValue instanceof Float) {
                         value = (int) Math.floor((Float) initialValue);
                     } else if (initialValue instanceof Integer){
@@ -231,14 +235,17 @@
                     } else {
                         Error.error(stmt.name, "Invalid value for INT type.");
                     }
-                } else if (stmt.dataType == Token.TokenType.CHAR) {
+                } else if (dataType == Token.TokenType.CHAR) {
                     if (initialValue instanceof Boolean || initialValue instanceof Integer || initialValue instanceof Float || initialValue instanceof String) {
                         Error.error(stmt.name, "Invalid value for CHAR type.");
+                    }
+                } else {
+                    if (initialValue instanceof Character || initialValue instanceof Integer || initialValue instanceof Float) {
+                        Error.error(stmt.name, "Invalid value for BOOL type.");
                     }
                 }
             }
 
-            environment.defineDataType(stmt.name.lexeme, stmt.dataType);
             environment.define(stmt.name.lexeme, value);
 
             return null;
