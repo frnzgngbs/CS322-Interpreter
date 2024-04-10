@@ -178,10 +178,6 @@ public class Lexer {
 
 
     private void getCharacterValue() {
-        if (getCurrentValue() == '\'') {
-            Error.error(line, "CHAR type cannot be empty.");
-        }
-
         char character = getCurrentValue();
 
         advance();

@@ -53,7 +53,7 @@ public class Environment {
 
 
         throw new RuntimeError(name,
-                "Cannot found " + name.lexeme + "variable, undefined variable '" + name.lexeme + "'.");
+                "Attempting to access '" + name.lexeme + "', but was undefined.");
     }
 
     void assign(Token name, Object value) {
