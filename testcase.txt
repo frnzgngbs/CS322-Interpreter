@@ -1,1 +1,4 @@
-DISPLAY: "ABCD"
+# this is a comment this will be ignored
+# this is a comment this will be ignored
+DISPLAY: 10 + 20
+# this is a comment this will be ignored
