@@ -8,20 +8,26 @@ public class Error {
 
     static boolean isError = false;
     static boolean hadRuntimeError = false;
-    static final String filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt";
-
 
     public static void error(int line, String message) {
         report(line, "", message);
     }
 
-    public static void report(int line, String where,
-                              String message) {
-        System.err.println(
-                "[line " + line + "] Error" + where + ": " + message);
+    public static void report(int line, String where, String message) {
+        // ANSI escape code for red text
+        String redColor = "\u001B[31m";
+        // ANSI escape code to reset text color
+        String resetColor = "\u001B[0m";
+
+        // Construct the error message with red color
+        String errorMessage = redColor + "\nCOMPILATION ERROR: \n\n[line " + line + "] Error" + where + ": " + message
+                + resetColor + "\n";
+
+        System.err.println(errorMessage);
         isError = true;
 
-        if(isError) System.exit(65);
+        if (isError)
+            System.exit(65);
 
     }
 
@@ -36,8 +42,8 @@ public class Error {
     public static void runtimeError(RuntimeError error) {
         error(error.token, error.getMessage());
         hadRuntimeError = true;
-        if (hadRuntimeError) System.exit(70);
+        if (hadRuntimeError)
+            System.exit(70);
     }
-
 
 }
