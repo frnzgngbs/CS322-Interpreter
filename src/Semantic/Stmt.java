@@ -7,14 +7,13 @@ import java.util.List;
 public abstract class Stmt {
     interface Visitor<R> {
         R visitExpressionStmt(Expression stmt);
-//        R visitIfStmt(If stmt);
         R visitDisplayStmt(Display stmt);
         R visitVariableStmt(Variable stmt);
         R visitIfStmt(If stmt);
         R visitCodeStructureStmt(CodeStructure stmt);
-
-
+        R visitScanStmt(Scan stmt); // Add this method for handling Scan statement
     }
+
     static class Expression extends Stmt {
         Expression(Expr expression) {
             this.expression = expression;
@@ -56,6 +55,20 @@ public abstract class Stmt {
         }
 
         final List<Expr> expression;
+    }
+
+
+    static class Scan extends Stmt {
+        Scan(List<Expr> variableExpressions) {
+            this.variableExpressions = variableExpressions;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitScanStmt(this);
+        }
+
+        final List<Expr> variableExpressions;
     }
 
     static class If extends Stmt {

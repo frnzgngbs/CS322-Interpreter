@@ -5,6 +5,7 @@
     import Lexical.Token;
 
     import java.util.List;
+    import java.util.Scanner;
 
     public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         final Environment globals = new Environment();
@@ -180,6 +181,49 @@
         @Override
         public Void visitCodeStructureStmt(Stmt.CodeStructure stmt) {
             executeCodeStructure(stmt.statements, new Environment(environment));
+            return null;
+        }
+
+        @Override
+        public Void visitScanStmt(Stmt.Scan stmt) {
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter values separated by spaces: ");
+            String inputLine = scanner.nextLine();
+            String[] inputValues = inputLine.split("\\s+");
+
+            if (inputValues.length != stmt.variableExpressions.size()) {
+                Error.scanError("ERROR: Number of input values does not match the number of specified variables.");
+            }
+
+            int i = 0;
+            for (Expr variableExpression : stmt.variableExpressions) {
+                if (!(variableExpression instanceof Expr.Variable)) {
+                    throw new RuntimeException("Invalid variable expression in scan statement.");
+                }
+                Expr.Variable variable = (Expr.Variable) variableExpression;
+
+                Object dataType = environment.getDataType(variable.name);
+
+                Object value;
+                String inputValue = inputValues[i++];
+                if (dataType == Token.TokenType.INT) {
+                    value = Integer.parseInt(inputValue);
+                } else if (dataType == Token.TokenType.FLOAT) {
+                    value = Float.parseFloat(inputValue);
+                } else if (dataType == Token.TokenType.CHAR) {
+                    if (inputValue.length() != 1) {
+                        Error.error(variable.name, "Invalid character input.");
+                    }
+                    value = inputValue.charAt(0);
+                } else if (dataType == Token.TokenType.BOOL) {
+                    value = Boolean.parseBoolean(inputValue);
+                } else {
+                    throw new RuntimeException("Unsupported variable type in scan statement.");
+                }
+
+                // Store the value in the environment
+                environment.define(variable.name.lexeme, value);
+            }
             return null;
         }
 

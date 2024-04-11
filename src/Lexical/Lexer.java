@@ -25,6 +25,7 @@ public class Lexer {
         keywords.put("ELSE IF",   Token.TokenType.ELSE_IF);
         keywords.put("ELSE",    Token.TokenType.ELSE);
         keywords.put("DISPLAY:",  Token.TokenType.DISPLAY);
+        keywords.put("SCAN:",  Token.TokenType.SCAN);
         keywords.put("BEGIN CODE:",  Token.TokenType.BEGIN_CODE);
         keywords.put("END CODE:",  Token.TokenType.END_CODE);
 

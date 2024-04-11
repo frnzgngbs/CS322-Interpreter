@@ -87,12 +87,26 @@ public class Parser {
         if (match(BEGIN_CODE)) {
             return new Stmt.CodeStructure(codeStructure());
         }
+        if(match(SCAN)) {
+            return scanStatement();
+        }
 
         return expressionStatement();
     }
 
+    private Stmt scanStatement() {
+        List<Expr> expressions = new ArrayList<>();
+
+        do {
+            expressions.add(expression());
+        } while(match(COMMA));
+
+        return new Stmt.Scan(expressions);
+    }
+
     private Stmt displayStatement() {
         List<Expr> expressions = new ArrayList<>();
+
 
         // 1 $ 5 & 6
         do {

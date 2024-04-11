@@ -39,5 +39,10 @@ public class Error {
         if (hadRuntimeError) System.exit(70);
     }
 
+    public static void scanError(String message) {
+        System.err.println(message);
+        System.exit(65);
+    }
+
 
 }

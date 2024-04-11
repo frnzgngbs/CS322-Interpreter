@@ -1,1 +1,3 @@
-DISPLAY: "ABCD"
+CHAR a
+SCAN: a
+DISPLAY: a & b
