@@ -1,1 +1,6 @@
-
+INT a, b
+DISPLAY: "Enter value for a: "
+SCAN: a
+DISPLAY: "Enter value for b: "
+SCAN: b
+DISPLAY: "Value of a: " & a & ", Value of b: " & b

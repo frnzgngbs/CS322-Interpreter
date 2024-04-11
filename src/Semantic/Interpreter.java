@@ -187,7 +187,6 @@
         @Override
         public Void visitScanStmt(Stmt.Scan stmt) {
             Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter values separated by spaces: ");
             String inputLine = scanner.nextLine();
             String[] inputValues = inputLine.split("\\s+");
 
@@ -252,7 +251,6 @@
 
             for (Expr expression : stmt.expression) {
                 Object value = evaluate(expression);
-                System.out.println(value);
                 builder.append(stringify(value));
 
             }

@@ -21,7 +21,7 @@ public class Main {
     public static void main(String[] args) {
         try {
             BufferedReader reader = new BufferedReader(
-                    new FileReader("C:\\Users\\John Marc\\Documents\\pl_code\\CS322-Interpreter\\testcase.txt"));
+                    new FileReader("C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt"));
             String line;
             int code_line = 1;
             while ((line = reader.readLine()) != null) {
