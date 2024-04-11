@@ -20,17 +20,21 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            BufferedReader reader = new BufferedReader(new FileReader("C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt"));
+            BufferedReader reader = new BufferedReader(
+                    new FileReader("C:\\Users\\John Marc\\Documents\\pl_code\\CS322-Interpreter\\testcase.txt"));
             String line;
             int code_line = 1;
-            while((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
                 tokenize(line, code_line++);
             }
-//            if (count == 0) {
-//                System.err.println("No begin code found.");
-//            }
 
-//            parseToken(tokens);
+            // close reader to avoid memory leaks
+            reader.close();
+            // if (count == 0) {
+            // System.err.println("No begin code found.");
+            // }
+
+            // parseToken(tokens);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
             System.out.println(fe.getMessage());
         } catch (IOException e) {
@@ -42,9 +46,10 @@ public class Main {
         Lexer lexer = new Lexer(source, line);
         tokens = lexer.scanTokens();
 
-//        for (Token token : tokens) {
-//            System.out.println(token);
-//        }
+
+        // for (Token token : tokens) {
+        // System.out.println(token);
+        // }
 
         parseToken(tokens);
     }

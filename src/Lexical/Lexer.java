@@ -41,7 +41,7 @@ public class Lexer {
     }
 
     public List<Token> scanTokens() {
-        while(!isAtEnd()) {
+        while (!isAtEnd()) {
             start = current;
             scanToken();
         }
@@ -101,6 +101,11 @@ public class Lexer {
                 addToken(Token.TokenType.DIVIDE);
                 break;
             case '#':
+                // addToken(Token.TokenType.COMMENT);
+                // keep consuming until reaching new line
+                while (getCurrentValue() != '\n' && !isAtEnd()) {
+                    advance();
+                }
                 return;
             case '%':
                 addToken(Token.TokenType.MODULO);
@@ -116,15 +121,19 @@ public class Lexer {
                 break;
             case '<':
                 System.out.println(current);
-                if (match('>')) addToken(Token.TokenType.NOTEQUAL);
-                else if (match('=')) addToken(Token.TokenType.LESSER_EQUAL);
-                else addToken(Token.TokenType.LESSER);
+                if (match('>'))
+                    addToken(Token.TokenType.NOTEQUAL);
+                else if (match('='))
+                    addToken(Token.TokenType.LESSER_EQUAL);
+                else
+                    addToken(Token.TokenType.LESSER);
                 break;
             case '>':
                 addToken(match('=') ? Token.TokenType.GREATER_EQUAL : Token.TokenType.GREATER);
                 break;
             default:
-                if (isDigit(c)) getNumberValue();
+                if (isDigit(c))
+                    getNumberValue();
                 else if (isAlpha(c)) {
                     getIdentifier();
                 } else {
@@ -140,8 +149,10 @@ public class Lexer {
     }
 
     private boolean match(char expected) {
-        if (isAtEnd()) return false;
-        if (source.charAt(current) != expected) return false;
+        if (isAtEnd())
+            return false;
+        if (source.charAt(current) != expected)
+            return false;
 
         current++;
         return true;
@@ -149,12 +160,14 @@ public class Lexer {
 
     // PEEK
     private char getCurrentValue() {
-        if (isAtEnd()) return '\0';
+        if (isAtEnd())
+            return '\0';
         return source.charAt(current);
     }
 
     private char getNextValue() {
-        if (isAtEnd()) return '\0';
+        if (isAtEnd())
+            return '\0';
         return source.charAt(current + 1);
     }
 
@@ -172,14 +185,12 @@ public class Lexer {
         return isAlpha(c) || isDigit(c);
     }
 
-
-
     private void getCharacterValue() {
         char character = getCurrentValue();
 
         advance();
         if (getCurrentValue() != '\'') {
-            Error.error(line, "CHAR type can ony hold 1 character value.");
+            Error.error(line, "CHAR data type can ony hold 1 character value but received more than 1.");
         }
         System.out.println(character);
         addToken(Token.TokenType.CHARACTER, character);
@@ -188,15 +199,15 @@ public class Lexer {
         }
     }
 
-
     private void getLogicalValue() {
         while (getCurrentValue() != '"' && !isAtEnd()) {
-            if (getCurrentValue() == '\n') line++;
+            if (getCurrentValue() == '\n')
+                line++;
             advance();
         }
 
         if (isAtEnd()) {
-            Error.error(line, "Unterminated string.");
+            Error.error(line, "Unterminated string caught at line " + line + ".");
             return;
         }
         // The closing ".
@@ -215,17 +226,19 @@ public class Lexer {
     }
 
     private void getNumberValue() {
-        // Continue iterating through the string, and update the current index if we are encountering a number
-        while(isDigit(getCurrentValue())) {
+        // Continue iterating through the string, and update the current index if we are
+        // encountering a number
+        while (isDigit(getCurrentValue())) {
             advance();
         }
         // Special case, if it is a float.
         // If we encounter '.', check the next character. if it is a number, continue.
-        if(getCurrentValue() == '.' && isDigit(getNextValue())) {
-            // Example 12.1212, since we are still in the '.' at this part, we need to increment our current index.
+        if (getCurrentValue() == '.' && isDigit(getNextValue())) {
+            // Example 12.1212, since we are still in the '.' at this part, we need to
+            // increment our current index.
             advance();
             // After calling advance() method, then we are now in '1'. Continue iterating.
-            while(isDigit(getCurrentValue())) {
+            while (isDigit(getCurrentValue())) {
                 advance();
             }
             // Add token as Float.
@@ -244,7 +257,8 @@ public class Lexer {
         }
         String text = source.substring(start, current);
 
-        if (text.equalsIgnoreCase("int") || text.equalsIgnoreCase("float") || text.equalsIgnoreCase("char") || text.equalsIgnoreCase("bool")) {
+        if (text.equalsIgnoreCase("int") || text.equalsIgnoreCase("float") || text.equalsIgnoreCase("char")
+                || text.equalsIgnoreCase("bool")) {
             if (!(text.equals("INT") || text.equals("FLOAT") || text.equals("CHAR") || text.equals("BOOL"))) {
                 Error.error(line, "Expected " + text.toUpperCase() + " but found " + text + ".");
             }
@@ -268,22 +282,22 @@ public class Lexer {
         addToken(type);
     }
 
-//    private void checkString() {
-//        while (getCurrentValue() != '"' && !isAtEnd()) {
-//            if (getCurrentValue() == '\n') line++;
-//            advance();
-//        }
-//
-//        if (isAtEnd()) {
-//            Error.error(line, "Unterminated string.");
-//            return;
-//        }
-//
-//        // The closing ".
-//        advance();
-//
-//        // Trim the surrounding quotes.
-//        String value = source.substring(start + 1, current - 1);
-//        addToken(STRING, value);
-//    }
+    // private void checkString() {
+    // while (getCurrentValue() != '"' && !isAtEnd()) {
+    // if (getCurrentValue() == '\n') line++;
+    // advance();
+    // }
+    //
+    // if (isAtEnd()) {
+    // Error.error(line, "Unterminated string.");
+    // return;
+    // }
+    //
+    // // The closing ".
+    // advance();
+    //
+    // // Trim the surrounding quotes.
+    // String value = source.substring(start + 1, current - 1);
+    // addToken(STRING, value);
+    // }
 }
