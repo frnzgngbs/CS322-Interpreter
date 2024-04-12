@@ -1,1 +1,2 @@
-INT DISPLAY
+INT b = 15, a
+DISPLAY: a & b & $ & b

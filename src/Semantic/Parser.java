@@ -24,6 +24,7 @@ public class Parser {
 
     public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
+        System.out.println(statements);
         while (!isAtEnd()) {
             statements.add(declaration());
         }
@@ -56,6 +57,7 @@ public class Parser {
 
     private Stmt declaration() {
         try {
+            System.out.println("DID WE COME IN HERE?");
             if (match(INT)) return varDeclaration(INT);
             else if (match(FLOAT)) return varDeclaration(FLOAT);
             else if (match(CHAR)) return varDeclaration(CHAR);

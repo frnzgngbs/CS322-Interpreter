@@ -28,6 +28,7 @@
             Object value = evaluate(expr.value);
             Object variableType = environment.getDataType(expr.name);
 
+
             if (variableType == Token.TokenType.FLOAT && value instanceof Integer) {
                 value = ((Integer) value).floatValue();
             } else if (variableType == Token.TokenType.INT && value instanceof Float) {
@@ -259,12 +260,10 @@
             for (Expr expression : stmt.expression) {
                 Object value = evaluate(expression);
 
-                if(value.equals("+")) continue;
+                if (value != null && value.equals("+")) continue;
 
-//                System.out.println(value);
-
+                // Check if value is not null before using it
                 builder.append(stringify(value));
-
             }
 
             System.out.print(builder.toString());

@@ -28,11 +28,7 @@ public class Main {
                 tokenize(line, code_line++);
             }
 
-            // close reader to avoid memory leaks
             reader.close();
-            // if (count == 0) {
-            // System.err.println("No begin code found.");
-            // }
 
             // parseToken(tokens);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
