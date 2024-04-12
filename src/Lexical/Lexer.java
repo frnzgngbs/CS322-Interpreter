@@ -171,6 +171,11 @@ public class Lexer {
         return source.charAt(current + 1);
     }
 
+    private char getPreviousValue() {
+        if(isAtEnd()) return '\0';
+        return source.charAt(current - 1);
+    }
+
     private boolean isDigit(char c) {
         return c >= '0' && c <= '9';
     }
@@ -186,17 +191,40 @@ public class Lexer {
     }
 
     private void getCharacterValue() {
+        // 0 Empty
+        // 1 No enclosing ' in the right side
+        // 2 No enclosing ' in the left side
+        int error = 0;
+
+        System.out.println(getPreviousValue());
+        if (getPreviousValue() != '\'') {
+            // Possible error for missing left '\''.
+            error = 1;
+        }
+
         char character = getCurrentValue();
 
-        advance();
-        if (getCurrentValue() != '\'') {
-            Error.error(line, "CHAR data type can ony hold 1 character value but received more than 1.");
-        }
-        System.out.println(character);
-        addToken(Token.TokenType.CHARACTER, character);
-        if (!isAtEnd()) {
+        if (character == '\'') {
+            error = 0;
+            Error.error(line, "Character literal cannot be empty.");
+        } else {
+            if (error == 1) {
+                Error.error(line, "Missing left ' for character literal.");
+            }
             advance();
+            if (getCurrentValue() != '\'') {
+                Error.error(line, "Missing right ' for character literal.");
+            }
+            if(isAtEnd()) {
+                Error.error(line, "Missing another ' in character literal");
+            }
+            addToken(Token.TokenType.CHARACTER, character);
+            if (!isAtEnd()) {
+                advance();
+            }
         }
+
+
     }
 
     private void getLogicalValue() {
