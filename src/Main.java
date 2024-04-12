@@ -46,10 +46,9 @@ public class Main {
         Lexer lexer = new Lexer(source, line);
         tokens = lexer.scanTokens();
 
-
-        // for (Token token : tokens) {
-        // System.out.println(token);
-        // }
+//         for (Token token : tokens) {
+//             System.out.println(token);
+//         }
 
         parseToken(tokens);
     }

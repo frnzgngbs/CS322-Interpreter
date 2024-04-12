@@ -20,7 +20,7 @@ public class Error {
         String resetColor = "\u001B[0m";
 
         // Construct the error message with red color
-        String errorMessage = redColor + "\nCOMPILATION ERROR: \n\n[line " + line + "] Error" + where + ": " + message
+        String errorMessage = redColor + "\nRUNTIME ERROR: \n\n[line " + line + "] Error" + where + ": " + message
                 + resetColor + "\n";
 
         System.err.println(errorMessage);

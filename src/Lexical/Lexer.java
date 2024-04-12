@@ -24,8 +24,8 @@ public class Lexer {
         keywords.put("IF",   Token.TokenType.IF);
         keywords.put("ELSE IF",   Token.TokenType.ELSE_IF);
         keywords.put("ELSE",    Token.TokenType.ELSE);
-        keywords.put("DISPLAY:",  Token.TokenType.DISPLAY);
-        keywords.put("SCAN:",  Token.TokenType.SCAN);
+        keywords.put("DISPLAY",  Token.TokenType.DISPLAY);
+        keywords.put("SCAN",  Token.TokenType.SCAN);
         keywords.put("BEGIN CODE:",  Token.TokenType.BEGIN_CODE);
         keywords.put("END CODE:",  Token.TokenType.END_CODE);
 
@@ -79,6 +79,9 @@ public class Lexer {
                 break;
             case ',':
                 addToken(Token.TokenType.COMMA);
+                break;
+            case ':':
+                addToken(Token.TokenType.SEPARATOR);
                 break;
             case '-':
                 addToken(Token.TokenType.MINUS);
@@ -183,7 +186,7 @@ public class Lexer {
     private boolean isAlpha(char c) {
         return (c >= 'a' && c <= 'z') ||
                 (c >= 'A' && c <= 'Z') ||
-                c == '_' || c == ':';
+                c == '_' ;
     }
 
     private boolean isAlphaNumeric(char c) {
@@ -301,6 +304,16 @@ public class Lexer {
             }
             if (text.equals("END") && match(' ') && match('C') && match('O') && match('D') && match('E')) {
                 type = Token.TokenType.END_CODE;
+                addToken(type);
+                return;
+            }
+            if(text.equals("DISPLAY")) {
+                type = Token.TokenType.DISPLAY;
+                addToken(type);
+                return;
+            }
+            if(text.equals("SCAN")) {
+                type = Token.TokenType.SCAN;
                 addToken(type);
                 return;
             }

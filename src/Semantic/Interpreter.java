@@ -33,13 +33,16 @@
             } else if (variableType == Token.TokenType.INT && value instanceof Float) {
                 value = ((Float) value).intValue();
             } else if(variableType == Token.TokenType.CHAR && (value instanceof Float || value instanceof Boolean || value instanceof Integer)) {
-                Error.error(expr.name, "Invalid value for CHAR type.");
-            } else if(variableType == Token.TokenType.BOOL && (value instanceof Float || value instanceof  Boolean || value instanceof Character)) {
-                Error.error(expr.name, "Invalid value for BOOL type.");
+                Error.error(expr.name,  "'" + value + "' is an invalid value for CHAR type.");
+            } else if(variableType == Token.TokenType.BOOL && (value instanceof Float || value instanceof  Boolean || value instanceof Character || value instanceof String)) {
+                if(!(value.equals("TRUE") || value.equals("FALSE"))) {
+                    Error.error(expr.name, "'"  + value + "' is an invalid value for BOOL type.");
+                }
+            } else {
+                if ((value.equals("TRUE") || value.equals("FALSE"))) {
+                    Error.error(expr.name, "'"  + value + "' is an invalid value for BOOL type.");
+                }
             }
-
-            System.out.println(value.getClass());
-            System.out.println(variableType);
 
             environment.assign(expr.name, value);
             return value;
@@ -211,11 +214,15 @@
                     value = Float.parseFloat(inputValue);
                 } else if (dataType == Token.TokenType.CHAR) {
                     if (inputValue.length() != 1) {
-                        Error.error(variable.name, "Invalid character input.");
+                        Error.error(variable.name,  "'" + inputValue + "' is an invalid character input.");
                     }
                     value = inputValue.charAt(0);
                 } else if (dataType == Token.TokenType.BOOL) {
-                    value = Boolean.parseBoolean(inputValue);
+                    value = inputValue;
+                    if(!(value.equals("TRUE") || value.equals("FALSE"))) {
+                        Error.error(variable.name, "'"  + value + "' is an invalid value for BOOL type.");
+                    }
+
                 } else {
                     throw new RuntimeException("Unsupported variable type in scan statement.");
                 }
@@ -251,6 +258,11 @@
 
             for (Expr expression : stmt.expression) {
                 Object value = evaluate(expression);
+
+                if(value.equals("+")) continue;
+
+//                System.out.println(value);
+
                 builder.append(stringify(value));
 
             }
@@ -300,12 +312,12 @@
                         value = initialValue;
                     }
                 } else if (dataType == Token.TokenType.BOOL){
+                    value = initialValue;
                     if (initialValue instanceof Character || initialValue instanceof Integer || initialValue instanceof Float) {
                         Error.error(stmt.name, "Invalid value for BOOL type.");
                     } else {
-                        value = initialValue;
-                        if (value instanceof Boolean) {
-                            System.out.println("BOOLLYY");
+                        if((!value.equals("TRUE") || !value.equals("FALSE"))) {
+                            Error.error(stmt.name, value + " is an invalid value for a BOOL type");
                         }
                     }
                 }

@@ -73,6 +73,10 @@ public class Parser {
     private Stmt varDeclaration(Token.TokenType dataType) {
         lastDataType = dataType;
 
+        if(peek().type == DISPLAY || peek().type == SCAN) {
+            Error.error(peek(), "Cannot use keyword for variable name.");
+        }
+
         Token name = consume(IDENTIFIER, "Expect variable name.");
 
         Expr initializer = null;
@@ -83,7 +87,9 @@ public class Parser {
         return new Stmt.Variable(lastDataType, name, initializer);
     }
     private Stmt statement() {
-        if (match(DISPLAY)) return displayStatement();
+        if (match(DISPLAY)) {
+            return displayStatement();
+        }
         if (match(BEGIN_CODE)) {
             return new Stmt.CodeStructure(codeStructure());
         }
@@ -95,27 +101,38 @@ public class Parser {
     }
 
     private Stmt scanStatement() {
+        if (peek().type != SEPARATOR) {
+            Error.error(peek(), "Missing separator ':' for SCAN keyword.");
+        }
+
+        advance();
+
         List<Expr> expressions = new ArrayList<>();
 
         do {
             expressions.add(expression());
         } while(match(COMMA));
 
+        // No need to advance here
+
         return new Stmt.Scan(expressions);
     }
 
     private Stmt displayStatement() {
+        if (peek().type != SEPARATOR) {
+            Error.error(peek(), "Missing separator ':' for DISPLAY keyword.");
+
+        }
+
         List<Expr> expressions = new ArrayList<>();
 
+        // Consume the colon
+        advance();
 
-        // 1 $ 5 & 6
-        do {
-            if(previous().type == NEW_LINE) {
-                expressions.add(new Expr.Literal('\n'));
-            }
+        while (!isAtEnd()) {
             expressions.add(expression());
-
-        } while (match(CONCAT));
+            advance();
+        };
 
         return new Stmt.Display(expressions);
     }
@@ -230,8 +247,8 @@ public class Parser {
 
 
     private Expr primary() {
-        if (match(FALSE)) return new Expr.Literal(false);
-        if (match(TRUE)) return new Expr.Literal(true);
+        if (match(FALSE)) return new Expr.Literal("FALSE");
+        if (match(TRUE)) return new Expr.Literal("TRUE");
 
         if (match(NUMBER, CHARACTER, TRUE, FALSE, STRING)) {
             return new Expr.Literal(previous().literal);
@@ -241,6 +258,14 @@ public class Parser {
             Expr expr = expression();
             consume(RIGHT_PAREN, "Expect ')' after expression.");
             return new Expr.Grouping(expr);
+        }
+
+        if(match(NEW_LINE)) {
+            return new Expr.Literal('\n');
+        }
+
+        if (match(CONCAT)) {
+            return new Expr.Literal('+');
         }
 
         if (match(IDENTIFIER)) {
