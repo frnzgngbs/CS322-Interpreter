@@ -73,8 +73,14 @@ public class Parser {
     private Stmt varDeclaration(Token.TokenType dataType) {
         lastDataType = dataType;
 
-        if(peek().type == DISPLAY || peek().type == SCAN) {
-            Error.error(peek(), "Cannot use keyword for variable name.");
+        Token type = peek();
+        switch (type.type) {
+            case SCAN:
+                Error.error(type, "Cannot use keyword SCAN as a variable name.");
+                break;
+            case DISPLAY:
+                Error.error(type, "Cannot use keyword DISPLAY as a variable name.");
+                break;
         }
 
         Token name = consume(IDENTIFIER, "Expect variable name.");

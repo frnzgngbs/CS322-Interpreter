@@ -1,15 +1,1 @@
-INT a
-DISPLAY: "Enter value for a: "
-SCAN: a
-FLOAT b
-DISPLAY: "Enter value for b: "
-SCAN: b
-CHAR c
-DISPLAY: "Enter value for c: "
-SCAN: c
-BOOL d
-DISPLAY: "Enter value for d: "
-SCAN: d
-
-DISPLAY: "Value of a: " & a & $ & "Value of b: " & b & $ & "Value of c: " & c & $ & "Value of d: " & d & $
-DISPLAY: d == "TRUE"
+INT DISPLAY
