@@ -31,6 +31,24 @@ public class Error {
 
     }
 
+    public static void report(String message) {
+        // ANSI escape code for red text
+        String redColor = "\u001B[31m";
+        // ANSI escape code to reset text color
+        String resetColor = "\u001B[0m";
+
+        // Construct the error message with red color
+        String errorMessage = redColor + "\nRUNTIME ERROR: \n\n" + message
+                + resetColor + "\n";
+
+        System.err.println(errorMessage);
+        isError = true;
+
+        if (isError)
+            System.exit(65);
+
+    }
+
     public static void error(Token token, String message) {
         if (token.type == Token.TokenType.EOF) {
             report(token.line, " at end", message);
@@ -50,6 +68,5 @@ public class Error {
         System.err.println(message);
         System.exit(65);
     }
-
 
 }

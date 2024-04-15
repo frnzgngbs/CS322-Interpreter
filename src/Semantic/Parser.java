@@ -2,18 +2,18 @@ package Semantic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import ErrorHandling.Error;
+import Lexical.Lexer;
 import Lexical.Token;
 
 import static Lexical.Token.TokenType.*;
-
 
 public class Parser {
     private final List<Token> tokens;
     private int current = 0;
     private Token.TokenType lastDataType;
-
 
     private static class ParseError extends RuntimeException {
     }
@@ -33,7 +33,6 @@ public class Parser {
     private Expr expression() {
         return assignment();
     }
-
 
     private Expr assignment() {
         Expr expr = equality();
@@ -55,12 +54,17 @@ public class Parser {
 
     private Stmt declaration() {
         try {
-//            System.out.println("DID WE COME IN HERE?");
-            if (match(INT)) return varDeclaration(INT);
-            else if (match(FLOAT)) return varDeclaration(FLOAT);
-            else if (match(CHAR)) return varDeclaration(CHAR);
-            else if (match(BOOL)) return varDeclaration(BOOL);
-            else if (match(COMMA)) return varDeclaration(lastDataType);
+            // System.out.println("DID WE COME IN HERE?");
+            if (match(INT))
+                return varDeclaration(INT);
+            else if (match(FLOAT))
+                return varDeclaration(FLOAT);
+            else if (match(CHAR))
+                return varDeclaration(CHAR);
+            else if (match(BOOL))
+                return varDeclaration(BOOL);
+            else if (match(COMMA))
+                return varDeclaration(lastDataType);
 
             return statement();
         } catch (ParseError error) {
@@ -68,7 +72,6 @@ public class Parser {
             return null;
         }
     }
-
 
     private Stmt varDeclaration(Token.TokenType dataType) {
         lastDataType = dataType;
@@ -104,6 +107,7 @@ public class Parser {
 
         return new Stmt.Variable(lastDataType, name, initializer);
     }
+
     private Stmt statement() {
         if (match(DISPLAY)) {
             return displayStatement();
@@ -111,7 +115,7 @@ public class Parser {
         if (match(BEGIN_CODE)) {
             return new Stmt.CodeStructure(codeStructure());
         }
-        if(match(SCAN)) {
+        if (match(SCAN)) {
             return scanStatement();
         }
 
@@ -129,7 +133,7 @@ public class Parser {
 
         do {
             expressions.add(expression());
-        } while(match(COMMA));
+        } while (match(COMMA));
 
         // No need to advance here
 
@@ -150,7 +154,8 @@ public class Parser {
         while (!isAtEnd()) {
             expressions.add(expression());
             advance();
-        };
+        }
+        ;
 
         return new Stmt.Display(expressions);
     }
@@ -195,12 +200,14 @@ public class Parser {
     }
 
     private boolean check(Token.TokenType type) {
-        if (isAtEnd()) return false;
+        if (isAtEnd())
+            return false;
         return peek().type == type;
     }
 
     private Token advance() {
-        if (!isAtEnd()) current++;
+        if (!isAtEnd())
+            current++;
         return previous();
     }
 
@@ -262,10 +269,26 @@ public class Parser {
         return primary();
     }
 
-
     private Expr primary() {
-        if (match(FALSE)) return new Expr.Literal("FALSE");
-        if (match(TRUE)) return new Expr.Literal("TRUE");
+        if (match(LEFT_SQUARE)) {
+            // System.out.println("Left square ");
+            if (Lexer.stackEscape().isEmpty()) {
+                // System.out.println("stack is empty");
+            } else {
+                // System.out.println("stack is not empty");
+                for (Character currstack : Lexer.stackEscape()) {
+                    System.out.println(currstack);
+                }
+            }
+
+            // System.out.println("stack size = " + Lexer.stackEscape().size());
+            // System.err.println("prev = " + previous());
+            return new Expr.EscapeCode("[", previous());
+        }
+        if (match(FALSE))
+            return new Expr.Literal("FALSE");
+        if (match(TRUE))
+            return new Expr.Literal("TRUE");
 
         if (match(NUMBER, CHARACTER, TRUE, FALSE, STRING)) {
             return new Expr.Literal(previous().literal);
@@ -277,7 +300,7 @@ public class Parser {
             return new Expr.Grouping(expr);
         }
 
-        if(match(NEW_LINE)) {
+        if (match(NEW_LINE)) {
             return new Expr.Literal('\n');
         }
 
@@ -289,13 +312,13 @@ public class Parser {
             return new Expr.Variable(previous());
         }
 
-
         throw error(peek(), "Expect expression.");
 
     }
 
     private Token consume(Token.TokenType type, String message) {
-        if (check(type)) return advance();
+        if (check(type))
+            return advance();
 
         throw error(peek(), message);
     }

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public class Lexer {
     private final String source;
@@ -13,30 +14,34 @@ public class Lexer {
     private int start = 0;
     private int current = 0;
     private int line = 1;
-
+    private static Stack<Character> valEscape = new Stack<>();
     private static final Map<String, Token.TokenType> keywords;
 
     static {
         keywords = new HashMap<>();
         keywords.put("AND", Token.TokenType.AND);
-        keywords.put("OR",  Token.TokenType.OR);
-        keywords.put("NOT",   Token.TokenType.NOT);
-        keywords.put("IF",   Token.TokenType.IF);
-        keywords.put("ELSE IF",   Token.TokenType.ELSE_IF);
-        keywords.put("ELSE",    Token.TokenType.ELSE);
-        keywords.put("DISPLAY",  Token.TokenType.DISPLAY);
-        keywords.put("SCAN",  Token.TokenType.SCAN);
-        keywords.put("BEGIN CODE:",  Token.TokenType.BEGIN_CODE);
-        keywords.put("END CODE:",  Token.TokenType.END_CODE);
+        keywords.put("OR", Token.TokenType.OR);
+        keywords.put("NOT", Token.TokenType.NOT);
+        keywords.put("IF", Token.TokenType.IF);
+        keywords.put("ELSE IF", Token.TokenType.ELSE_IF);
+        keywords.put("ELSE", Token.TokenType.ELSE);
+        keywords.put("DISPLAY", Token.TokenType.DISPLAY);
+        keywords.put("SCAN", Token.TokenType.SCAN);
+        keywords.put("BEGIN CODE:", Token.TokenType.BEGIN_CODE);
+        keywords.put("END CODE:", Token.TokenType.END_CODE);
 
-        keywords.put("CHAR",   Token.TokenType.CHAR);
-        keywords.put("INT",   Token.TokenType.INT);
-        keywords.put("FLOAT",   Token.TokenType.FLOAT);
-        keywords.put("BOOL",   Token.TokenType.BOOL);
+        keywords.put("CHAR", Token.TokenType.CHAR);
+        keywords.put("INT", Token.TokenType.INT);
+        keywords.put("FLOAT", Token.TokenType.FLOAT);
+        keywords.put("BOOL", Token.TokenType.BOOL);
     }
 
     public Lexer(String source) {
         this.source = source;
+    }
+
+    public static Stack<Character> stackEscape() {
+        return valEscape;
     }
 
     public List<Token> scanTokens() {
@@ -71,6 +76,24 @@ public class Lexer {
                 addToken(Token.TokenType.RIGHT_PAREN);
                 break;
             case '[':
+                // initially push [ since first time encountered
+                valEscape.push(c);
+                // System.err.println("pushed");
+                int i = 0;
+
+                while (!isAtEnd()) {
+                    // System.out.println("CURRENT VAL " + getCurrentValue());
+                    if (getCurrentValue() == ']') {
+                        if (!valEscape.isEmpty()) {
+                            valEscape.pop();
+                            // System.out.println("was popped");
+                        }
+                    }
+                    advance();
+                }
+                if (!valEscape.isEmpty()) {
+                    Error.report(line, " at line " + line, "Encountered '[' but ']' is not found.");
+                }
                 addToken(Token.TokenType.LEFT_SQUARE);
                 break;
             case ']':
@@ -125,7 +148,7 @@ public class Lexer {
                 addToken(match('=') ? Token.TokenType.ISEQUAL : Token.TokenType.EQUAL);
                 break;
             case '<':
-                System.out.println(current);
+                // System.out.println(current);
                 if (match('>'))
                     addToken(Token.TokenType.NOTEQUAL);
                 else if (match('='))
@@ -163,6 +186,10 @@ public class Lexer {
         return true;
     }
 
+    public int getLine() {
+        return this.line;
+    }
+
     // PEEK
     private char getCurrentValue() {
         if (isAtEnd())
@@ -177,7 +204,8 @@ public class Lexer {
     }
 
     private char getPreviousValue() {
-        if(isAtEnd()) return '\0';
+        if (isAtEnd())
+            return '\0';
         return source.charAt(current - 1);
     }
 
@@ -188,7 +216,7 @@ public class Lexer {
     private boolean isAlpha(char c) {
         return (c >= 'a' && c <= 'z') ||
                 (c >= 'A' && c <= 'Z') ||
-                c == '_' ;
+                c == '_';
     }
 
     private boolean isAlphaNumeric(char c) {
@@ -220,7 +248,7 @@ public class Lexer {
             if (getCurrentValue() != '\'') {
                 Error.error(line, "Missing right ' for character literal.");
             }
-            if(isAtEnd()) {
+            if (isAtEnd()) {
                 Error.error(line, "Missing another ' in character literal");
             }
             addToken(Token.TokenType.CHARACTER, character);
@@ -228,7 +256,6 @@ public class Lexer {
                 advance();
             }
         }
-
 
     }
 
@@ -309,12 +336,12 @@ public class Lexer {
                 addToken(type);
                 return;
             }
-            if(text.equals("DISPLAY")) {
+            if (text.equals("DISPLAY")) {
                 type = Token.TokenType.DISPLAY;
                 addToken(type);
                 return;
             }
-            if(text.equals("SCAN")) {
+            if (text.equals("SCAN")) {
                 type = Token.TokenType.SCAN;
                 addToken(type);
                 return;

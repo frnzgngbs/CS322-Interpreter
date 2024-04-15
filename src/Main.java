@@ -18,9 +18,9 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            String filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt";
+            String filePath = "C:\\Users\\John Marc\\Documents\\pl_code\\CS322-Interpreter\\testcase.txt";
             String source = readFile(filePath);
-//            System.out.println(source);
+            // System.out.println(source);
             tokenize(source);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
             System.out.println(fe.getMessage());
@@ -35,9 +35,9 @@ public class Main {
         String line;
 
         /*
-         Track if it's the first line
-         If it is the first line, do not add a new line
-         as it will increment the line attribute in our lexer.java
+         * Track if it's the first line
+         * If it is the first line, do not add a new line
+         * as it will increment the line attribute in our lexer.java
          */
 
         boolean firstLine = true;
@@ -58,7 +58,7 @@ public class Main {
         List<Token> tokenize = lexer.scanTokens();
 
         tokenize.forEach((a) -> {
-            System.out.println(a);
+            // System.out.println(a);
         });
 
         tokens.addAll(tokenize);
