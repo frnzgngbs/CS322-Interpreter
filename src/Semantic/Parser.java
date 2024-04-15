@@ -147,10 +147,10 @@ public class Parser {
         // Consume the colon
         advance();
 
-        while (!isAtEnd()) {
+        do {
             expressions.add(expression());
-            advance();
-        };
+        } while(match(IDENTIFIER) || match(NEW_LINE) || match(CONCAT)
+            || match(STRING));
 
         return new Stmt.Display(expressions);
     }

@@ -1,3 +1,5 @@
-DISPLAY: 10 + 10 * (10 / 2)
-# 10 + 50
-# 60
+BEGIN CODE
+    INT a
+    SCAN: a
+    DISPLAY: "Franz" & " Genegobis" & $ & "I am " & a & " yrs old."
+END CODE
