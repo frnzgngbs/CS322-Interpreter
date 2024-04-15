@@ -1,5 +1,4 @@
-BEGIN CODE
+
     INT a
     SCAN: a
     DISPLAY: "Franz" & " Genegobis" & $ & "I am " & a & " yrs old."
-END CODE

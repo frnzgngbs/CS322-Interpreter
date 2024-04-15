@@ -20,10 +20,19 @@ public class Parser {
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
+        if (tokens.get(0).type != BEGIN_CODE) {
+            for (Token tok : tokens) {
+                if(tok.type == END_CODE) {
+                    Error.error(tok, "Encountered END CODE but \"BEGIN CODE\" is not found\n");
+                }
+            }
+            Error.error(tokens.get(0), "Amawa jud o, asa naman na imong begin code? Basa2 lage docs.");
+        }
     }
 
     public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
+
         while (!isAtEnd()) {
             statements.add(declaration());
         }
