@@ -24,11 +24,9 @@ public class Parser {
 
     public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
-        System.out.println(statements);
         while (!isAtEnd()) {
             statements.add(declaration());
         }
-
         return statements;
     }
 
@@ -57,7 +55,7 @@ public class Parser {
 
     private Stmt declaration() {
         try {
-            System.out.println("DID WE COME IN HERE?");
+//            System.out.println("DID WE COME IN HERE?");
             if (match(INT)) return varDeclaration(INT);
             else if (match(FLOAT)) return varDeclaration(FLOAT);
             else if (match(CHAR)) return varDeclaration(CHAR);
@@ -82,6 +80,18 @@ public class Parser {
                 break;
             case DISPLAY:
                 Error.error(type, "Cannot use keyword DISPLAY as a variable name.");
+                break;
+            case INT:
+                Error.error(type, "Cannot use INT type as a variable name.");
+                break;
+            case FLOAT:
+                Error.error(type, "Cannot use FLOAT type as a variable name.");
+                break;
+            case BOOL:
+                Error.error(type, "Cannot use BOOL type as a variable name");
+                break;
+            case CHAR:
+                Error.error(type, "Cannot use CHAR type as a variable name");
                 break;
         }
 
@@ -160,7 +170,6 @@ public class Parser {
         consume(END_CODE, "Expect 'END CODE' after BEGIN CODE.");
         return statements;
     }
-
 
     private Expr equality() {
         Expr expr = comparison();

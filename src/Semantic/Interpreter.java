@@ -28,6 +28,7 @@
             Object value = evaluate(expr.value);
             Object variableType = environment.getDataType(expr.name);
 
+            System.out.println("NAA DIRI ANG LINE 2");
 
             if (variableType == Token.TokenType.FLOAT && value instanceof Integer) {
                 value = ((Integer) value).floatValue();
@@ -314,14 +315,17 @@
                     value = initialValue;
                     if (initialValue instanceof Character || initialValue instanceof Integer || initialValue instanceof Float) {
                         Error.error(stmt.name, "Invalid value for BOOL type.");
-                    } else {
-                        if((!value.equals("TRUE") || !value.equals("FALSE"))) {
+                    } else if(initialValue instanceof String){
+                        System.out.println("VALUE: " + value + " TYPE:" + value.getClass().getTypeName());
+                        if((value.equals("TRUE") || value.equals("FALSE"))) {}
+                        else {
                             Error.error(stmt.name, value + " is an invalid value for a BOOL type");
                         }
                     }
                 }
             }
 
+            System.out.println("LINE 1");
             environment.define(stmt.name.lexeme, value);
 
             return null;

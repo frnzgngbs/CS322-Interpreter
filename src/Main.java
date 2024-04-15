@@ -1,7 +1,5 @@
-import ErrorHandling.Error;
 import Lexical.Lexer;
 import Lexical.Token;
-import Semantic.Expr;
 import Semantic.Interpreter;
 import Semantic.Parser;
 import Semantic.Stmt;
@@ -20,33 +18,52 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            BufferedReader reader = new BufferedReader(
-                    new FileReader("C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt"));
-            String line;
-            int code_line = 1;
-            while ((line = reader.readLine()) != null) {
-                tokenize(line, code_line++);
-            }
-
-            reader.close();
-
-            // parseToken(tokens);
+            String filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt";
+            String source = readFile(filePath);
+//            System.out.println(source);
+            tokenize(source);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
             System.out.println(fe.getMessage());
         } catch (IOException e) {
-            e.getStackTrace();
+            e.printStackTrace();
         }
     }
 
-    private static void tokenize(String source, int line) {
-        Lexer lexer = new Lexer(source, line);
-        tokens = lexer.scanTokens();
+    private static String readFile(String filePath) throws IOException {
+        StringBuilder source = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new FileReader(filePath));
+        String line;
 
-//         for (Token token : tokens) {
-//             System.out.println(token);
-//         }
+        /*
+         Track if it's the first line
+         If it is the first line, do not add a new line
+         as it will increment the line attribute in our lexer.java
+         */
 
+        boolean firstLine = true;
+        while ((line = reader.readLine()) != null) {
+            if (!firstLine) {
+                source.append('\n');
+            } else {
+                firstLine = false;
+            }
+            source.append(line);
+        }
+        reader.close();
+        return source.toString();
+    }
+
+    private static void tokenize(String source) {
+        Lexer lexer = new Lexer(source);
+        List<Token> tokenize = lexer.scanTokens();
+
+        tokenize.forEach((a) -> {
+            System.out.println(a);
+        });
+
+        tokens.addAll(tokenize);
         parseToken(tokens);
+
     }
 
     private static void parseToken(List<Token> tokens) {

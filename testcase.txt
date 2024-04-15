@@ -1,2 +1,3 @@
-INT b = 15, a
-DISPLAY: a & b & $ & b
+DISPLAY: 10 + 10 * (10 / 2)
+# 10 + 50
+# 60

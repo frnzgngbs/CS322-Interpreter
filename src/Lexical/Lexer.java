@@ -35,8 +35,7 @@ public class Lexer {
         keywords.put("BOOL",   Token.TokenType.BOOL);
     }
 
-    public Lexer(String source, int line) {
-        this.line = line;
+    public Lexer(String source) {
         this.source = source;
     }
 
@@ -95,7 +94,10 @@ public class Lexer {
             case '$':
                 addToken(Token.TokenType.NEW_LINE);
                 break;
-            case '\n', '\t', ' ':
+            case '\n':
+                line++;
+                break;
+            case '\t', ' ':
                 break;
             case '&':
                 addToken(Token.TokenType.CONCAT);

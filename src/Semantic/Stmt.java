@@ -26,6 +26,8 @@ public abstract class Stmt {
 
         final Expr expression;
     }
+
+//    INT a = (1+2) * 3 (2/2)
 //    static class If extends Stmt {
 //        If(Expr condition, Stmt thenBranch, Stmt elseBranch) {
 //            this.condition = condition;
