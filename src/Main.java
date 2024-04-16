@@ -20,7 +20,6 @@ public class Main {
         try {
             String filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt";
             String source = readFile(filePath);
-            // System.out.println(source);
             tokenize(source);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
             System.out.println(fe.getMessage());
@@ -58,7 +57,7 @@ public class Main {
         List<Token> tokenize = lexer.scanTokens();
 
         tokenize.forEach((a) -> {
-            // System.out.println(a);
+             System.out.println(a);
         });
 
         tokens.addAll(tokenize);

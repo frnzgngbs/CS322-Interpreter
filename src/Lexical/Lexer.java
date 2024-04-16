@@ -229,7 +229,6 @@ public class Lexer {
         // 2 No enclosing ' in the left side
         int error = 0;
 
-        System.out.println(getPreviousValue());
         if (getPreviousValue() != '\'') {
             // Possible error for missing left '\''.
             error = 1;
@@ -308,7 +307,6 @@ public class Lexer {
             }
 
             if(isAlpha(getCurrentValue())) {
-                System.out.println(getCurrentValue());
                 Error.error(line, "Unsupported literal");
             }
 

@@ -402,14 +402,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     Error.error(stmt.name, "Invalid value for CHAR type.");
                 } else {
                     value = initialValue;
-                    if (initialValue instanceof Character || initialValue instanceof Integer || initialValue instanceof Float) {
+                    if (initialValue instanceof Character) {
                         Error.error(stmt.name, "Invalid value for BOOL type.");
-                    } else if (initialValue instanceof String) {
-//                        System.out.println("VALUE: " + value + " TYPE:" + value.getClass().getTypeName());
-                        if ((value.equals("TRUE") || value.equals("FALSE"))) {
-                        } else {
-                            Error.error(stmt.name, value + " is an invalid value for a BOOL type");
-                        }
+                    }
+                    if ((value.equals("TRUE") || value.equals("FALSE"))) {
+                    } else {
+                        Error.error(stmt.name, value + " is an invalid value for a BOOL type");
                     }
                 }
             }

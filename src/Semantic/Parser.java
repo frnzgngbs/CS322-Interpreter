@@ -179,7 +179,6 @@ public class Parser {
     private Stmt displayStatement() {
         if (peek().type != SEPARATOR) {
             Error.error(peek(), "Missing separator ':' for DISPLAY keyword.");
-
         }
 
         List<Expr> expressions = new ArrayList<>();
@@ -320,6 +319,7 @@ public class Parser {
             // System.err.println("prev = " + previous());
             return new Expr.EscapeCode("[", previous());
         }
+
         if (match(FALSE))
             return new Expr.Literal("FALSE");
         if (match(TRUE))
