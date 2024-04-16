@@ -100,7 +100,16 @@ public class Parser {
                 Error.error(type, "Cannot use BOOL type as a variable name");
                 break;
             case CHAR:
-                Error.error(type, "Cannot use CHAR type as a variable name");
+                Error.error(type, "Cannot use CHAR type as a variable name.");
+                break;
+            case AND:
+                Error.error(type, "Cannot use AND keyword as a variable name.");
+                break;
+            case OR:
+                Error.error(type, "Cannot use OR keyword as a variable name.");
+                break;
+            case NOT:
+                Error.error(type, "Cannot use NOT keyword as a variable name.");
                 break;
         }
 
@@ -123,8 +132,23 @@ public class Parser {
         if(match(SCAN)) {
             return scanStatement();
         }
+        if(match(IF)) return ifStatement();
 
         return expressionStatement();
+    }
+
+    private Stmt ifStatement() {
+        consume(LEFT_PAREN, "Expect '(' after 'IF'.");
+        Expr condition = expression();
+        consume(RIGHT_PAREN, "Expect ')' after if condition.");
+
+        Stmt thenBranch = statement();
+        Stmt elseBranch = null;
+        if (match(ELSE)) {
+            elseBranch = statement();
+        }
+
+        return new Stmt.If(condition, thenBranch, elseBranch);
     }
 
     private Stmt scanStatement() {
