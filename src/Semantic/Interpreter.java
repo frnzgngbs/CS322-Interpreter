@@ -401,12 +401,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     Error.error(stmt.name, "Invalid value for INT type.");
                 }
             } else if (dataType == Token.TokenType.CHAR) {
+                value =initialValue;
                 if (initialValue instanceof Boolean || initialValue instanceof Integer || initialValue instanceof Float
                         || initialValue instanceof String) {
                     Error.error(stmt.name, "Invalid value for CHAR type.");
-                } else {
+                }
+            } else {
                     value = initialValue;
-                    if (initialValue instanceof Character) {
+                    if (initialValue instanceof Character || initialValue instanceof Integer || initialValue instanceof Float) {
                         Error.error(stmt.name, "Invalid value for BOOL type.");
                     }
                     if ((value.equals("TRUE") || value.equals("FALSE"))) {
@@ -414,7 +416,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                         Error.error(stmt.name, value + " is an invalid value for a BOOL type");
                     }
                 }
-            }
         }
         environment.define(stmt.name.lexeme, value);
         return null;

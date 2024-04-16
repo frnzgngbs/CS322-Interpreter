@@ -1,6 +1,4 @@
 BEGIN CODE
-    INT sd = 10
-    INT sd
-    FLOAT _char = sd = 12.343
+    BOOL t = "TRU"
     DISPLAY: sd
 END CODE
