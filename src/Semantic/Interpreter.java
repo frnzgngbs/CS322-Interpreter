@@ -23,26 +23,32 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         } catch (RuntimeError error) {
             Error.runtimeError(error);
         }
-    }
 
-    @Override
-    public Object visitAssignExpr(Expr.Assign expr) {
-        Object value = evaluate(expr.value);
-        Object variableType = environment.getDataType(expr.name);
 
-        System.out.println("NAA DIRI ANG LINE 2");
+        @Override
+        public Object visitAssignExpr(Expr.Assign expr) {
+            Object value = evaluate(expr.value);
+            Object variableType = environment.getDataType(expr.name);
 
-        if (variableType == Token.TokenType.FLOAT && value instanceof Integer) {
-            value = ((Integer) value).floatValue();
-        } else if (variableType == Token.TokenType.INT && value instanceof Float) {
-            value = ((Float) value).intValue();
-        } else if (variableType == Token.TokenType.CHAR
-                && (value instanceof Float || value instanceof Boolean || value instanceof Integer)) {
-            Error.error(expr.name, "'" + value + "' is an invalid value for CHAR type.");
-        } else if (variableType == Token.TokenType.BOOL && (value instanceof Float || value instanceof Boolean
-                || value instanceof Character || value instanceof String)) {
-            if (!(value.equals("TRUE") || value.equals("FALSE"))) {
-                Error.error(expr.name, "'" + value + "' is an invalid value for BOOL type.");
+////            System.out.println("NAA DIRI ANG LINE 2");
+//
+//            System.out.println(value);
+//            System.out.println(variableType);
+
+            if (variableType == Token.TokenType.FLOAT && value instanceof Integer) {
+                value = ((Integer) value).floatValue();
+            } else if (variableType == Token.TokenType.INT && value instanceof Float) {
+                value = ((Float) value).intValue();
+            } else if(variableType == Token.TokenType.CHAR && (value instanceof Float || value instanceof Boolean || value instanceof Integer)) {
+                Error.error(expr.name,  "'" + value + "' is an invalid value for CHAR type.");
+            } else if(variableType == Token.TokenType.BOOL && (value instanceof Float || value instanceof  Boolean || value instanceof Character || value instanceof String)) {
+                if(!(value.equals("TRUE") || value.equals("FALSE"))) {
+                    Error.error(expr.name, "'"  + value + "' is an invalid value for BOOL type.");
+                }
+            } else {
+                if ((value.equals("TRUE") || value.equals("FALSE"))) {
+                    Error.error(expr.name, "'"  + value + "' is an invalid value for BOOL type.");
+                }
             }
         } else {
             if ((value.equals("TRUE") || value.equals("FALSE"))) {
@@ -401,32 +407,35 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     Error.error(stmt.name, "Invalid value for CHAR type.");
                 } else {
                     value = initialValue;
-                }
-            } else if (dataType == Token.TokenType.BOOL) {
-                value = initialValue;
-                if (initialValue instanceof Character || initialValue instanceof Integer
-                        || initialValue instanceof Float) {
-                    Error.error(stmt.name, "Invalid value for BOOL type.");
-                } else if (initialValue instanceof String) {
-                    // System.out.println("VALUE: " + value + " TYPE:" +
-                    // value.getClass().getTypeName());
-                    if ((value.equals("TRUE") || value.equals("FALSE"))) {
-                    } else {
-                        Error.error(stmt.name, value + " is an invalid value for a BOOL type");
+                    if (initialValue instanceof Character || initialValue instanceof Integer || initialValue instanceof Float) {
+                        Error.error(stmt.name, "Invalid value for BOOL type.");
+                    } else if(initialValue instanceof String){
+//                        System.out.println("VALUE: " + value + " TYPE:" + value.getClass().getTypeName());
+                        if((value.equals("TRUE") || value.equals("FALSE"))) {}
+                        else {
+                            Error.error(stmt.name, value + " is an invalid value for a BOOL type");
+                        }
                     }
                 }
             }
+
+//            System.out.println("LINE 1");
+            environment.define(stmt.name.lexeme, value);
+
+            return null;
         }
 
         // System.out.println("LINE 1");
         environment.define(stmt.name.lexeme, value);
 
-        return null;
-    }
-
-    @Override
-    public Void visitIfStmt(Stmt.If stmt) {
-        return null;
-    }
+        @Override
+        public Void visitIfStmt(Stmt.If stmt) {
+            if (isTruthy(evaluate(stmt.condition))) {
+                execute(stmt.thenBranch);
+            } else if (stmt.elseBranch != null) {
+                execute(stmt.elseBranch);
+            }
+            return null;
+        }
 
 }

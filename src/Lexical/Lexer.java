@@ -293,6 +293,12 @@ public class Lexer {
         }
         // Special case, if it is a float.
         // If we encounter '.', check the next character. if it is a number, continue.
+
+        if(isAlpha(getCurrentValue())) {
+            System.out.println(getCurrentValue());
+            Error.error(line, "Unsupported identifier");
+        }
+
         if (getCurrentValue() == '.' && isDigit(getNextValue())) {
             // Example 12.1212, since we are still in the '.' at this part, we need to
             // increment our current index.
@@ -301,6 +307,12 @@ public class Lexer {
             while (isDigit(getCurrentValue())) {
                 advance();
             }
+
+            if(isAlpha(getCurrentValue())) {
+                System.out.println(getCurrentValue());
+                Error.error(line, "Unsupported literal");
+            }
+
             // Add token as Float.
             addToken(Token.TokenType.NUMBER,
                     Float.parseFloat(source.substring(start, current)));
@@ -326,10 +338,13 @@ public class Lexer {
         Token.TokenType type = keywords.get(text);
         if (type == null) {
             // Check if it's BEGIN CODE or END CODE
-            if (text.equals("BEGIN") && match(' ') && match('C') && match('O') && match('D') && match('E')) {
-                type = Token.TokenType.BEGIN_CODE;
-                addToken(type);
-                return;
+            if (text.equals("BEGIN") && match(' ')) {
+                if(match('C') && match('O') && match('D') && match('E')) {
+                    type = Token.TokenType.BEGIN_CODE;
+                    addToken(type);
+                    return;
+                }
+                current--;
             }
             if (text.equals("END") && match(' ') && match('C') && match('O') && match('D') && match('E')) {
                 type = Token.TokenType.END_CODE;
@@ -347,8 +362,8 @@ public class Lexer {
                 return;
             }
             type = Token.TokenType.IDENTIFIER;
-
         }
+
         addToken(type);
     }
 

@@ -20,10 +20,19 @@ public class Parser {
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
+        if (tokens.get(0).type != BEGIN_CODE) {
+            for (Token tok : tokens) {
+                if(tok.type == END_CODE) {
+                    Error.error(tok, "Encountered END CODE but \"BEGIN CODE\" is not found\n");
+                }
+            }
+            Error.error(tokens.get(0), "Amawa jud o, asa naman na imong begin code? Basa2 lage docs.");
+        }
     }
 
     public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
+
         while (!isAtEnd()) {
             statements.add(declaration());
         }
@@ -94,7 +103,19 @@ public class Parser {
                 Error.error(type, "Cannot use BOOL type as a variable name");
                 break;
             case CHAR:
-                Error.error(type, "Cannot use CHAR type as a variable name");
+                Error.error(type, "Cannot use CHAR type as a variable name.");
+                break;
+            case AND:
+                Error.error(type, "Cannot use AND keyword as a variable name.");
+                break;
+            case OR:
+                Error.error(type, "Cannot use OR keyword as a variable name.");
+                break;
+            case NOT:
+                Error.error(type, "Cannot use NOT keyword as a variable name.");
+                break;
+            case NUMBER:
+                Error.error(type, "Identifiers starts with " + type.literal + " and is not supported.");
                 break;
         }
 
@@ -118,8 +139,23 @@ public class Parser {
         if (match(SCAN)) {
             return scanStatement();
         }
+        if(match(IF)) return ifStatement();
 
         return expressionStatement();
+    }
+
+    private Stmt ifStatement() {
+        consume(LEFT_PAREN, "Expect '(' after 'IF'.");
+        Expr condition = expression();
+        consume(RIGHT_PAREN, "Expect ')' after if condition.");
+
+        Stmt thenBranch = statement();
+        Stmt elseBranch = null;
+        if (match(ELSE)) {
+            elseBranch = statement();
+        }
+
+        return new Stmt.If(condition, thenBranch, elseBranch);
     }
 
     private Stmt scanStatement() {
@@ -151,11 +187,10 @@ public class Parser {
         // Consume the colon
         advance();
 
-        while (!isAtEnd()) {
+        do {
             expressions.add(expression());
-            advance();
-        }
-        ;
+        } while(match(IDENTIFIER) || match(NEW_LINE) || match(CONCAT)
+            || match(STRING));
 
         return new Stmt.Display(expressions);
     }

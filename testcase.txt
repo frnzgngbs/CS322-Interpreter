@@ -1,7 +1,5 @@
-INT x, y, z=5
-CHAR a_1='n'
-BOOL t="TRUE"
-x=y=4
-a_1='c'
-# this is a comment
-DISPLAY: x & t & z & $ & a_1 & [#] & "last"
+BEGIN CODE
+    FLOAT sd = 10.23f
+    FLOAT _char = sd = 12.343
+    DISPLAY: sd
+END CODE
