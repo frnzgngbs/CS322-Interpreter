@@ -7,10 +7,17 @@ import java.util.List;
 public abstract class Stmt {
     interface Visitor<R> {
         R visitExpressionStmt(Expression stmt);
+
         R visitDisplayStmt(Display stmt);
+
         R visitVariableStmt(Variable stmt);
+
         R visitIfStmt(If stmt);
+
         R visitCodeStructureStmt(CodeStructure stmt);
+
+        R visitCodeEscapeStmt(EscapeCode stmt);
+
         R visitScanStmt(Scan stmt); // Add this method for handling Scan statement
     }
 
@@ -26,26 +33,27 @@ public abstract class Stmt {
 
         final Expr expression;
     }
+    
 
-//    INT a = (1+2) * 3 (2/2)
-//    static class If extends Stmt {
-//        If(Expr condition, Stmt thenBranch, Stmt elseBranch) {
-//            this.condition = condition;
-//            this.thenBranch = thenBranch;
-//            this.elseBranch = elseBranch;
-//        }
-//
-//        @Override
-//        <R> R accept(Visitor<R> visitor) {
-//            return visitor.visitIfStmt(this);
-//        }
-//
-//        final Expr condition;
-//        final Stmt thenBranch;
-//        final Stmt elseBranch;
-//    }
-    //< stmt-if
-//> stmt-print
+    // INT a = (1+2) * 3 (2/2)
+    // static class If extends Stmt {
+    // If(Expr condition, Stmt thenBranch, Stmt elseBranch) {
+    // this.condition = condition;
+    // this.thenBranch = thenBranch;
+    // this.elseBranch = elseBranch;
+    // }
+    //
+    // @Override
+    // <R> R accept(Visitor<R> visitor) {
+    // return visitor.visitIfStmt(this);
+    // }
+    //
+    // final Expr condition;
+    // final Stmt thenBranch;
+    // final Stmt elseBranch;
+    // }
+    // < stmt-if
+    // > stmt-print
     static class Display extends Stmt {
         Display(List<Expr> expression) {
             this.expression = expression;
@@ -58,7 +66,6 @@ public abstract class Stmt {
 
         final List<Expr> expression;
     }
-
 
     static class Scan extends Stmt {
         Scan(List<Expr> variableExpressions) {
@@ -96,6 +103,7 @@ public abstract class Stmt {
             this.name = name;
             this.initializer = initializer;
         }
+
         <R> R accept(Visitor<R> visitor) {
             return visitor.visitVariableStmt(this);
         }
@@ -112,9 +120,24 @@ public abstract class Stmt {
         }
 
         final List<Stmt> statements;
+
         @Override
         <R> R accept(Visitor<R> visitor) {
             return visitor.visitCodeStructureStmt(this);
+        }
+    }
+
+    static class EscapeCode extends Stmt {
+
+        EscapeCode(List<Stmt> statements) {
+            this.statements = statements;
+        }
+
+        final List<Stmt> statements;
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitCodeEscapeStmt(this);
         }
     }
 

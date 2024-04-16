@@ -7,16 +7,24 @@ import java.util.List;
 public abstract class Expr {
     interface Visitor<R> {
         R visitAssignExpr(Assign expr);
+
         R visitBinaryExpr(Binary expr);
+
         R visitGroupingExpr(Grouping expr);
+
         R visitLiteralExpr(Literal expr);
+
         R visitLogicalExpr(Logical expr);
+
         R visitUnaryExpr(Unary expr);
+
         R visitVariableExpr(Variable expr);
+
+        R visitEscapeCodeExpr(EscapeCode expr);
     }
 
     // Nested Expr classes here...
-//> expr-assign
+    // > expr-assign
     static class Assign extends Expr {
         Assign(Token name, Expr value) {
             this.name = name;
@@ -31,8 +39,9 @@ public abstract class Expr {
         final Token name;
         final Expr value;
     }
-    //< expr-assign
-//> expr-binary
+
+    // < expr-assign
+    // > expr-binary
     static class Binary extends Expr {
         Binary(Expr left, Token operator, Expr right) {
             this.left = left;
@@ -62,8 +71,9 @@ public abstract class Expr {
 
         final Expr expression;
     }
-    //< expr-grouping
-//> expr-literal
+
+    // < expr-grouping
+    // > expr-literal
     static class Literal extends Expr {
         Literal(Object value) {
             this.value = value;
@@ -76,8 +86,9 @@ public abstract class Expr {
 
         final Object value;
     }
-    //< expr-literal
-//> expr-logical
+
+    // < expr-literal
+    // > expr-logical
     static class Logical extends Expr {
         Logical(Expr left, Token operator, Expr right) {
             this.left = left;
@@ -94,7 +105,7 @@ public abstract class Expr {
         final Token operator;
         final Expr right;
     }
-    //< expr-logical
+    // < expr-logical
 
     static class Unary extends Expr {
         Unary(Token operator, Expr right) {
@@ -110,8 +121,9 @@ public abstract class Expr {
         final Token operator;
         final Expr right;
     }
-    //< expr-unary
-//> expr-variable
+
+    // < expr-unary
+    // > expr-variable
     static class Variable extends Expr {
         Variable(Token name) {
             this.name = name;
@@ -124,7 +136,39 @@ public abstract class Expr {
 
         final Token name;
     }
-//< expr-variable
+    // < expr-variable
+
+    // // > escape-variable
+    // static class EscapeCode extends Expr {
+    // EscapeCode(Token name) {
+    // this.name = name;
+    // }
+
+    // @Override
+    // <R> R accept(Visitor<R> visitor) {
+    // return visitor.visitEscapeCodeExpr(this);
+    // }
+
+    // final Token name;
+    // }
+    // // < escape-variable
+
+    // > escape-variable
+    static class EscapeCode extends Expr {
+        EscapeCode(Object name, Object whatever) {
+            this.name = name;
+            this.whatever = whatever;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitEscapeCodeExpr(this);
+        }
+
+        final Object name;
+        final Object whatever;
+    }
+    // < escape-variable
 
     abstract <R> R accept(Visitor<R> visitor);
 }
