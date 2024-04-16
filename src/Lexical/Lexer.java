@@ -266,6 +266,12 @@ public class Lexer {
         }
         // Special case, if it is a float.
         // If we encounter '.', check the next character. if it is a number, continue.
+
+        if(isAlpha(getCurrentValue())) {
+            System.out.println(getCurrentValue());
+            Error.error(line, "Unsupported identifier");
+        }
+
         if (getCurrentValue() == '.' && isDigit(getNextValue())) {
             // Example 12.1212, since we are still in the '.' at this part, we need to
             // increment our current index.
@@ -274,6 +280,7 @@ public class Lexer {
             while (isDigit(getCurrentValue())) {
                 advance();
             }
+
             // Add token as Float.
             addToken(Token.TokenType.NUMBER,
                     Float.parseFloat(source.substring(start, current)));
@@ -323,8 +330,8 @@ public class Lexer {
                 return;
             }
             type = Token.TokenType.IDENTIFIER;
-
         }
+
         addToken(type);
     }
 

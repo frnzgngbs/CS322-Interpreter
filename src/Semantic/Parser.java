@@ -111,6 +111,9 @@ public class Parser {
             case NOT:
                 Error.error(type, "Cannot use NOT keyword as a variable name.");
                 break;
+            case NUMBER:
+                Error.error(type, "Identifiers starts with " + type.literal + " and is not supported.");
+                break;
         }
 
         Token name = consume(IDENTIFIER, "Expect variable name.");

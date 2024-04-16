@@ -28,7 +28,10 @@
             Object value = evaluate(expr.value);
             Object variableType = environment.getDataType(expr.name);
 
-//            System.out.println("NAA DIRI ANG LINE 2");
+////            System.out.println("NAA DIRI ANG LINE 2");
+//
+//            System.out.println(value);
+//            System.out.println(variableType);
 
             if (variableType == Token.TokenType.FLOAT && value instanceof Integer) {
                 value = ((Integer) value).floatValue();
@@ -334,6 +337,11 @@
 
         @Override
         public Void visitIfStmt(Stmt.If stmt) {
+            if (isTruthy(evaluate(stmt.condition))) {
+                execute(stmt.thenBranch);
+            } else if (stmt.elseBranch != null) {
+                execute(stmt.elseBranch);
+            }
             return null;
         }
 
