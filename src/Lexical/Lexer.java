@@ -295,7 +295,6 @@ public class Lexer {
         // If we encounter '.', check the next character. if it is a number, continue.
 
         if(isAlpha(getCurrentValue())) {
-            System.out.println(getCurrentValue());
             Error.error(line, "Unsupported identifier");
         }
 

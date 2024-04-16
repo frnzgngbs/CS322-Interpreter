@@ -18,7 +18,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            String filePath = "C:\\Users\\John Marc\\Documents\\pl_code\\CS322-Interpreter\\testcase.txt";
+            String filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt";
             String source = readFile(filePath);
             // System.out.println(source);
             tokenize(source);
