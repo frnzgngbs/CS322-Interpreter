@@ -1,4 +1,4 @@
 BEGIN CODE
-    BOOL t = "TRU"
-    DISPLAY: sd
+   CHAR _abc = 'a
+
 END CODE

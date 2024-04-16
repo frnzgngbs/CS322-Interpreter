@@ -80,23 +80,23 @@ public class Lexer {
                 break;
             case '[':
                 // initially push [ since first time encountered
-                valEscape.push(c);
-                // System.err.println("pushed");
-                int i = 0;
-
-                while (!isAtEnd()) {
-                    // System.out.println("CURRENT VAL " + getCurrentValue());
-                    if (getCurrentValue() == ']') {
-                        if (!valEscape.isEmpty()) {
-                            valEscape.pop();
-                            // System.out.println("was popped");
-                        }
-                    }
-                    advance();
-                }
-                if (!valEscape.isEmpty()) {
-                    Error.report(line, " at line " + line, "Encountered '[' but ']' is not found.");
-                }
+//                valEscape.push(c);
+//                // System.err.println("pushed");
+//                int i = 0;
+//
+//                while (!isAtEnd()) {
+//                    // System.out.println("CURRENT VAL " + getCurrentValue());
+//                    if (getCurrentValue() == ']') {
+//                        if (!valEscape.isEmpty()) {
+//                            valEscape.pop();
+//                            // System.out.println("was popped");
+//                        }
+//                    }
+//                    advance();
+//                }
+//                if (!valEscape.isEmpty()) {
+//                    Error.report(line, " at line " + line, "Encountered '[' but ']' is not found.");
+//                }
                 addToken(Token.TokenType.LEFT_SQUARE);
                 break;
             case ']':
@@ -105,6 +105,7 @@ public class Lexer {
             case ',':
                 addToken(Token.TokenType.COMMA);
                 break;
+
             case ':':
                 addToken(Token.TokenType.SEPARATOR);
                 break;
@@ -134,6 +135,7 @@ public class Lexer {
             case '#':
                 // addToken(Token.TokenType.COMMENT);
                 // keep consuming until reaching new line
+                addToken(Token.TokenType.COMMENT);
                 while (getCurrentValue() != '\n' && !isAtEnd()) {
                     advance();
                 }
@@ -233,31 +235,32 @@ public class Lexer {
         if(reachEndCode) {
             Error.error(line, "Outside of the END CODE BEGIN CODE block.");
         }
-        // 0 Empty
-        // 1 No enclosing ' in the right side
-        // 2 No enclosing ' in the left side
+
         int error = 0;
 
-        if (getPreviousValue() != '\'') {
-            // Possible error for missing left '\''.
-            error = 1;
+        // error = 0 for empty
+        // error = 1 missing left '
+        // error = 2 missing right '
+        // error = 3 more than 1 character literal.
+
+        if(getPreviousValue() != '\'') {
+            Error.error(line, "Missing left ' for character literal");
         }
 
         char character = getCurrentValue();
 
         if (character == '\'') {
-            error = 0;
             Error.error(line, "Character literal cannot be empty.");
         } else {
-            if (error == 1) {
-                Error.error(line, "Missing left ' for character literal.");
+            while(getCurrentValue() != '\'') {
+                if(error == 1) {
+                    Error.error(line, "Character literal cannot be more than of length 1.");
+                }
+                advance();
+                error = 1;
             }
-            advance();
             if (getCurrentValue() != '\'') {
                 Error.error(line, "Missing right ' for character literal.");
-            }
-            if (isAtEnd()) {
-                Error.error(line, "Missing another ' in character literal");
             }
             addToken(Token.TokenType.CHARACTER, character);
             if (!isAtEnd()) {

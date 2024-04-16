@@ -129,11 +129,11 @@ public abstract class Stmt {
 
     static class EscapeCode extends Stmt {
 
-        EscapeCode(List<Stmt> statements) {
+        EscapeCode(List<Expr> statements) {
             this.statements = statements;
         }
 
-        final List<Stmt> statements;
+        final List<Expr> statements;
 
         @Override
         <R> R accept(Visitor<R> visitor) {

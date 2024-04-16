@@ -53,77 +53,77 @@ public class Token {
         this.lexeme = lex;
     }
 
-    public String defineEscape() {
-        // Check if the string has at least two characters
-        if (lexeme.length() >= 2) {
-            // System.out.println("lex length" + lexeme.length());
-            // Remove the first and last characters
-            String result = lexeme.substring(1, lexeme.length() - 1);
-            // Remove occurrences of special characters $, &, and "
-            result = result.replace("$", "").replace("&", "").replace("\"", "");
-            // Replace consecutive spaces with a single space
-            result = result.replaceAll("\\s+", " ");
-            // Trim leading and trailing spaces
-            result = result.trim();
-
-            // Check if the string is sandwiched between brackets
-            // System.out.println("res = " + result);
-            // System.out.println("reslength = " + result.length());
-
-            if (result.length() == 0) {
-                Error.report("No logic implemented with \"[]\".");
-                // throw new RuntimeException("No logic implemented in []");
-            }
-
-            if (result.length() > 5) {
-                int countL = 0;
-                int countR = 0;
-                int lastLIndex = 0;
-                int firstRIndex = 0;
-                boolean isRVisited = false;
-                for (int i = 0; i < result.length(); i++) {
-                    // System.out.println("charat = " + result.charAt(i) + " " + i);
-                    if (result.charAt(i) == '[') {
-                        countL++;
-                        lastLIndex = i;
-                    } else if (result.charAt(i) == ']') {
-                        countR++;
-                        if (!isRVisited) {
-                            firstRIndex = i;
-                            isRVisited = true;
-                        }
-
-                    }
-                }
-
-                // sandwich
-                // System.out.println("COUNT L = " + countL);
-                // System.out.println("COUNT R = " + countR);
-                if (countL == countR && (countL > 0 && countR > 0)) {
-                    // System.out.println("COUNT L = COUNT R");
-                    result = result.substring(firstRIndex + 1, lastLIndex).trim();
-                    result = "[" + result + "]";
-                    // System.out
-                    // .println("last l = " + lastLIndex + "first R = " + firstRIndex + "isrvisited
-                    // = "
-                    // + isRVisited);
-                    // System.out.println("here");
-                }
-            }
-
-            // System.out.println("reach");
-
-            // if (result.indexOf('[') != -1 && result.indexOf(']') != -1) {
-            // System.out.println("here");
-            // // result = "[" + result + "]";
-            // }
-
-            return result;
-        } else {
-            // If the string has less than two characters, return it as is
-            // System.out.println("length is 1");
-            return lexeme;
-        }
-    }
+//    public String defineEscape() {
+//        // Check if the string has at least two characters
+//        if (lexeme.length() >= 2) {
+//            // System.out.println("lex length" + lexeme.length());
+//            // Remove the first and last characters
+//            String result = lexeme.substring(1, lexeme.length() - 1);
+//            // Remove occurrences of special characters $, &, and "
+//            result = result.replace("$", "").replace("&", "").replace("\"", "");
+//            // Replace consecutive spaces with a single space
+//            result = result.replaceAll("\\s+", " ");
+//            // Trim leading and trailing spaces
+//            result = result.trim();
+//
+//            // Check if the string is sandwiched between brackets
+//            // System.out.println("res = " + result);
+//            // System.out.println("reslength = " + result.length());
+//
+//            if (result.length() == 0) {
+//                Error.report("No logic implemented with \"[]\".");
+//                // throw new RuntimeException("No logic implemented in []");
+//            }
+//
+//            if (result.length() > 5) {
+//                int countL = 0;
+//                int countR = 0;
+//                int lastLIndex = 0;
+//                int firstRIndex = 0;
+//                boolean isRVisited = false;
+//                for (int i = 0; i < result.length(); i++) {
+//                    // System.out.println("charat = " + result.charAt(i) + " " + i);
+//                    if (result.charAt(i) == '[') {
+//                        countL++;
+//                        lastLIndex = i;
+//                    } else if (result.charAt(i) == ']') {
+//                        countR++;
+//                        if (!isRVisited) {
+//                            firstRIndex = i;
+//                            isRVisited = true;
+//                        }
+//
+//                    }
+//                }
+//
+//                // sandwich
+//                // System.out.println("COUNT L = " + countL);
+//                // System.out.println("COUNT R = " + countR);
+//                if (countL == countR && (countL > 0 && countR > 0)) {
+//                    // System.out.println("COUNT L = COUNT R");
+//                    result = result.substring(firstRIndex + 1, lastLIndex).trim();
+//                    result = "[" + result + "]";
+//                    // System.out
+//                    // .println("last l = " + lastLIndex + "first R = " + firstRIndex + "isrvisited
+//                    // = "
+//                    // + isRVisited);
+//                    // System.out.println("here");
+//                }
+//            }
+//
+//            // System.out.println("reach");
+//
+//            // if (result.indexOf('[') != -1 && result.indexOf(']') != -1) {
+//            // System.out.println("here");
+//            // // result = "[" + result + "]";
+//            // }
+//
+//            return result;
+//        } else {
+//            // If the string has less than two characters, return it as is
+//            // System.out.println("length is 1");
+//            return lexeme;
+//        }
+//    }
 
 }

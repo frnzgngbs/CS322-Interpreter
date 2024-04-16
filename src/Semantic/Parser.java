@@ -37,7 +37,6 @@ public class Parser {
 
         while (!isAtEnd()) {
 
-            System.out.println(reachEndCode);
             statements.add(declaration());
         }
         return statements;
@@ -137,6 +136,15 @@ public class Parser {
         if (match(DISPLAY)) {
             return displayStatement();
         }
+//        if(match(LEFT_SQUARE)) {
+//            List<Expr> expressions = new ArrayList<>();
+//
+//            while(!match(RIGHT_SQUARE)) {
+//                expressions.add(expression());
+//            }
+//
+//
+//        }
         if (match(BEGIN_CODE)) {
             return new Stmt.CodeStructure(codeStructure());
         }
@@ -185,15 +193,57 @@ public class Parser {
             Error.error(peek(), "Missing separator ':' for DISPLAY keyword.");
         }
 
+        // STATEMENTS OF OUR DISPLAY
         List<Expr> expressions = new ArrayList<>();
 
         // Consume the colon
         advance();
 
-        do {
-            expressions.add(expression());
-        } while(match(IDENTIFIER) || match(NEW_LINE) || match(CONCAT)
-            || match(STRING));
+        boolean doAdvance = true;
+        while(check(IDENTIFIER) || check(CONCAT) || check(NEW_LINE)
+        || check(STRING) || check(LEFT_SQUARE)) {
+//            System.out.println("HERE");
+            if(peek().type != LEFT_SQUARE) {
+                expressions.add(expression());
+            } else if(peek().type == LEFT_SQUARE) {
+                while(!check(RIGHT_SQUARE)) {
+                    if(doAdvance) advance();
+                    System.out.println("PEEK WHILE STATEMENT: " + peek());
+                    if(match(CONCAT)) {
+                        doAdvance = false;
+
+                        expressions.add(new Expr.Literal("&"));
+
+                        if(doAdvance) advance();
+                    } else if(match(COMMENT)){
+                        doAdvance = false;
+
+                        expressions.add(new Expr.Literal("#"));
+
+                        if(doAdvance) advance();
+                    }else {
+                        System.out.println("BOGO");
+                        System.out.println(peek());
+                        doAdvance = false;
+                        expressions.add(expression());
+                    }
+                }
+                consume(RIGHT_SQUARE, "Expect ']' after '['");
+            }
+        }
+//        do {
+//            if(!(peek().type == LEFT_SQUARE)) {
+//                expressions.add(expression());
+//            } else {
+//                while(!match(RIGHT_SQUARE)) {
+//                    expressions.add(expression());
+//                }
+//                consume(RIGHT_SQUARE, "Missing ']' after '['");
+//
+//            }
+//            expressions.add(expression());
+//        } while(match(IDENTIFIER) || match(NEW_LINE) || match(CONCAT)
+//            || match(STRING) || match(LEFT_SQUARE));
 
         return new Stmt.Display(expressions);
     }
@@ -209,7 +259,6 @@ public class Parser {
         while (!check(END_CODE) && !isAtEnd()) {
             statements.add(declaration());
         }
-
 
         consume(END_CODE, "Expect 'END CODE' after BEGIN CODE.");
 
@@ -314,20 +363,13 @@ public class Parser {
     }
 
     private Expr primary() {
-        if (match(LEFT_SQUARE)) {
-            // System.out.println("Left square ");
-            if (Lexer.stackEscape().isEmpty()) {
-                // System.out.println("stack is empty");
-            } else {
-                // System.out.println("stack is not empty");
-                for (Character currstack : Lexer.stackEscape()) {
-                    System.out.println(currstack);
-                }
-            }
+        if(match(LEFT_SQUARE)) {
 
-            // System.out.println("stack size = " + Lexer.stackEscape().size());
-            // System.err.println("prev = " + previous());
-            return new Expr.EscapeCode("[", previous());
+        }
+
+        if(match(RIGHT_SQUARE)) {
+            System.out.println("RIGHT");
+            return new Expr.Literal(']');
         }
 
         if (match(FALSE))
@@ -350,7 +392,7 @@ public class Parser {
         }
 
         if (match(CONCAT)) {
-            return new Expr.Literal('+');
+            return new Expr.Literal("+");
         }
 
         if (match(IDENTIFIER)) {
