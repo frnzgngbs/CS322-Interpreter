@@ -299,10 +299,13 @@ public class Lexer {
         Token.TokenType type = keywords.get(text);
         if (type == null) {
             // Check if it's BEGIN CODE or END CODE
-            if (text.equals("BEGIN") && match(' ') && match('C') && match('O') && match('D') && match('E')) {
-                type = Token.TokenType.BEGIN_CODE;
-                addToken(type);
-                return;
+            if (text.equals("BEGIN") && match(' ')) {
+                if(match('C') && match('O') && match('D') && match('E')) {
+                    type = Token.TokenType.BEGIN_CODE;
+                    addToken(type);
+                    return;
+                }
+                current--;
             }
             if (text.equals("END") && match(' ') && match('C') && match('O') && match('D') && match('E')) {
                 type = Token.TokenType.END_CODE;
