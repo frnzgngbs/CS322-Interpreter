@@ -351,7 +351,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         for (Expr expression : stmt.expression) {
             Object value = evaluate(expression);
 
-            System.out.println(value);
             if (value != null && value.equals("+"))
                 continue;
 

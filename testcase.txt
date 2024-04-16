@@ -1,4 +1,4 @@
 BEGIN CODE
-   CHAR _abc = 'a
-
+   CHAR c = '1'
+   DISPLAY: c
 END CODE

@@ -66,6 +66,9 @@ public class Lexer {
 
     private void addToken(Token.TokenType type, Object literal) {
         String text = source.substring(start, current);
+        if(type == Token.TokenType.CHARACTER) {
+            text = String.valueOf(literal);
+        }
         tokens.add(new Token(type, text, literal, line));
     }
 
@@ -238,29 +241,23 @@ public class Lexer {
 
         int error = 0;
 
-        // error = 0 for empty
-        // error = 1 missing left '
-        // error = 2 missing right '
-        // error = 3 more than 1 character literal.
-
-        if(getPreviousValue() != '\'') {
-            Error.error(line, "Missing left ' for character literal");
-        }
-
         char character = getCurrentValue();
 
         if (character == '\'') {
             Error.error(line, "Character literal cannot be empty.");
         } else {
-            while(getCurrentValue() != '\'') {
-                if(error == 1) {
-                    Error.error(line, "Character literal cannot be more than of length 1.");
-                }
-                advance();
-                error = 1;
+            if(getNextValue() != '\'') {
+                error = 2;
             }
-            if (getCurrentValue() != '\'') {
-                Error.error(line, "Missing right ' for character literal.");
+            while(getCurrentValue() != '\'') {
+                if(getCurrentValue() == '\n') {
+                    Error.error(line, "Missing ' right character literal");
+                }
+                if(error == 1) {
+                    Error.error(line, "Character length issue.");
+                }
+                error = 1;
+                advance();
             }
             addToken(Token.TokenType.CHARACTER, character);
             if (!isAtEnd()) {
@@ -353,6 +350,10 @@ public class Lexer {
                 Error.error(line, "Expected " + text.toUpperCase() + " but found " + text + ".");
             }
         }
+
+        // 'ab'
+        if(getCurrentValue() == '\'') Error.error(line, "Missing left ' character literal");
+
         Token.TokenType type = keywords.get(text);
         if (type == null) {
             // Check if it's BEGIN CODE or END CODE

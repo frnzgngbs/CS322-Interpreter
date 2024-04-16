@@ -202,13 +202,11 @@ public class Parser {
         boolean doAdvance = true;
         while(check(IDENTIFIER) || check(CONCAT) || check(NEW_LINE)
         || check(STRING) || check(LEFT_SQUARE)) {
-//            System.out.println("HERE");
             if(peek().type != LEFT_SQUARE) {
                 expressions.add(expression());
             } else if(peek().type == LEFT_SQUARE) {
                 while(!check(RIGHT_SQUARE)) {
                     if(doAdvance) advance();
-                    System.out.println("PEEK WHILE STATEMENT: " + peek());
                     if(match(CONCAT)) {
                         doAdvance = false;
 
@@ -222,8 +220,6 @@ public class Parser {
 
                         if(doAdvance) advance();
                     }else {
-                        System.out.println("BOGO");
-                        System.out.println(peek());
                         doAdvance = false;
                         expressions.add(expression());
                     }
@@ -368,7 +364,6 @@ public class Parser {
         }
 
         if(match(RIGHT_SQUARE)) {
-            System.out.println("RIGHT");
             return new Expr.Literal(']');
         }
 
