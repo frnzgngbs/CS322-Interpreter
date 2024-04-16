@@ -13,7 +13,9 @@ import static Lexical.Token.TokenType.*;
 public class Parser {
     private final List<Token> tokens;
     private int current = 0;
+    private Token currentTokenBeingParsed;
     private Token.TokenType lastDataType;
+    private boolean reachEndCode = false;
 
     private static class ParseError extends RuntimeException {
     }
@@ -34,6 +36,8 @@ public class Parser {
         List<Stmt> statements = new ArrayList<>();
 
         while (!isAtEnd()) {
+
+            System.out.println(reachEndCode);
             statements.add(declaration());
         }
         return statements;
@@ -206,7 +210,13 @@ public class Parser {
             statements.add(declaration());
         }
 
+
         consume(END_CODE, "Expect 'END CODE' after BEGIN CODE.");
+
+        if(previous().type == END_CODE) {
+            reachEndCode = true;
+        }
+
         return statements;
     }
 

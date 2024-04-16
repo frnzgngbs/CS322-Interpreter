@@ -14,6 +14,8 @@ public class Lexer {
     private int start = 0;
     private int current = 0;
     private int line = 1;
+
+    private boolean reachEndCode = false;
     private static Stack<Character> valEscape = new Stack<>();
     private static final Map<String, Token.TokenType> keywords;
 
@@ -48,6 +50,7 @@ public class Lexer {
         while (!isAtEnd()) {
             start = current;
             scanToken();
+
         }
         tokens.add(new Token(Token.TokenType.EOF, "", null, line));
         return tokens;
@@ -220,10 +223,16 @@ public class Lexer {
     }
 
     private boolean isAlphaNumeric(char c) {
+        if(reachEndCode) {
+            Error.error(line, "Outside of the END CODE BEGIN CODE block.");
+        }
         return isAlpha(c) || isDigit(c);
     }
 
     private void getCharacterValue() {
+        if(reachEndCode) {
+            Error.error(line, "Outside of the END CODE BEGIN CODE block.");
+        }
         // 0 Empty
         // 1 No enclosing ' in the right side
         // 2 No enclosing ' in the left side
@@ -259,6 +268,9 @@ public class Lexer {
     }
 
     private void getLogicalValue() {
+        if(reachEndCode) {
+            Error.error(line, "Outside of the END CODE BEGIN CODE block.");
+        }
         while (getCurrentValue() != '"' && !isAtEnd()) {
             if (getCurrentValue() == '\n')
                 line++;
@@ -287,6 +299,9 @@ public class Lexer {
     private void getNumberValue() {
         // Continue iterating through the string, and update the current index if we are
         // encountering a number
+        if(reachEndCode) {
+            Error.error(line, "Outside of the END CODE BEGIN CODE block.");
+        }
         while (isDigit(getCurrentValue())) {
             advance();
         }
@@ -321,6 +336,9 @@ public class Lexer {
     }
 
     private void getIdentifier() {
+        if(reachEndCode) {
+            Error.error(line, "Outside of the END CODE BEGIN CODE block.");
+        }
         while (isAlphaNumeric(getCurrentValue())) {
             advance();
         }
@@ -346,6 +364,7 @@ public class Lexer {
             if (text.equals("END") && match(' ') && match('C') && match('O') && match('D') && match('E')) {
                 type = Token.TokenType.END_CODE;
                 addToken(type);
+                reachEndCode = true;
                 return;
             }
             if (text.equals("DISPLAY")) {
