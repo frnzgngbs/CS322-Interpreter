@@ -1,8 +1,6 @@
 BEGIN CODE
-    FLOAT sd
+    INT sd = 10
+    INT sd
     FLOAT _char = sd = 12.343
     DISPLAY: sd
 END CODE
-
-
-a

@@ -367,10 +367,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if (environment.isDefined(stmt.name.lexeme)) {
             // Check if the existing variable has the same data type
             Token.TokenType existingDataType = (Token.TokenType) environment.getDataType(stmt.name);
+
             if (existingDataType != stmt.dataType) {
                 throw new RuntimeError(stmt.name,
                         "Variable '" + stmt.name.lexeme + "' already declared with a different data type.");
+            } else {
+                Error.error(stmt.name, "Variable " + "'" + stmt.name.lexeme + "' has already been defined.");
             }
+
         }
 
         environment.defineDataType(stmt.name.lexeme, stmt.dataType);
