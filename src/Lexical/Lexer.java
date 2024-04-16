@@ -281,6 +281,11 @@ public class Lexer {
                 advance();
             }
 
+            if(isAlpha(getCurrentValue())) {
+                System.out.println(getCurrentValue());
+                Error.error(line, "Unsupported literal");
+            }
+
             // Add token as Float.
             addToken(Token.TokenType.NUMBER,
                     Float.parseFloat(source.substring(start, current)));

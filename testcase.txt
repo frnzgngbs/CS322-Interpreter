@@ -1,4 +1,5 @@
 BEGIN CODE
-    CHAR _char = 'c'
-    DISPLAY: _char
+    FLOAT sd = 10.23f
+    FLOAT _char = sd = 12.343
+    DISPLAY: sd
 END CODE
