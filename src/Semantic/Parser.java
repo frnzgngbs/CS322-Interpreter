@@ -24,7 +24,7 @@ public class Parser {
         this.tokens = tokens;
         if (tokens.get(0).type != BEGIN_CODE) {
             for (Token tok : tokens) {
-                if(tok.type == END_CODE) {
+                if (tok.type == END_CODE) {
                     Error.error(tok, "Encountered END CODE but \"BEGIN CODE\" is not found\n");
                 }
             }
@@ -136,22 +136,23 @@ public class Parser {
         if (match(DISPLAY)) {
             return displayStatement();
         }
-//        if(match(LEFT_SQUARE)) {
-//            List<Expr> expressions = new ArrayList<>();
-//
-//            while(!match(RIGHT_SQUARE)) {
-//                expressions.add(expression());
-//            }
-//
-//
-//        }
+        // if(match(LEFT_SQUARE)) {
+        // List<Expr> expressions = new ArrayList<>();
+        //
+        // while(!match(RIGHT_SQUARE)) {
+        // expressions.add(expression());
+        // }
+        //
+        //
+        // }
         if (match(BEGIN_CODE)) {
             return new Stmt.CodeStructure(codeStructure());
         }
         if (match(SCAN)) {
             return scanStatement();
         }
-        if(match(IF)) return ifStatement();
+        if (match(IF))
+            return ifStatement();
 
         return expressionStatement();
     }
@@ -200,26 +201,29 @@ public class Parser {
         advance();
 
         boolean doAdvance = true;
-        while(check(IDENTIFIER) || check(CONCAT) || check(NEW_LINE)
-        || check(STRING) || check(LEFT_SQUARE)) {
-            if(peek().type != LEFT_SQUARE) {
+        while (check(IDENTIFIER) || check(CONCAT) || check(NEW_LINE)
+                || check(STRING) || check(LEFT_SQUARE)) {
+            if (peek().type != LEFT_SQUARE) {
                 expressions.add(expression());
-            } else if(peek().type == LEFT_SQUARE) {
-                while(!check(RIGHT_SQUARE)) {
-                    if(doAdvance) advance();
-                    if(match(CONCAT)) {
+            } else if (peek().type == LEFT_SQUARE) {
+                while (!check(RIGHT_SQUARE)) {
+                    if (doAdvance)
+                        advance();
+                    if (match(CONCAT)) {
                         doAdvance = false;
 
                         expressions.add(new Expr.Literal("&"));
 
-                        if(doAdvance) advance();
-                    } else if(match(COMMENT)){
+                        // if (doAdvance)
+                        // advance();
+                    } else if (match(COMMENT)) {
                         doAdvance = false;
 
                         expressions.add(new Expr.Literal("#"));
 
-                        if(doAdvance) advance();
-                    }else {
+                        // if (doAdvance)
+                        // advance();
+                    } else {
                         doAdvance = false;
                         expressions.add(expression());
                     }
@@ -227,19 +231,19 @@ public class Parser {
                 consume(RIGHT_SQUARE, "Expect ']' after '['");
             }
         }
-//        do {
-//            if(!(peek().type == LEFT_SQUARE)) {
-//                expressions.add(expression());
-//            } else {
-//                while(!match(RIGHT_SQUARE)) {
-//                    expressions.add(expression());
-//                }
-//                consume(RIGHT_SQUARE, "Missing ']' after '['");
-//
-//            }
-//            expressions.add(expression());
-//        } while(match(IDENTIFIER) || match(NEW_LINE) || match(CONCAT)
-//            || match(STRING) || match(LEFT_SQUARE));
+        // do {
+        // if(!(peek().type == LEFT_SQUARE)) {
+        // expressions.add(expression());
+        // } else {
+        // while(!match(RIGHT_SQUARE)) {
+        // expressions.add(expression());
+        // }
+        // consume(RIGHT_SQUARE, "Missing ']' after '['");
+        //
+        // }
+        // expressions.add(expression());
+        // } while(match(IDENTIFIER) || match(NEW_LINE) || match(CONCAT)
+        // || match(STRING) || match(LEFT_SQUARE));
 
         return new Stmt.Display(expressions);
     }
@@ -258,7 +262,7 @@ public class Parser {
 
         consume(END_CODE, "Expect 'END CODE' after BEGIN CODE.");
 
-        if(previous().type == END_CODE) {
+        if (previous().type == END_CODE) {
             reachEndCode = true;
         }
 
@@ -359,11 +363,11 @@ public class Parser {
     }
 
     private Expr primary() {
-        if(match(LEFT_SQUARE)) {
+        if (match(LEFT_SQUARE)) {
 
         }
 
-        if(match(RIGHT_SQUARE)) {
+        if (match(RIGHT_SQUARE)) {
             return new Expr.Literal(']');
         }
 

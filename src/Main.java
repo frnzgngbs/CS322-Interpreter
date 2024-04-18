@@ -18,7 +18,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            String filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt";
+            String filePath = "C:\\Users\\John Marc\\Documents\\pl_code\\CS322-Interpreter\\testcase.txt";
             String source = readFile(filePath);
             tokenize(source);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
@@ -56,9 +56,9 @@ public class Main {
         Lexer lexer = new Lexer(source);
         List<Token> tokenize = lexer.scanTokens();
 
-        tokenize.forEach((a) -> {
-             System.out.println(a);
-        });
+        // tokenize.forEach((a) -> {
+        // System.out.println(a);
+        // });
 
         tokens.addAll(tokenize);
         parseToken(tokens);

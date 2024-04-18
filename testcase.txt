@@ -1,4 +1,3 @@
 BEGIN CODE
-   CHAR c = '1'
-   DISPLAY: c
+   DISPLAY: "Hello" & [ # ]
 END CODE

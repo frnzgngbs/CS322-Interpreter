@@ -66,7 +66,7 @@ public class Lexer {
 
     private void addToken(Token.TokenType type, Object literal) {
         String text = source.substring(start, current);
-        if(type == Token.TokenType.CHARACTER) {
+        if (type == Token.TokenType.CHARACTER) {
             text = String.valueOf(literal);
         }
         tokens.add(new Token(type, text, literal, line));
@@ -83,23 +83,24 @@ public class Lexer {
                 break;
             case '[':
                 // initially push [ since first time encountered
-//                valEscape.push(c);
-//                // System.err.println("pushed");
-//                int i = 0;
-//
-//                while (!isAtEnd()) {
-//                    // System.out.println("CURRENT VAL " + getCurrentValue());
-//                    if (getCurrentValue() == ']') {
-//                        if (!valEscape.isEmpty()) {
-//                            valEscape.pop();
-//                            // System.out.println("was popped");
-//                        }
-//                    }
-//                    advance();
-//                }
-//                if (!valEscape.isEmpty()) {
-//                    Error.report(line, " at line " + line, "Encountered '[' but ']' is not found.");
-//                }
+                // valEscape.push(c);
+                // // System.err.println("pushed");
+                // int i = 0;
+                //
+                // while (!isAtEnd()) {
+                // // System.out.println("CURRENT VAL " + getCurrentValue());
+                // if (getCurrentValue() == ']') {
+                // if (!valEscape.isEmpty()) {
+                // valEscape.pop();
+                // // System.out.println("was popped");
+                // }
+                // }
+                // advance();
+                // }
+                // if (!valEscape.isEmpty()) {
+                // Error.report(line, " at line " + line, "Encountered '[' but ']' is not
+                // found.");
+                // }
                 addToken(Token.TokenType.LEFT_SQUARE);
                 break;
             case ']':
@@ -138,7 +139,7 @@ public class Lexer {
             case '#':
                 // addToken(Token.TokenType.COMMENT);
                 // keep consuming until reaching new line
-                addToken(Token.TokenType.COMMENT);
+                // addToken(Token.TokenType.COMMENT);
                 while (getCurrentValue() != '\n' && !isAtEnd()) {
                     advance();
                 }
@@ -228,14 +229,14 @@ public class Lexer {
     }
 
     private boolean isAlphaNumeric(char c) {
-        if(reachEndCode) {
+        if (reachEndCode) {
             Error.error(line, "Outside of the END CODE BEGIN CODE block.");
         }
         return isAlpha(c) || isDigit(c);
     }
 
     private void getCharacterValue() {
-        if(reachEndCode) {
+        if (reachEndCode) {
             Error.error(line, "Outside of the END CODE BEGIN CODE block.");
         }
 
@@ -246,14 +247,14 @@ public class Lexer {
         if (character == '\'') {
             Error.error(line, "Character literal cannot be empty.");
         } else {
-            if(getNextValue() != '\'') {
+            if (getNextValue() != '\'') {
                 error = 2;
             }
-            while(getCurrentValue() != '\'') {
-                if(getCurrentValue() == '\n') {
+            while (getCurrentValue() != '\'') {
+                if (getCurrentValue() == '\n') {
                     Error.error(line, "Missing ' right character literal");
                 }
-                if(error == 1) {
+                if (error == 1) {
                     Error.error(line, "Character length issue.");
                 }
                 error = 1;
@@ -268,7 +269,7 @@ public class Lexer {
     }
 
     private void getLogicalValue() {
-        if(reachEndCode) {
+        if (reachEndCode) {
             Error.error(line, "Outside of the END CODE BEGIN CODE block.");
         }
         while (getCurrentValue() != '"' && !isAtEnd()) {
@@ -299,7 +300,7 @@ public class Lexer {
     private void getNumberValue() {
         // Continue iterating through the string, and update the current index if we are
         // encountering a number
-        if(reachEndCode) {
+        if (reachEndCode) {
             Error.error(line, "Outside of the END CODE BEGIN CODE block.");
         }
         while (isDigit(getCurrentValue())) {
@@ -308,7 +309,7 @@ public class Lexer {
         // Special case, if it is a float.
         // If we encounter '.', check the next character. if it is a number, continue.
 
-        if(isAlpha(getCurrentValue())) {
+        if (isAlpha(getCurrentValue())) {
             Error.error(line, "Unsupported identifier");
         }
 
@@ -321,7 +322,7 @@ public class Lexer {
                 advance();
             }
 
-            if(isAlpha(getCurrentValue())) {
+            if (isAlpha(getCurrentValue())) {
                 Error.error(line, "Unsupported literal");
             }
 
@@ -336,7 +337,7 @@ public class Lexer {
     }
 
     private void getIdentifier() {
-        if(reachEndCode) {
+        if (reachEndCode) {
             Error.error(line, "Outside of the END CODE BEGIN CODE block.");
         }
         while (isAlphaNumeric(getCurrentValue())) {
@@ -352,13 +353,14 @@ public class Lexer {
         }
 
         // 'ab'
-        if(getCurrentValue() == '\'') Error.error(line, "Missing left ' character literal");
+        if (getCurrentValue() == '\'')
+            Error.error(line, "Missing left ' character literal");
 
         Token.TokenType type = keywords.get(text);
         if (type == null) {
             // Check if it's BEGIN CODE or END CODE
             if (text.equals("BEGIN") && match(' ')) {
-                if(match('C') && match('O') && match('D') && match('E')) {
+                if (match('C') && match('O') && match('D') && match('E')) {
                     type = Token.TokenType.BEGIN_CODE;
                     addToken(type);
                     return;
