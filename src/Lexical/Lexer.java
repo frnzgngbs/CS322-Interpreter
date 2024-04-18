@@ -365,12 +365,25 @@ public class Lexer {
                 }
                 current--;
             }
-            if (text.equals("END") && match(' ') && match('C') && match('O') && match('D') && match('E')) {
-                type = Token.TokenType.END_CODE;
+            if (text.equals("BEGIN") && match(' ') && match('I') && match('F')) {
+                type = Token.TokenType.BEGINIF;
                 addToken(type);
-                reachEndCode = true;
                 return;
             }
+            if (text.equals("END") && match(' ')) {
+                if(match('C') && match('O') && match('D') && match('E')) {
+                    type = Token.TokenType.END_CODE;
+                    addToken(type);
+                    reachEndCode = true;
+                    return;
+                }
+                if (match('I') && match('F')) {
+                    type = Token.TokenType.ENDIF;
+                    addToken(type);
+                    return;
+                }
+            }
+
             if (text.equals("DISPLAY")) {
                 type = Token.TokenType.DISPLAY;
                 addToken(type);

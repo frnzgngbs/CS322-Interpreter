@@ -156,19 +156,6 @@ public class Parser {
         return expressionStatement();
     }
 
-    private Stmt ifStatement() {
-        consume(LEFT_PAREN, "Expect '(' after 'IF'.");
-        Expr condition = expression();
-        consume(RIGHT_PAREN, "Expect ')' after if condition.");
-
-        Stmt thenBranch = statement();
-        Stmt elseBranch = null;
-        if (match(ELSE)) {
-            elseBranch = statement();
-        }
-
-        return new Stmt.If(condition, thenBranch, elseBranch);
-    }
 
     private Stmt scanStatement() {
         if (peek().type != SEPARATOR) {
@@ -244,11 +231,6 @@ public class Parser {
         return new Stmt.Display(expressions);
     }
 
-    private Stmt expressionStatement() {
-        Expr expr = expression();
-        return new Stmt.Expression(expr);
-    }
-
     private List<Stmt> codeStructure() {
         List<Stmt> statements = new ArrayList<>();
 
@@ -263,6 +245,32 @@ public class Parser {
         }
 
         return statements;
+    }
+
+    private Stmt ifStatement() {
+        consume(LEFT_PAREN, "Expect '(' after 'IF'.");
+        Expr condition = expression();
+        consume(RIGHT_PAREN, "Expect ')' after if condition.");
+
+        consume(BEGINIF, "Expect \"BEGIN IF\" after IF.");
+
+        Stmt thenBranch = statement();
+
+        consume(ENDIF, "Expect \"END IF after BEGIN IF.");
+        Stmt elseBranch = null;
+
+        if (match(ELSE)) {
+            consume(BEGINIF, "Expect \"BEGIN IF\" else IF.");
+            elseBranch = statement();
+            consume(ENDIF, "Expect \"END IF after BEGIN IF.");
+        }
+
+        return new Stmt.If(condition, thenBranch, elseBranch);
+    }
+
+    private Stmt expressionStatement() {
+        Expr expr = expression();
+        return new Stmt.Expression(expr);
     }
 
     private Expr equality() {

@@ -1,4 +1,11 @@
 BEGIN CODE
-   CHAR c = '1'
-   DISPLAY: c
+   INT a = 10, b = 20
+   IF (a > b)
+   BEGIN IF
+        DISPLAY: a
+   END IF
+   ELSE
+   BEGIN IF
+        DISPLAY: b
+   END IF
 END CODE
