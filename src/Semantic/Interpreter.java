@@ -11,6 +11,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
+import static Lexical.Token.TokenType.*;
+
+
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     final Environment globals = new Environment();
     private Environment environment = globals;
@@ -287,67 +290,104 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitScanStmt(Stmt.Scan stmt) {
         Scanner scanner = new Scanner(System.in);
-        String inputLine = scanner.nextLine();
-        String[] inputValues = inputLine.split("\\s+");
+        List<String> inputValues = new ArrayList<>();
 
-        if (inputValues.length != stmt.variableExpressions.size()) {
-            Error.scanError("ERROR: Number of input values does not match the number of specified variables.");
+        int flag = 0;
+        while (flag != stmt.variableExpressions.size()) {
+            String inputLine = scanner.nextLine();
+            if (!inputLine.isEmpty()) {
+                flag++;
+                inputValues.add(inputLine);
+            }
         }
 
-        Expr.Variable exceptionHolder = new Expr.Variable(null);
-        Object exceptionDatatypeHolder = new Object();
-        Object exceptionValueHolder = new Object();
 
-        try {
+        for(int i = 0; i < stmt.variableExpressions.size(); i++) {
+            Expr.Variable variable = (Expr.Variable) stmt.variableExpressions.get(i);
+            Object dataType = environment.getDataType(variable.name);
+            String inputValue = inputValues.get(i);
 
-            int i = 0;
-            for (Expr variableExpression : stmt.variableExpressions) {
-                if (!(variableExpression instanceof Expr.Variable)) {
-                    throw new RuntimeException("Invalid variable expression in scan statement.");
-                }
-                Expr.Variable variable = (Expr.Variable) variableExpression;
-
-                Object dataType = environment.getDataType(variable.name);
-
-                // case when it throws exception make a copy
-                exceptionHolder = variable;
-                exceptionDatatypeHolder = dataType;
-
-                Object value;
-                String inputValue = inputValues[i++];
-                if (dataType == Token.TokenType.INT) {
-                    exceptionValueHolder = Integer.parseInt(inputValue);
+            try {
+                Object value = (String) inputValue;
+                if(dataType == INT) {
                     value = Integer.parseInt(inputValue);
-                } else if (dataType == Token.TokenType.FLOAT) {
-                    exceptionValueHolder = Float.parseFloat(inputValue);
+                } else if(dataType == FLOAT) {
                     value = Float.parseFloat(inputValue);
-                } else if (dataType == Token.TokenType.CHAR) {
-                    if (inputValue.length() != 1) {
-                        Error.error(variable.name, "'" + inputValue + "' is an invalid character input.");
+                } else if(dataType == CHAR) {
+                    if(inputValue.length() > 1) {
+                        Error.error(variable.name, "Character literal cannot take an input value of string.");
+                    } else {
+                        value = inputValue.charAt(0);
                     }
-                    exceptionValueHolder = inputValue.charAt(0);
-                    value = inputValue.charAt(0);
                 } else if (dataType == Token.TokenType.BOOL) {
-                    exceptionValueHolder = inputValue;
-                    value = inputValue;
-                    if (!(value.equals("TRUE") || value.equals("FALSE"))) {
-                        Error.error(variable.name, "'" + value + "' is an invalid value for BOOL type.");
+                    if(!(inputValue.equals("TRUE") || inputValue.equals("FALSE"))) {
+                        Error.error(variable.name, "'" + inputValue + "' is an invalid value for BOOL type.");
+                    } else {
+                        value = Boolean.parseBoolean(inputValue);
                     }
-
-                } else {
-                    throw new RuntimeException("Unsupported variable type in scan statement.");
                 }
-
                 environment.define(variable.name.lexeme, value);
+            } catch (NumberFormatException e) {
+                Error.error(variable.name, "Invalid input value for " + dataType + ": " + inputValue);
             }
-
-        } catch (NumberFormatException e) {
-            Error.error(exceptionHolder.name,
-                    "'" + exceptionHolder.name.lexeme + "' identifier expects a value of " + exceptionDatatypeHolder
-                            + " but received other data type.");
         }
 
         return null;
+
+//        Expr.Variable exceptionHolder = new Expr.Variable(null);
+//        Object exceptionDatatypeHolder = new Object();
+//        Object exceptionValueHolder = new Object();
+//
+//        try {
+//
+//            int i = 0;
+//            for (Expr variableExpression : stmt.variableExpressions) {
+//                if (!(variableExpression instanceof Expr.Variable)) {
+//                    throw new RuntimeException("Invalid variable expression in scan statement.");
+//                }
+//                Expr.Variable variable = (Expr.Variable) variableExpression;
+//
+//                Object dataType = environment.getDataType(variable.name);
+//
+//                // case when it throws exception make a copy
+//                exceptionHolder = variable;
+//                exceptionDatatypeHolder = dataType;
+//
+//                Object value;
+//                String inputValue = inputValues[i++];
+//                if (dataType == Token.TokenType.INT) {
+//                    exceptionValueHolder = Integer.parseInt(inputValue);
+//                    value = Integer.parseInt(inputValue);
+//                } else if (dataType == Token.TokenType.FLOAT) {
+//                    exceptionValueHolder = Float.parseFloat(inputValue);
+//                    value = Float.parseFloat(inputValue);
+//                } else if (dataType == Token.TokenType.CHAR) {
+//                    if (inputValue.length() != 1) {
+//                        Error.error(variable.name, "'" + inputValue + "' is an invalid character input.");
+//                    }
+//                    exceptionValueHolder = inputValue.charAt(0);
+//                    value = inputValue.charAt(0);
+//                } else if (dataType == Token.TokenType.BOOL) {
+//                    exceptionValueHolder = inputValue;
+//                    value = inputValue;
+//                    if (!(value.equals("TRUE") || value.equals("FALSE"))) {
+//                        Error.error(variable.name, "'" + value + "' is an invalid value for BOOL type.");
+//                    }
+//
+//                } else {
+//                    throw new RuntimeException("Unsupported variable type in scan statement.");
+//                }
+//
+//                environment.define(variable.name.lexeme, value);
+//            }
+//
+//        } catch (NumberFormatException e) {
+//            Error.error(exceptionHolder.name,
+//                    "'" + exceptionHolder.name.lexeme + "' identifier expects a value of " + exceptionDatatypeHolder
+//                            + " but received other data type.");
+//        }
+
+//        return null;
     }
 
     void executeCodeStructure(List<Stmt> statements,

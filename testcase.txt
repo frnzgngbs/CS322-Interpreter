@@ -1,12 +1,5 @@
 BEGIN CODE
-    INT a = 10
-    IF ("FALSE")
-    BEGIN IF
-        DISPLAY: "Winson Baring"
-    END IF
-    ELSE
-    BEGIN IF
-        INT test = 10
-        DISPLAY: "Baring Winson" & test
-    END IF
+    CHAR a, b
+    SCAN: a,b
+    DISPLAY: a & $ & b
 END CODE

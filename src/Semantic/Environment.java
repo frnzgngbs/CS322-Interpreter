@@ -54,7 +54,7 @@ public class Environment {
             return enclosing.get(name);
 
         throw new RuntimeError(name,
-                "Attempting to access '" + name.lexeme + "', but was undefined.");
+                "Cannot find symbol \"" + name.lexeme + "\".");
     }
 
     Object get(String key) {

@@ -106,7 +106,6 @@ public class Lexer {
             case ',':
                 addToken(Token.TokenType.COMMA);
                 break;
-
             case ':':
                 addToken(Token.TokenType.SEPARATOR);
                 break;
@@ -342,12 +341,12 @@ public class Lexer {
         }
         String text = source.substring(start, current);
 
-        if (text.equalsIgnoreCase("int") || text.equalsIgnoreCase("float") || text.equalsIgnoreCase("char")
-                || text.equalsIgnoreCase("bool")) {
-            if (!(text.equals("INT") || text.equals("FLOAT") || text.equals("CHAR") || text.equals("BOOL"))) {
-                Error.error(line, "Expected " + text.toUpperCase() + " but found " + text + ".");
-            }
-        }
+//        if (text.equalsIgnoreCase("int") || text.equalsIgnoreCase("float") || text.equalsIgnoreCase("char")
+//                || text.equalsIgnoreCase("bool")) {
+//            if (!(text.equals("INT") || text.equals("FLOAT") || text.equals("CHAR") || text.equals("BOOL"))) {
+//                Error.error(line, "Expected " + text.toUpperCase() + " but found " + text + ".");
+//            }
+//        }
 
         // 'ab'
         if (getCurrentValue() == '\'')
