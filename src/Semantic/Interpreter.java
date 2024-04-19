@@ -296,13 +296,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         while (flag != stmt.variableExpressions.size()) {
             String inputLine = scanner.nextLine();
             if (!inputLine.isEmpty()) {
-                flag++;
                 // Split the input line by space to get individual values
                 String[] values = inputLine.split("\\s+");
                 inputValues.addAll(Arrays.asList(values));
-                if(values.length > 1) {
-                    break;
-                }
+                flag += values.length;
             }
         }
 

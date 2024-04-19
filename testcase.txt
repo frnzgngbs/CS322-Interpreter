@@ -1,5 +1,5 @@
 BEGIN CODE
-    CHAR a, b
-    SCAN: a,b
-    DISPLAY: a & $ & b
+    CHAR a, b, c
+    SCAN: a,b, c
+    DISPLAY: a & $ & b & $ & c
 END CODE
