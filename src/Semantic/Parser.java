@@ -252,18 +252,24 @@ public class Parser {
     }
 
     private Stmt ifStatement() {
-        consume(LEFT_PAREN, "Expect '(' after 'IF'.");
-        Expr condition = expression();
-        consume(RIGHT_PAREN, "Expect ')' after if condition.");
-        consume(BEGINIF, "Expect \"BEGIN IF\" else IF.");
-
-        List<Stmt> if_body_statement = new ArrayList<>();
-
-        while(!check(ENDIF)) {
-            if_body_statement.add(statement());
+        List<Expr> condition = new ArrayList<>();
+        List<List<Stmt>> body_statement = new ArrayList<>();
+        while(!check(ELSE)) {
+            // RESET THE BODY STATEMENT OF UR CONDITIONAL STATEMENT
+            List<Stmt> if_body_statement = new ArrayList<>();
+            System.out.println("CURRENT VALUE: " + peek());
+            if(match(ELSE_IF)) {}
+            consume(LEFT_PAREN, "Expect '(' after 'IF'.");
+            condition.add(expression());
+            consume(RIGHT_PAREN, "Expect ')' after if condition.");
+            consume(BEGINIF, "Expect \"BEGIN IF\" else IF.");
+            while(!check(ENDIF)) {
+                if_body_statement.add(statement());
+            }
+            body_statement.add(if_body_statement);
+            consume(ENDIF, "Expect \"END IF after BEGIN IF.");
         }
 
-        consume(ENDIF, "Expect \"END IF after BEGIN IF.");
 
         List<Stmt> else_body_statement = new ArrayList<>();
 
@@ -275,7 +281,7 @@ public class Parser {
             consume(ENDIF, "Expect \"END IF after BEGIN IF.");
         }
 
-        return new Stmt.If(condition, if_body_statement, else_body_statement);
+        return new Stmt.If(condition, body_statement, else_body_statement);
     }
 
     private Stmt expressionStatement() {
@@ -382,9 +388,9 @@ public class Parser {
         }
 
         if (match(FALSE))
-            return new Expr.Literal("FALSE");
+            return new Expr.Literal(false);
         if (match(TRUE))
-            return new Expr.Literal("TRUE");
+            return new Expr.Literal(true);
 
         if (match(NUMBER, CHARACTER, TRUE, FALSE, STRING)) {
             return new Expr.Literal(previous().literal);

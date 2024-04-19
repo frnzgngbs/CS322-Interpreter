@@ -439,12 +439,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                         || initialValue instanceof Float) {
                     Error.error(stmt.name, "Invalid value for BOOL type.");
                 }
-                if ((value.equals("TRUE") || value.equals("FALSE"))) {
+                if ((value.equals(true) || value.equals(false))) {
                 } else {
                     Error.error(stmt.name, value + " is an invalid value for a BOOL type");
                 }
             }
         }
+
         environment.define(stmt.name.lexeme, value);
         return null;
 
@@ -452,15 +453,48 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitIfStmt(Stmt.If stmt) {
-        if (isTruthy(evaluate(stmt.condition))) {
-            for(Stmt s : stmt.thenBranch) {
-                execute(s);
+        /*
+
+            CONDITIONS = [
+                FALSE,
+                TRUE
+            ]
+
+            EXPLANATION: Based on the index of which it is true, it determines which conditional if and else if statement
+                         are evaluated as true. So my approach here is that if we meet a true value, we should stop iterating.
+                         as to avoid executing the other else if statement that would have the potential to get evaluated.
+                         as true.
+
+
+             BRANCH = [
+                [
+                    DISPLAY: a
+                ],
+                [
+                    DISPLAY: c, DISPLAY: "JM CHOY"
+                ],
+             ]
+
+
+         */
+
+        System.out.println(stmt.thenBranch.get(1));
+
+        for(int i = 0; i < stmt.conditions.size(); i++) {
+            if(isTruthy(evaluate(stmt.conditions.get(i)))) {
+                for(Stmt st : stmt.thenBranch.get(i)) {
+                    execute(st);
+                }
+                // STOP, AS WE ALREADY FOUND THE FIRST STATEMENT THAT WAS EVALUATED TO TRUE!
+                return null;
             }
-        } else if (stmt.elseBranch != null) {
+        }
+        if (stmt.elseBranch != null) {
             for(Stmt s : stmt.elseBranch) {
                 execute(s);
             }
         }
+
         return null;
     }
 

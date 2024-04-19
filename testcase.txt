@@ -1,12 +1,7 @@
 BEGIN CODE
-   INT a = 10, b = 20, c = 25
-   IF (a > b)
+   BOOL b = "TRUE"
+   if (b)
    BEGIN IF
-        DISPLAY: a
-   END IF
-   ELSE
-   BEGIN IF
-        DISPLAY: b
-        DISPLAY: "Winson Gwapo"
+   DISPLAY: "GWAPO"
    END IF
 END CODE
