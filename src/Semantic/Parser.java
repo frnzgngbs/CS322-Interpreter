@@ -36,7 +36,6 @@ public class Parser {
         List<Stmt> statements = new ArrayList<>();
 
         while (!isAtEnd()) {
-
             statements.add(declaration());
         }
         return statements;
@@ -77,6 +76,16 @@ public class Parser {
                 return varDeclaration(BOOL);
             else if (match(COMMA))
                 return varDeclaration(lastDataType);
+            else if((peek().lexeme.equalsIgnoreCase("int") || peek().lexeme.equalsIgnoreCase("bool")
+                    || peek().lexeme.equalsIgnoreCase("float") || peek().lexeme.equalsIgnoreCase("char"))
+                    && match(IDENTIFIER)) {
+                if(!previous().lexeme.equals("INT") || !previous().lexeme.equals("FLOAT")
+                || !previous().lexeme.equals("CHAR") || !previous().lexeme.equals("BOOL")){
+                    Error.error(previous(), "Expected " + previous().lexeme.toUpperCase() + " but found " + previous().lexeme + ".");
+                }
+            }
+
+
 
             return statement();
         } catch (ParseError error) {

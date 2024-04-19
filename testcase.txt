@@ -1,14 +1,3 @@
 BEGIN CODE
-   INT a = 1, b = 2, c = 3
-
-   IF (a > b)
-   BEGIN IF
-   DISPLAY: "Winson"
-   END IF
-   ELSE
-   BEGIN IF
-   DISPLAY: "Winson Baring"
-   END IF
-
-
+    if (
 END CODE
