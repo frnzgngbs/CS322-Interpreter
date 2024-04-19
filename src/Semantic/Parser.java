@@ -36,6 +36,7 @@ public class Parser {
         List<Stmt> statements = new ArrayList<>();
 
         while (!isAtEnd()) {
+
             statements.add(declaration());
         }
         return statements;
@@ -76,14 +77,22 @@ public class Parser {
                 return varDeclaration(BOOL);
             else if (match(COMMA))
                 return varDeclaration(lastDataType);
-            else if((peek().lexeme.equalsIgnoreCase("int") || peek().lexeme.equalsIgnoreCase("bool")
-                    || peek().lexeme.equalsIgnoreCase("float") || peek().lexeme.equalsIgnoreCase("char"))
-                    && match(IDENTIFIER)) {
-                if(!previous().lexeme.equals("INT") || !previous().lexeme.equals("FLOAT")
-                || !previous().lexeme.equals("CHAR") || !previous().lexeme.equals("BOOL")){
-                    Error.error(previous(), "Expected " + previous().lexeme.toUpperCase() + " but found " + previous().lexeme + ".");
-                }
-            }
+//            else if((peek().lexeme.equalsIgnoreCase("int") || peek().lexeme.equalsIgnoreCase("bool")
+//                    || peek().lexeme.equalsIgnoreCase("float") || peek().lexeme.equalsIgnoreCase("char"))
+//                    && match(IDENTIFIER)) {
+//                if(!previous().lexeme.equals("INT") || !previous().lexeme.equals("FLOAT")
+//                || !previous().lexeme.equals("CHAR") || !previous().lexeme.equals("BOOL")){
+//                    Error.error(previous(), "Expected " + previous().lexeme.toUpperCase() + " but found " + previous().lexeme + ".");
+//                }
+//            }
+//            else if((peek().lexeme.equalsIgnoreCase("if") || peek().lexeme.equalsIgnoreCase("else if")
+//                    || peek().lexeme.equalsIgnoreCase("else")) && match(IDENTIFIER)) {
+//                if(!previous().lexeme.equals("IF") || !previous().lexeme.equals("ELSE IF")
+//                        || !previous().lexeme.equals("ELSE")) {
+//                    Error.error(previous(), "Expected " + previous().lexeme.toUpperCase() + " but found " + previous().lexeme + ".");
+//                }
+//            }
+
 
 
 
@@ -275,7 +284,7 @@ public class Parser {
             consume(RIGHT_PAREN, "Expect ')' after if condition.");
             consume(BEGINIF, "Expect \"BEGIN IF\" else IF.");
             while(!check(ENDIF)) {
-                if_body_statement.add(statement());
+                if_body_statement.add(declaration());
             }
             body_statement.add(if_body_statement);
             consume(ENDIF, "Expect \"END IF after BEGIN IF.");
@@ -289,7 +298,7 @@ public class Parser {
         if (match(ELSE)) {
             consume(BEGINIF, "Expect \"BEGIN IF\" else IF.");
             while(!check(ENDIF)) {
-                else_body_statement.add(statement());
+                else_body_statement.add(declaration());
             }
             consume(ENDIF, "Expect \"END IF after BEGIN IF.");
         }
@@ -426,6 +435,8 @@ public class Parser {
         if (match(IDENTIFIER)) {
             return new Expr.Variable(previous());
         }
+
+        System.out.println(peek());
 
         throw error(peek(), "Expect expression.");
 
