@@ -255,21 +255,27 @@ public class Parser {
         consume(LEFT_PAREN, "Expect '(' after 'IF'.");
         Expr condition = expression();
         consume(RIGHT_PAREN, "Expect ')' after if condition.");
+        consume(BEGINIF, "Expect \"BEGIN IF\" else IF.");
 
-        consume(BEGINIF, "Expect \"BEGIN IF\" after IF.");
+        List<Stmt> if_body_statement = new ArrayList<>();
 
-        Stmt thenBranch = statement();
+        while(!check(ENDIF)) {
+            if_body_statement.add(statement());
+        }
 
         consume(ENDIF, "Expect \"END IF after BEGIN IF.");
-        Stmt elseBranch = null;
+
+        List<Stmt> else_body_statement = new ArrayList<>();
 
         if (match(ELSE)) {
             consume(BEGINIF, "Expect \"BEGIN IF\" else IF.");
-            elseBranch = statement();
+            while(!check(ENDIF)) {
+                else_body_statement.add(statement());
+            }
             consume(ENDIF, "Expect \"END IF after BEGIN IF.");
         }
 
-        return new Stmt.If(condition, thenBranch, elseBranch);
+        return new Stmt.If(condition, if_body_statement, else_body_statement);
     }
 
     private Stmt expressionStatement() {
@@ -371,10 +377,6 @@ public class Parser {
     }
 
     private Expr primary() {
-        if (match(LEFT_SQUARE)) {
-
-        }
-
         if (match(RIGHT_SQUARE)) {
             return new Expr.Literal(']');
         }

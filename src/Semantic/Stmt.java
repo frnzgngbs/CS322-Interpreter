@@ -81,7 +81,7 @@ public abstract class Stmt {
     }
 
     static class If extends Stmt {
-        If(Expr condition, Stmt thenBranch, Stmt elseBranch) {
+        If(Expr condition, List<Stmt> thenBranch, List<Stmt> elseBranch) {
             this.condition = condition;
             this.thenBranch = thenBranch;
             this.elseBranch = elseBranch;
@@ -93,8 +93,8 @@ public abstract class Stmt {
         }
 
         final Expr condition;
-        final Stmt thenBranch;
-        final Stmt elseBranch;
+        final List<Stmt> thenBranch;
+        final List<Stmt> elseBranch;
     }
 
     static class Variable extends Stmt {

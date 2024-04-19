@@ -24,9 +24,6 @@ public class Lexer {
         keywords.put("AND", Token.TokenType.AND);
         keywords.put("OR", Token.TokenType.OR);
         keywords.put("NOT", Token.TokenType.NOT);
-        keywords.put("IF", Token.TokenType.IF);
-        keywords.put("ELSE IF", Token.TokenType.ELSE_IF);
-        keywords.put("ELSE", Token.TokenType.ELSE);
         keywords.put("DISPLAY", Token.TokenType.DISPLAY);
         keywords.put("SCAN", Token.TokenType.SCAN);
         keywords.put("BEGIN CODE:", Token.TokenType.BEGIN_CODE);
@@ -357,8 +354,8 @@ public class Lexer {
             Error.error(line, "Missing left ' character literal");
 
         Token.TokenType type = keywords.get(text);
+
         if (type == null) {
-            // Check if it's BEGIN CODE or END CODE
             if (text.equals("BEGIN") && match(' ')) {
                 if (match('C') && match('O') && match('D') && match('E')) {
                     type = Token.TokenType.BEGIN_CODE;
@@ -396,6 +393,24 @@ public class Lexer {
                 addToken(type);
                 return;
             }
+
+            if(text.equals("IF")) {
+                type = Token.TokenType.IF;
+                addToken(type);
+                return;
+            }
+
+            if(text.equals("ELSE")) {
+                if(match(' ') && match('I') && match('F')) {
+                    type = Token.TokenType.ELSE_IF;
+                    addToken(type);
+                    return;
+                }
+                type = Token.TokenType.ELSE;
+                addToken(type);
+                return;
+            }
+
             type = Token.TokenType.IDENTIFIER;
         }
 

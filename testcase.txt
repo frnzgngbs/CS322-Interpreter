@@ -1,5 +1,5 @@
 BEGIN CODE
-   INT a = 10, b = 20
+   INT a = 10, b = 20, c = 25
    IF (a > b)
    BEGIN IF
         DISPLAY: a
@@ -7,5 +7,6 @@ BEGIN CODE
    ELSE
    BEGIN IF
         DISPLAY: b
+        DISPLAY: "Winson Gwapo"
    END IF
 END CODE
