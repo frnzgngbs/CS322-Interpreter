@@ -1,7 +1,14 @@
 BEGIN CODE
-   BOOL b = "TRUE"
-   if (b)
+   INT a = 1, b = 2, c = 3
+
+   IF (a > b)
    BEGIN IF
-   DISPLAY: "GWAPO"
+   DISPLAY: "Winson"
    END IF
+   ELSE
+   BEGIN IF
+   DISPLAY: "Winson Baring"
+   END IF
+
+
 END CODE

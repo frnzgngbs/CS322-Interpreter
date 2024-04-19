@@ -478,7 +478,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
          */
 
-        System.out.println(stmt.thenBranch.get(1));
+        System.out.println(stmt.conditions.get(0));
 
         for(int i = 0; i < stmt.conditions.size(); i++) {
             if(isTruthy(evaluate(stmt.conditions.get(i)))) {

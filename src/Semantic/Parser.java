@@ -254,11 +254,13 @@ public class Parser {
     private Stmt ifStatement() {
         List<Expr> condition = new ArrayList<>();
         List<List<Stmt>> body_statement = new ArrayList<>();
+        List<Stmt> else_body_statement = new ArrayList<>();
+
         while(!check(ELSE)) {
             // RESET THE BODY STATEMENT OF UR CONDITIONAL STATEMENT
+//            System.out.println("PEEK VALUE: " + peek());
             List<Stmt> if_body_statement = new ArrayList<>();
-            System.out.println("CURRENT VALUE: " + peek());
-            if(match(ELSE_IF)) {}
+            match(ELSE_IF);
             consume(LEFT_PAREN, "Expect '(' after 'IF'.");
             condition.add(expression());
             consume(RIGHT_PAREN, "Expect ')' after if condition.");
@@ -268,10 +270,12 @@ public class Parser {
             }
             body_statement.add(if_body_statement);
             consume(ENDIF, "Expect \"END IF after BEGIN IF.");
+            if(peek().type != ELSE) {
+                break;
+            }
         }
 
 
-        List<Stmt> else_body_statement = new ArrayList<>();
 
         if (match(ELSE)) {
             consume(BEGINIF, "Expect \"BEGIN IF\" else IF.");
