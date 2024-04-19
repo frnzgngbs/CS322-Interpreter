@@ -297,42 +297,55 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             String inputLine = scanner.nextLine();
             if (!inputLine.isEmpty()) {
                 flag++;
-                inputValues.add(inputLine);
+                // Split the input line by space to get individual values
+                String[] values = inputLine.split("\\s+");
+                inputValues.addAll(Arrays.asList(values));
+                if(values.length > 1) {
+                    break;
+                }
             }
         }
 
-
-        for(int i = 0; i < stmt.variableExpressions.size(); i++) {
+        for (int i = 0; i < stmt.variableExpressions.size(); i++) {
             Expr.Variable variable = (Expr.Variable) stmt.variableExpressions.get(i);
             Object dataType = environment.getDataType(variable.name);
+
+            // Get the next input value from the list
             String inputValue = inputValues.get(i);
 
             try {
-                Object value = (String) inputValue;
-                if(dataType == INT) {
+                Object value;
+                if (dataType == INT) {
                     value = Integer.parseInt(inputValue);
-                } else if(dataType == FLOAT) {
+                } else if (dataType == FLOAT) {
                     value = Float.parseFloat(inputValue);
-                } else if(dataType == CHAR) {
-                    if(inputValue.length() > 1) {
+                } else if (dataType == CHAR) {
+                    if (inputValue.length() > 1) {
                         Error.error(variable.name, "Character literal cannot take an input value of string.");
+                        continue; // Skip to the next iteration
                     } else {
                         value = inputValue.charAt(0);
                     }
                 } else if (dataType == Token.TokenType.BOOL) {
-                    if(!(inputValue.equals("TRUE") || inputValue.equals("FALSE"))) {
+                    if (!(inputValue.equals("TRUE") || inputValue.equals("FALSE"))) {
                         Error.error(variable.name, "'" + inputValue + "' is an invalid value for BOOL type.");
+                        continue; // Skip to the next iteration
                     } else {
                         value = Boolean.parseBoolean(inputValue);
                     }
+                } else {
+                    // Handle other data types if necessary
+                    continue; // Skip to the next iteration
                 }
                 environment.define(variable.name.lexeme, value);
             } catch (NumberFormatException e) {
-                Error.error(variable.name, "Invalid input value for " + dataType + ": " + inputValue);
+                Error.error(variable.name, "Invalid input format for " + dataType + ": " + inputValue);
             }
         }
 
         return null;
+    }
+
 
 //        Expr.Variable exceptionHolder = new Expr.Variable(null);
 //        Object exceptionDatatypeHolder = new Object();
@@ -388,7 +401,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 //        }
 
 //        return null;
-    }
 
     void executeCodeStructure(List<Stmt> statements,
             Environment environment) {
