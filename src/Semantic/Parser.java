@@ -140,6 +140,12 @@ public class Parser {
             case NUMBER:
                 Error.error(type, "Identifiers starts with " + type.literal + " and is not supported.");
                 break;
+            case SEPARATOR,
+                    COMMA,
+                    CONCAT,
+                    NEW_LINE:
+                Error.error(type, "Invalid statement.");
+                break;
         }
 
         Token name = consume(IDENTIFIER, "Expect variable name.");
