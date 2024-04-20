@@ -1,6 +1,7 @@
 BEGIN CODE
-    INT b, a
-    IF(b)
+    INT b = 10, a
+    IF(b = 100)
     BEGIN IF
     END IF
+
 END CODE

@@ -208,7 +208,15 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitLogicalExpr(Expr.Logical expr) {
-        return null;
+        Object left = evaluate(expr.left);
+
+        if (expr.operator.type == OR) {
+            if (isTruthy(left)) return left;
+        } else {
+            if (!isTruthy(left)) return left;
+        }
+
+        return evaluate(expr.right);
     }
 
     @Override
@@ -535,6 +543,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
         for(int i = 0; i < stmt.conditions.size(); i++) {
             Expr conditions = stmt.conditions.get(i);
+            if (conditions instanceof Expr.Assign) {
+                Object dataType = environment.getDataType(((Expr.Assign) conditions).name);
+                Error.error(
+                        ((Expr.Assign) conditions).name,
+                        "Incompatible type: Expected BOOL but provided '" + dataType + "'.");
+            }
             if(conditions instanceof Expr.Variable) {
                 Object value = environment.get(((Expr.Variable) conditions).name.lexeme);
                 System.out.println("Here: " + value);
