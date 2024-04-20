@@ -426,6 +426,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         for (Expr expression : stmt.expression) {
             Object value = evaluate(expression);
 
+            if(value == null && expression instanceof Expr.Variable) {
+                Error.error(((Expr.Variable) expression).name, "Variable '" + ((Expr.Variable) expression).name.lexeme + "' might not been initialized.");
+            }
+
             if (value != null && value.equals("+"))
                 continue;
 
@@ -530,6 +534,16 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         System.out.println(stmt.conditions.get(0));
 
         for(int i = 0; i < stmt.conditions.size(); i++) {
+            Expr conditions = stmt.conditions.get(i);
+            if(conditions instanceof Expr.Variable) {
+                Object value = environment.get(((Expr.Variable) conditions).name.lexeme);
+                System.out.println("Here: " + value);
+                if(value == null) {
+                    Error.error(
+                            ((Expr.Variable) conditions).name,
+                            "Variable '" +  ((Expr.Variable) conditions).name.lexeme + "' might not have been initialized.");
+                }
+            }
             if(isTruthy(evaluate(stmt.conditions.get(i)))) {
                 for(Stmt st : stmt.thenBranch.get(i)) {
                     execute(st);

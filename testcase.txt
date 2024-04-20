@@ -1,3 +1,6 @@
 BEGIN CODE
-    INT & a
+    INT b, a
+    IF(b)
+    BEGIN IF
+    END IF
 END CODE
