@@ -77,6 +77,8 @@ public class Parser {
                 return varDeclaration(BOOL);
             else if (match(COMMA))
                 return varDeclaration(lastDataType);
+            else if(match(ELSE_IF)) Error.error(previous(), "Found '" + previous().lexeme + "' without 'IF'");
+            else if(match(ELSE)) Error.error(previous(), "Found '" + previous().lexeme + "' without 'IF'");
 //            else if((peek().lexeme.equalsIgnoreCase("int") || peek().lexeme.equalsIgnoreCase("bool")
 //                    || peek().lexeme.equalsIgnoreCase("float") || peek().lexeme.equalsIgnoreCase("char"))
 //                    && match(IDENTIFIER)) {
