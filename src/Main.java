@@ -18,7 +18,14 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            String filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt";
+            String filePath = null;
+            if(args.length == 0) {
+                filePath = "C:\\Users\\winso\\Documents\\GitHub\\CS322-Interpreter\\testcase.txt";
+            }else{
+                filePath = args[0];
+            }
+
+
             String source = readFile(filePath);
             tokenize(source);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {

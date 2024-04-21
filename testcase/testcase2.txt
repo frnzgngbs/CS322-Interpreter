@@ -1,0 +1,4 @@
+BEGIN CODE
+    INT b = 10
+    DISPLAY: b
+END CODE
