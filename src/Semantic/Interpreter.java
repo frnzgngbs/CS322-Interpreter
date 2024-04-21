@@ -223,9 +223,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Object visitUnaryExpr(Expr.Unary expr) {
         Object right = evaluate(expr.right);
 
+        System.out.println(expr);
         switch (expr.operator.type) {
             case NOT:
-                return !isTruthy(right);
+                Object intialValue = right;
+                if (intialValue instanceof Boolean) {
+                    Object value = String.valueOf(intialValue);
+                    return  String.valueOf(value).toUpperCase();
+                }
             case MINUS:
                 return -(float) right;
         }

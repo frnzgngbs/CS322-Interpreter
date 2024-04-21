@@ -20,11 +20,10 @@ public class Main {
         try {
             String filePath = null;
             if(args.length == 0) {
-                filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt    ";
+                filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt";
             }else{
                 filePath = args[0];
             }
-
 
             String source = readFile(filePath);
             tokenize(source);
@@ -63,9 +62,9 @@ public class Main {
         Lexer lexer = new Lexer(source);
         List<Token> tokenize = lexer.scanTokens();
 
-//         tokenize.forEach((a) -> {
-//             System.out.println(a);
-//         });
+         tokenize.forEach((a) -> {
+             System.out.println(a);
+         });
 
         tokens.addAll(tokenize);
         parseToken(tokens);

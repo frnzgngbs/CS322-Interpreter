@@ -201,7 +201,6 @@ public class Parser {
         }
         if (match(IF))
             return ifStatement();
-
         return expressionStatement();
     }
 
@@ -425,7 +424,7 @@ public class Parser {
     }
 
     private Expr unary() {
-        if (match(PLUS, MINUS)) {
+        if (match(NOT, MINUS)) {
             Token operator = previous();
             Expr right = unary();
             return new Expr.Unary(operator, right);
