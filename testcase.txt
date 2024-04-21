@@ -1,3 +1,10 @@
-BEGIN sdf
-
+BEGIN CODE
+    IF("TRUE" AND "FALSE")
+    BEGIN IF
+        DISPLAY: "FRANZ"
+    END IF
+    ELSE
+    BEGIN IF
+        DISPLAY: "GENEGOBIS"
+    END IF
 END CODE

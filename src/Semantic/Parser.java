@@ -2,10 +2,8 @@ package Semantic;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 import ErrorHandling.Error;
-import Lexical.Lexer;
 import Lexical.Token;
 
 import static Lexical.Token.TokenType.*;
@@ -47,7 +45,7 @@ public class Parser {
     }
 
     private Expr assignment() {
-        Expr expr = equality();
+        Expr expr = OR();
 
         if (match(EQUAL)) {
             Token equals = previous();
@@ -61,6 +59,30 @@ public class Parser {
 
             Error.error(equals, "Invalid assignment target.");
         }
+        return expr;
+    }
+
+    private Expr OR() {
+        Expr expr = AND();
+
+        while (match(OR)) {
+            Token operator = previous();
+            Expr right = AND();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    private Expr AND() {
+        Expr expr = equality();
+
+        while (match(AND)) {
+            Token operator = previous();
+            Expr right = equality();
+            expr = new Expr.Logical(expr, operator, right);
+        }
+
         return expr;
     }
 
