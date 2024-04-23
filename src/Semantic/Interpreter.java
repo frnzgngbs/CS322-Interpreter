@@ -225,6 +225,22 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
         switch (expr.operator.type) {
             case NOT:
+                if(right instanceof Integer)
+                    Error.error(
+                        expr.operator,
+                        "Bad operand type INT for unary operator '" + expr.operator.type + "'.");
+                else if(right instanceof Float)
+                    Error.error(
+                            expr.operator,
+                            "Bad operand type INT for unary operator '" + expr.operator.type + "'.");
+                else if(right instanceof Character)
+                    Error.error(
+                            expr.operator,
+                            "Bad operand type INT for unary operator '" + expr.operator.type + "'.");
+                else if(right instanceof String)
+                    Error.error(
+                            expr.operator,
+                            "Bad operand type INT for unary operator '" + expr.operator.type + "'.");
                 return !isTruthy(right);
             case MINUS:
                 return -(float) right;

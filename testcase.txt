@@ -1,10 +1,4 @@
 BEGIN CODE
-    IF (1 <> 1)
-    BEGIN IF
-        DISPLAY: 1
-    END IF
-    ELSE
-    BEGIN IF
-        DISPLAY: 2
-    END IF
+    INT a = NOT 1
+    DISPLAY: a
 END CODE
