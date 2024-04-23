@@ -237,7 +237,7 @@ public class Parser {
         boolean doAdvance = true;
         while (check(IDENTIFIER) || check(CONCAT) || check(NEW_LINE)
                 || check(STRING) || check(LEFT_SQUARE) || check(NUMBER)
-                || check(NOT)) {
+                || check(NOT) || check(TRUE) || check(FALSE)) {
             if (peek().type != LEFT_SQUARE) {
                 expressions.add(expression());
             } else if (peek().type == LEFT_SQUARE) {

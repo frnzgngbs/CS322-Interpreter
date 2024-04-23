@@ -428,6 +428,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitDisplayStmt(Stmt.Display stmt) {
+//        System.out.println("KA SUD DIRI");
         StringBuilder builder = new StringBuilder();
         for (Expr expression : stmt.expression) {
             Object value = evaluate(expression);
@@ -439,6 +440,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             if (value != null && value.equals("+"))
                 continue;
 
+            if(expression instanceof Expr.Unary) {
+                System.out.println("SUD");
+                builder.append(stringify(value.toString().toUpperCase()));
+                continue;
+            }
             // Check if value is not null before using it
             builder.append(stringify(value));
         }
