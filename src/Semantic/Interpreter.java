@@ -226,11 +226,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         System.out.println(expr);
         switch (expr.operator.type) {
             case NOT:
-                Object intialValue = right;
-                if (intialValue instanceof Boolean) {
-                    Object value = String.valueOf(intialValue);
-                    return  String.valueOf(value).toUpperCase();
-                }
+                return right;
             case MINUS:
                 return -(float) right;
         }
@@ -435,7 +431,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitDisplayStmt(Stmt.Display stmt) {
         StringBuilder builder = new StringBuilder();
-
         for (Expr expression : stmt.expression) {
             Object value = evaluate(expression);
 
@@ -483,7 +478,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 } else if (initialValue instanceof Float) {
                     value = initialValue; // No need for conversion
                 } else {
-                    Error.error(stmt.name, "Invalid value for FLOAT type.");
+                    Error.error(stmt.name, "'"+ initialValue + "'Invalid value for FLOAT type.");
                 }
             } else if (dataType == Token.TokenType.INT) {
                 if (initialValue instanceof Float) {
@@ -491,30 +486,28 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 } else if (initialValue instanceof Integer) {
                     value = initialValue; // No need for conversion
                 } else {
-                    Error.error(stmt.name, "Invalid value for INT type.");
+                    Error.error(stmt.name, "'"+ initialValue + "' is annvalid value for INT type.");
                 }
             } else if (dataType == Token.TokenType.CHAR) {
                 value = initialValue;
                 if (initialValue instanceof Boolean || initialValue instanceof Integer || initialValue instanceof Float
                         || initialValue instanceof String) {
-                    Error.error(stmt.name, "Invalid value for CHAR type.");
+                    Error.error(stmt.name, "'"+ value + "' is an invalid value for CHAR type.");
                 }
             } else {
                 value = initialValue;
                 if (initialValue instanceof Character || initialValue instanceof Integer
                         || initialValue instanceof Float) {
-                    Error.error(stmt.name, "Invalid value for BOOL type.");
+                    Error.error(stmt.name, "'" + value + "' is an invalid value for BOOL type.");
                 }
-                if ((value.equals(true) || value.equals(false))) {
-                } else {
-                    Error.error(stmt.name, value + " is an invalid value for a BOOL type");
+                if ((value.equals(true) || value.equals(false) || (value.equals("TRUE") || value.equals("FALSE")))) {}
+                else {
+                    Error.error(stmt.name, "'" + value + "' is an invalid value for a BOOL type");
                 }
             }
         }
-
         environment.define(stmt.name.lexeme, value);
         return null;
-
     }
 
     @Override
