@@ -223,10 +223,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Object visitUnaryExpr(Expr.Unary expr) {
         Object right = evaluate(expr.right);
 
-        System.out.println(expr);
         switch (expr.operator.type) {
             case NOT:
-                return right;
+                return !isTruthy(right);
             case MINUS:
                 return -(float) right;
         }
@@ -241,8 +240,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             return;
         if (left instanceof Integer && right instanceof Integer)
             return;
-
-        throw new RuntimeError(operator, "Operands must be numbers.");
+        throw new RuntimeError(operator, left.getClass().getTypeName() + " cannot be compared with " + right.getClass().getTypeName());
     }
 
     private boolean isTruthy(Object object) {
