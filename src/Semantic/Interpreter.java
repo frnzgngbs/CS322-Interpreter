@@ -242,7 +242,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                             "Bad operand type INT for unary operator '" + expr.operator.type + "'.");
                 return !isTruthy(right);
             case MINUS:
-                return -(float) right;
+                if(right instanceof Integer) {
+                    return -(int)right;
+                }
+                return -(float)right;
         }
 
         // Unreachable.
@@ -448,6 +451,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         for (Expr expression : stmt.expression) {
             Object value = evaluate(expression);
 
+            System.out.println("VALUE: " + value);
             if(value == null && expression instanceof Expr.Variable) {
                 Error.error(((Expr.Variable) expression).name, "Variable '" + ((Expr.Variable) expression).name.lexeme + "' might not been initialized.");
             }

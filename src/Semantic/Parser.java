@@ -252,9 +252,9 @@ public class Parser {
         boolean doAdvance = true;
         while (check(IDENTIFIER) || check(CONCAT) || check(NEW_LINE)
                 || check(STRING) || check(LEFT_SQUARE) || check(NUMBER)
-                || check(NOT) || check(TRUE) || check(FALSE)) {
+                || check(NOT) || check(TRUE) || check(FALSE) || check(RIGHT_SQUARE)) {
             if (peek().type != LEFT_SQUARE) {
-                System.out.println("PEEK: " + peek().type);
+//                System.out.println("PEEK: " + peek().type);
                 expressions.add(expression());
             } else if (match(LEFT_SQUARE)) {
                 while (!check(RIGHT_SQUARE)) {
@@ -264,8 +264,6 @@ public class Parser {
                         expressions.add(new Expr.Literal("&"));
 
                     } else if (match(COMMENT)) {
-                        System.out.println("COMMENT: " + previous().type);
-
                         doAdvance = false;
 
                         expressions.add(new Expr.Literal("#"));
@@ -446,6 +444,7 @@ public class Parser {
 
     private Expr primary() {
         if (match(RIGHT_SQUARE)) {
+            System.err.println("SUD RIGHT ESCAPE");
             return new Expr.Literal(']');
         }
 
@@ -457,6 +456,11 @@ public class Parser {
 
         if (match(NUMBER, CHARACTER, TRUE, FALSE, STRING)) {
             return new Expr.Literal(previous().literal);
+        }
+
+
+        if(match(LEFT_SQUARE)) {
+            return new Expr.Literal('[');
         }
 
         if (match(LEFT_PAREN)) {
