@@ -1,11 +1,6 @@
 BEGIN CODE
-<<<<<<< HEAD
-	INT x = -5
-	DISPLAY: x
+	INT a, b
+	a=100
+	b=200
+	DISPLAY:  [$] & a & [$] & b & [$]
 END CODE
-=======
-    INT a = 1
-    DISPLAY: a
-    DISPLAY: [#]
-END CODE
->>>>>>> 744d93c36a2d06f8a6199cd8d205ff560852fd69

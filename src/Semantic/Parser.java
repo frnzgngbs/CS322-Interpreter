@@ -280,9 +280,12 @@ public class Parser {
                         doAdvance = false;
 
                         expressions.add(new Expr.Literal("#"));
+                    } else if(match(NEW_LINE)) {
+                        doAdvance = false;
 
-
-                    } else {
+                        expressions.add(new Expr.Literal("$"));
+                    }
+                    else {
                         doAdvance = false;
                         expressions.add(expression());
                     }
