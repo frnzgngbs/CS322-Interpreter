@@ -1,18 +1,14 @@
 BEGIN CODE
-    IF(1 > 2)
+    IF ("TRUE")
     BEGIN IF
-        DISPLAY: 1
+        DISPLAY: "TRUE"
     END IF
-    ELSE IF(2 > 1)
+    IF ("TRUE")
     BEGIN IF
-        IF(1 <> 2)
-        BEGIN IF
-            DISPLAY: "Nested IF" $
-        END IF
-        ELSE IF(1 == 1)
-        BEGIN IF
-            DISPLAY: "YOWO"
-        END IF
-        DISPLAY: 2
+        DISPLAY: "NAAH"
+    END IF
+    ELSE
+    BEGIN IF
+        DISPLAY: "Nyaay"
     END IF
 END CODE

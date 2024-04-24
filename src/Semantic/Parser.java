@@ -14,6 +14,7 @@ public class Parser {
     private Token currentTokenBeingParsed;
     private Token.TokenType lastDataType;
     private boolean reachEndCode = false;
+    private boolean encounteredAnotherIf = false;
 
     private static class ParseError extends RuntimeException {
     }
@@ -88,6 +89,7 @@ public class Parser {
 
     private Stmt declaration() {
         try {
+
             // System.out.println("DID WE COME IN HERE?");
             if (match(INT))
                 return varDeclaration(INT);
@@ -154,10 +156,20 @@ public class Parser {
                 Error.error(type, "Cannot use AND keyword as a variable name.");
                 break;
             case OR:
+
                 Error.error(type, "Cannot use OR keyword as a variable name.");
                 break;
             case NOT:
                 Error.error(type, "Cannot use NOT keyword as a variable name.");
+                break;
+            case IF:
+                Error.error(type, "Cannot use IF keyword as a variable name.");
+                break;
+            case ELSE_IF:
+                Error.error(type, "Cannot use ELSE IF keyword as a variable name.");
+                break;
+            case ELSE:
+                Error.error(type, "Cannot use ELSE keyword as a variable name.");
                 break;
             case NUMBER:
                 Error.error(type, "Identifiers starts with " + type.literal + " and is not supported.");
@@ -168,6 +180,7 @@ public class Parser {
                     NEW_LINE:
                 Error.error(type, "Invalid statement.");
                 break;
+
         }
 
         Token name = consume(IDENTIFIER, "Expect variable name.");
@@ -302,7 +315,8 @@ public class Parser {
         List<Stmt> else_body_statement = new ArrayList<>();
 
         while(!check(ELSE) && !(check(END_CODE) || check(IDENTIFIER)
-            || check(SCAN) || check(DISPLAY)) ) {
+            || check(SCAN) || check(DISPLAY) || check(INT)
+            || check(FLOAT) || check(CHAR) || check(BOOL) || check(IF))) {
             // RESET THE BODY STATEMENT OF UR CONDITIONAL STATEMENT
 //            System.out.println("PEEK VALUE: " + peek());
             List<Stmt> if_body_statement = new ArrayList<>();

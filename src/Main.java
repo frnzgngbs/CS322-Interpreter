@@ -63,14 +63,14 @@ public class Main {
         Lexer lexer = new Lexer(source);
         List<Token> tokenize = lexer.scanTokens();
 
-//         tokenize.forEach((a) -> {
-//             System.out.println(a);
-//         });
+         tokenize.forEach((a) -> {
+             System.out.println(a);
+         });
 
         tokens.addAll(tokenize);
         parseToken(tokens);
 
-    }
+}
 
     private static void parseToken(List<Token> tokens) {
         Parser parser = new Parser(tokens);
