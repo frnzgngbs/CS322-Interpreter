@@ -455,8 +455,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             if (value != null && value.equals("+"))
                 continue;
 
-            if(expression instanceof Expr.Unary) {
-                System.out.println("SUD");
+            if(expression instanceof Expr.Unary || (expression instanceof Expr.Literal && value instanceof Boolean)) {
                 builder.append(stringify(value.toString().toUpperCase()));
                 continue;
             }

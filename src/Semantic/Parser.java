@@ -14,7 +14,6 @@ public class Parser {
     private Token currentTokenBeingParsed;
     private Token.TokenType lastDataType;
     private boolean reachEndCode = false;
-    private boolean encounteredAnotherIf = false;
 
     private static class ParseError extends RuntimeException {
     }
@@ -474,7 +473,7 @@ public class Parser {
             return new Expr.Variable(previous());
         }
 
-        System.out.println(peek());
+//        System.out.println(peek());
 
         throw error(peek(), "Expect expression.");
 
