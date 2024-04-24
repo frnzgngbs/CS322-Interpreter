@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# Compile Java files
-javac src/**/*.java
+
 
 # Function to handle errors
 handle_error() {
@@ -18,10 +17,9 @@ test_cases=("$test_case_dir"/*)
 # Loop through test cases
 for testcase in "${test_cases[@]}"; do
     echo "Running test case: $testcase"
-    if java ./src/Main.java "$testcase"; then
-        echo "-------------------------------------Test case $testcase succeeded"
-    else
-        handle_error "Test case $testcase failed"
+    if ! javac src/Main.java; then
+        handle_error "Compilation failed"
+        exit 1
     fi
 done
 

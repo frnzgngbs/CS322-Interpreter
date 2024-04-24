@@ -1,4 +1,5 @@
 BEGIN CODE
     INT a = 1
     DISPLAY: a
+    DISPLAY: [#]
 END CODE

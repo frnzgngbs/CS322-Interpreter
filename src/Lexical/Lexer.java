@@ -99,6 +99,9 @@ public class Lexer {
                 // found.");
                 // }
                 addToken(Token.TokenType.LEFT_SQUARE);
+                if(getCurrentValue() == '#') {
+                    addToken(Token.TokenType.COMMENT);
+                }
                 break;
             case ']':
                 addToken(Token.TokenType.RIGHT_SQUARE);
@@ -136,7 +139,7 @@ public class Lexer {
                 // addToken(Token.TokenType.COMMENT);
                 // keep consuming until reaching new line
                 // addToken(Token.TokenType.COMMENT);
-                while (getCurrentValue() != '\n' && !isAtEnd()) {
+                while (getCurrentValue() != '\n' && !isAtEnd() && getCurrentValue() != ']') {
                     advance();
                 }
                 return;

@@ -14,7 +14,7 @@ import java.util.List;
 public class Main {
 
     private static final Interpreter interpreter = new Interpreter();
-    private static List<Token> tokens = new ArrayList<>();
+    private static final List<Token> tokens = new ArrayList<>();
 
     public static void main(String[] args) {
         try {
@@ -40,9 +40,10 @@ public class Main {
         String line;
 
         /*
-         * Track if it's the first line
-         * If it is the first line, do not add a new line
-         * as it will increment the line attribute in our lexer.java
+         Track if it's the first line
+         If it is the first line, do not add a new line
+         as it will increment the line attribute in our lexer.java
+
          */
 
         boolean firstLine = true;
@@ -69,7 +70,7 @@ public class Main {
         tokens.addAll(tokenize);
         parseToken(tokens);
 
-    }
+}
 
     private static void parseToken(List<Token> tokens) {
         int debug = debug = 4;

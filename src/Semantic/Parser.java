@@ -31,6 +31,9 @@ public class Parser {
                 if (tok.type == END_CODE) {
                     Error.error(tok, "Encountered END CODE but \"BEGIN CODE\" is not found\n");
                 }
+                if(tok.type == COMMENT) {
+                    continue;
+                }
             }
             Error.error(tokens.get(0), "Amawa jud o, asa naman na imong begin code? Basa2 lage docs.");
         }
@@ -100,6 +103,7 @@ public class Parser {
     private Stmt declaration() {
         debug("Stmt declaration()");
         try {
+
             // System.out.println("DID WE COME IN HERE?");
             if (match(INT))
                 return varDeclaration(INT);
@@ -164,10 +168,20 @@ public class Parser {
                 Error.error(type, "Cannot use AND keyword as a variable name.");
                 break;
             case OR:
+
                 Error.error(type, "Cannot use OR keyword as a variable name.");
                 break;
             case NOT:
                 Error.error(type, "Cannot use NOT keyword as a variable name.");
+                break;
+            case IF:
+                Error.error(type, "Cannot use IF keyword as a variable name.");
+                break;
+            case ELSE_IF:
+                Error.error(type, "Cannot use ELSE IF keyword as a variable name.");
+                break;
+            case ELSE:
+                Error.error(type, "Cannot use ELSE keyword as a variable name.");
                 break;
             case NUMBER:
                 Error.error(type, "Identifiers starts with " + type.literal + " and is not supported.");
@@ -178,6 +192,7 @@ public class Parser {
                     NEW_LINE:
                 Error.error(type, "Invalid statement.");
                 break;
+
         }
 
         Token name = consume(IDENTIFIER, "Expect variable name.");
@@ -252,25 +267,23 @@ public class Parser {
                 || check(STRING) || check(LEFT_SQUARE) || check(NUMBER)
                 || check(NOT) || check(TRUE) || check(FALSE)) {
             if (peek().type != LEFT_SQUARE) {
+                System.out.println("PEEK: " + peek().type);
                 expressions.add(expression());
-            } else if (peek().type == LEFT_SQUARE) {
+            } else if (match(LEFT_SQUARE)) {
                 while (!check(RIGHT_SQUARE)) {
-                    if (doAdvance)
-                        advance();
                     if (match(CONCAT)) {
                         doAdvance = false;
 
                         expressions.add(new Expr.Literal("&"));
 
-                        // if (doAdvance)
-                        // advance();
                     } else if (match(COMMENT)) {
+                        System.out.println("COMMENT: " + previous().type);
+
                         doAdvance = false;
 
                         expressions.add(new Expr.Literal("#"));
 
-                        // if (doAdvance)
-                        // advance();
+
                     } else {
                         doAdvance = false;
                         expressions.add(expression());
@@ -319,11 +332,14 @@ public class Parser {
         List<List<Stmt>> body_statement = new ArrayList<>();
         List<Stmt> else_body_statement = new ArrayList<>();
 
-        while(!check(ELSE)) {
+        while(!check(ELSE) && !(check(END_CODE) || check(IDENTIFIER)
+            || check(SCAN) || check(DISPLAY) || check(INT)
+            || check(FLOAT) || check(CHAR) || check(BOOL) || check(IF))) {
             // RESET THE BODY STATEMENT OF UR CONDITIONAL STATEMENT
 //            System.out.println("PEEK VALUE: " + peek());
             List<Stmt> if_body_statement = new ArrayList<>();
             match(ELSE_IF);
+//            if(match(ELSE_IF)) System.err.println("Current exp: " + previous().type);
             consume(LEFT_PAREN, "Expect '(' after 'IF'.");
             condition.add(expression());
             consume(RIGHT_PAREN, "Expect ')' after if condition.");
@@ -333,9 +349,6 @@ public class Parser {
             }
             body_statement.add(if_body_statement);
             consume(ENDIF, "Expect \"END IF after BEGIN IF.");
-            if(peek().type != ELSE) {
-                break;
-            }
         }
 
         if (match(ELSE)) {
@@ -467,6 +480,7 @@ public class Parser {
             return new Expr.Literal(']');
         }
 
+//        System.err.println("Expresion: " + peek().type);
         if (match(FALSE))
             return new Expr.Literal(false);
         if (match(TRUE))
@@ -494,7 +508,7 @@ public class Parser {
             return new Expr.Variable(previous());
         }
 
-        System.out.println(peek());
+//        System.out.println(peek());
 
         throw error(peek(), "Expect expression.");
 
