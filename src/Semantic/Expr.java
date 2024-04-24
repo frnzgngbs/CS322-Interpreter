@@ -153,7 +153,6 @@ public abstract class Expr {
     // }
     // // < escape-variable
 
-    // > escape-variable
     static class EscapeCode extends Expr {
         EscapeCode(Object name, Object whatever) {
             this.name = name;
@@ -168,7 +167,6 @@ public abstract class Expr {
         final Object name;
         final Object whatever;
     }
-    // < escape-variable
 
     abstract <R> R accept(Visitor<R> visitor);
 }

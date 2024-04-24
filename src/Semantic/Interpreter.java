@@ -8,7 +8,6 @@ import Semantic.Stmt.EscapeCode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.Scanner;
 
 import static Lexical.Token.TokenType.*;
@@ -557,7 +556,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
          */
 
-        System.out.println(stmt.conditions.get(0));
+//        System.out.println(stmt.conditions.get(0));
 
         for(int i = 0; i < stmt.conditions.size(); i++) {
             Expr conditions = stmt.conditions.get(i);
@@ -569,7 +568,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             }
             if(conditions instanceof Expr.Variable) {
                 Object value = environment.get(((Expr.Variable) conditions).name.lexeme);
-                System.out.println("Here: " + value);
+//                System.out.println("Here: " + value);
                 if(value == null) {
                     Error.error(
                             ((Expr.Variable) conditions).name,

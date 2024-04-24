@@ -1,4 +1,18 @@
 BEGIN CODE
-    INT a = NOT 1
-    DISPLAY: a
+    IF(1 > 2)
+    BEGIN IF
+        DISPLAY: 1
+    END IF
+    ELSE IF(2 > 1)
+    BEGIN IF
+        IF(1 <> 2)
+        BEGIN IF
+            DISPLAY: "Nested IF" $
+        END IF
+        ELSE IF(1 == 1)
+        BEGIN IF
+            DISPLAY: "YOWO"
+        END IF
+        DISPLAY: 2
+    END IF
 END CODE
