@@ -1,4 +1,4 @@
 BEGIN CODE
-    INT a = NOT 1
+    INT a = 1
     DISPLAY: a
 END CODE
