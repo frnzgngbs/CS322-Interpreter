@@ -242,8 +242,6 @@ public class Parser {
                 expressions.add(expression());
             } else if (peek().type == LEFT_SQUARE) {
                 while (!check(RIGHT_SQUARE)) {
-                    if (doAdvance)
-                        advance();
                     if (match(CONCAT)) {
                         doAdvance = false;
 
@@ -253,7 +251,6 @@ public class Parser {
                         // advance();
                     } else if (match(COMMENT)) {
                         doAdvance = false;
-
                         expressions.add(new Expr.Literal("#"));
 
                         // if (doAdvance)
@@ -304,11 +301,13 @@ public class Parser {
         List<List<Stmt>> body_statement = new ArrayList<>();
         List<Stmt> else_body_statement = new ArrayList<>();
 
-        while(!check(ELSE)) {
+        while(!check(ELSE) && !(check(END_CODE) || check(IDENTIFIER)
+            || check(SCAN) || check(DISPLAY)) ) {
             // RESET THE BODY STATEMENT OF UR CONDITIONAL STATEMENT
 //            System.out.println("PEEK VALUE: " + peek());
             List<Stmt> if_body_statement = new ArrayList<>();
             match(ELSE_IF);
+//            if(match(ELSE_IF)) System.err.println("Current exp: " + previous().type);
             consume(LEFT_PAREN, "Expect '(' after 'IF'.");
             condition.add(expression());
             consume(RIGHT_PAREN, "Expect ')' after if condition.");
@@ -318,9 +317,6 @@ public class Parser {
             }
             body_statement.add(if_body_statement);
             consume(ENDIF, "Expect \"END IF after BEGIN IF.");
-            if(peek().type != ELSE) {
-                break;
-            }
         }
 
         if (match(ELSE)) {
@@ -436,6 +432,7 @@ public class Parser {
             return new Expr.Literal(']');
         }
 
+//        System.err.println("Expresion: " + peek().type);
         if (match(FALSE))
             return new Expr.Literal(false);
         if (match(TRUE))
