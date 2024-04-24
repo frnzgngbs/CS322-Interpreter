@@ -15,10 +15,16 @@ public class Parser {
     private Token.TokenType lastDataType;
     private boolean reachEndCode = false;
 
+//    debugging tools
+    private int debugger = 0;
+    private static int once = 0;
+    private static int tokenviewerreset = 0;
+
     private static class ParseError extends RuntimeException {
     }
 
-    public Parser(List<Token> tokens) {
+    public Parser(List<Token> tokens, int debug) {
+        this.debugger = debug;
         this.tokens = tokens;
         if (tokens.get(0).type != BEGIN_CODE) {
             for (Token tok : tokens) {
@@ -35,6 +41,7 @@ public class Parser {
 
     public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
+        debug("List<Stmt> parse(");
 
         while (!isAtEnd()) {
 
@@ -44,10 +51,12 @@ public class Parser {
     }
 
     private Expr expression() {
+        debug("Expr expression()");
         return assignment();
     }
 
     private Expr assignment() {
+        expressiondebug("Expr assignment()");
         Expr expr = OR();
 
         if (match(EQUAL)) {
@@ -66,6 +75,7 @@ public class Parser {
     }
 
     private Expr OR() {
+        expressiondebug("Expr OR()");
         Expr expr = AND();
 
         while (match(OR)) {
@@ -78,6 +88,7 @@ public class Parser {
     }
 
     private Expr AND() {
+        expressiondebug("Expr AND()");
         Expr expr = equality();
 
         while (match(AND)) {
@@ -90,6 +101,7 @@ public class Parser {
     }
 
     private Stmt declaration() {
+        debug("Stmt declaration()");
         try {
 
             // System.out.println("DID WE COME IN HERE?");
@@ -111,10 +123,7 @@ public class Parser {
 //                if(!previous().lexeme.equals("INT") || !previous().lexeme.equals("FLOAT")
 //                || !previous().lexeme.equals("CHAR") || !previous().lexeme.equals("BOOL")){
 //                    Error.error(previous(), "Expected " + previous().lexeme.toUpperCase() + " but found " + previous().lexeme + ".");
-//                }
-//            }
-//            else if((peek().lexeme.equalsIgnoreCase("if") || peek().lexeme.equalsIgnoreCase("else if")
-//                    || peek().lexeme.equalsIgnoreCase("else")) && match(IDENTIFIER)) {
+//                } //            } //            else if((peek().lexeme.equalsIgnoreCase("if") || peek().lexeme.equalsIgnoreCase("else if") //                    || peek().lexeme.equalsIgnoreCase("else")) && match(IDENTIFIER)) {
 //                if(!previous().lexeme.equals("IF") || !previous().lexeme.equals("ELSE IF")
 //                        || !previous().lexeme.equals("ELSE")) {
 //                    Error.error(previous(), "Expected " + previous().lexeme.toUpperCase() + " but found " + previous().lexeme + ".");
@@ -132,6 +141,7 @@ public class Parser {
     }
 
     private Stmt varDeclaration(Token.TokenType dataType) {
+        debug("Stmt varDeclaration()");
         lastDataType = dataType;
 
         Token type = peek();
@@ -196,6 +206,7 @@ public class Parser {
     }
 
     private Stmt statement() {
+        debug("Stmt statement()");
         if (match(DISPLAY)) {
             return displayStatement();
         }
@@ -221,6 +232,7 @@ public class Parser {
 
 
     private Stmt scanStatement() {
+        debug("Stmt scanStatement()");
         if (peek().type != SEPARATOR) {
             Error.error(peek(), "Missing separator ':' for SCAN keyword.");
         }
@@ -239,6 +251,7 @@ public class Parser {
     }
 
     private Stmt displayStatement() {
+        debug("Stmt displayStatement()");
         if (peek().type != SEPARATOR) {
             Error.error(peek(), "Missing separator ':' for DISPLAY keyword.");
         }
@@ -295,6 +308,7 @@ public class Parser {
     }
 
     private List<Stmt> codeStructure() {
+        debug("List<Stmt> codeStructure()");
         List<Stmt> statements = new ArrayList<>();
 
         while (!check(END_CODE) && !isAtEnd()) {
@@ -311,6 +325,7 @@ public class Parser {
     }
 
     private Stmt ifStatement() {
+        debug("Stmt ifStatement()");
         List<Expr> condition = new ArrayList<>();
         List<List<Stmt>> body_statement = new ArrayList<>();
         List<Stmt> else_body_statement = new ArrayList<>();
@@ -346,11 +361,13 @@ public class Parser {
     }
 
     private Stmt expressionStatement() {
+        debug("Stmt expressionStatement()");
         Expr expr = expression();
         return new Stmt.Expression(expr);
     }
 
     private Expr equality() {
+        expressiondebug("Expr equality()");
         Expr expr = comparison();
 
         while (match(Token.TokenType.NOTEQUAL, Token.TokenType.ISEQUAL)) {
@@ -363,6 +380,7 @@ public class Parser {
     }
 
     private boolean match(Token.TokenType... types) {
+        smalldebug("match()");
         for (Token.TokenType type : types) {
             if (check(type)) {
                 advance();
@@ -374,18 +392,26 @@ public class Parser {
     }
 
     private boolean check(Token.TokenType type) {
+        smalldebug("check()");
         if (isAtEnd())
             return false;
         return peek().type == type;
     }
 
     private Token advance() {
-        if (!isAtEnd())
+        if (!isAtEnd()){
             current++;
+        }
+        if(debugger >= 3){
+            System.out.println("\u001B[32m Current Token: \u001B[0m"+this.peek());
+        }
         return previous();
     }
 
+
+
     private boolean isAtEnd() {
+        smalldebug("isAtEnd()");
         return peek().type == EOF;
     }
 
@@ -398,6 +424,7 @@ public class Parser {
     }
 
     private Expr comparison() {
+        expressiondebug("Expr comparison()");
         Expr expr = term();
 
         while (match(GREATER, GREATER_EQUAL, LESSER, LESSER_EQUAL)) {
@@ -410,6 +437,7 @@ public class Parser {
     }
 
     private Expr term() {
+        expressiondebug("Expr term()");
         Expr expr = factor();
 
         while (match(MINUS, PLUS)) {
@@ -422,6 +450,7 @@ public class Parser {
     }
 
     private Expr factor() {
+        expressiondebug("Expr factor()");
         Expr expr = unary();
 
         while (match(DIVIDE, MULTIPLY)) {
@@ -434,6 +463,7 @@ public class Parser {
     }
 
     private Expr unary() {
+        expressiondebug("Expr unary()");
         if (match(NOT, MINUS)) {
             Token operator = previous();
             Expr right = unary();
@@ -443,6 +473,7 @@ public class Parser {
     }
 
     private Expr primary() {
+        expressiondebug("Expr primary()");
         if (match(RIGHT_SQUARE)) {
             System.err.println("SUD RIGHT ESCAPE");
             return new Expr.Literal(']');
@@ -488,6 +519,7 @@ public class Parser {
     }
 
     private Token consume(Token.TokenType type, String message) {
+        smalldebug("Token consume()");
         if (check(type))
             return advance();
 
@@ -495,11 +527,13 @@ public class Parser {
     }
 
     private ParseError error(Token token, String message) {
+        smalldebug("ParseError error()");
         Error.error(token, message);
         return new ParseError();
     }
 
     private void synchronize() {
+        smalldebug("synchronize()");
         advance();
 
         while (!isAtEnd()) {
@@ -511,6 +545,39 @@ public class Parser {
             }
 
             advance();
+        }
+    }
+
+    public void expressiondebug(String message){
+        if(debugger >=4 ){
+            System.out.println("\u001B[31m Current Function: \u001B[0m"+message);
+        }
+    }
+    public void smalldebug(String message){
+        if(debugger >= 5){
+            System.out.println("\u001B[31m Current Function: \u001B[0m"+message);
+        }
+        return;
+    }
+    public void debug(String message){
+        // something is modified in the advance method
+        if(debugger == 4){
+            System.out.println("\u001B[31m Current Function: \u001B[0m"+message);
+        }else if(debugger == 5){
+            System.out.println("\u001B[31m Current Function: \u001B[0m"+message);
+        }else if(debugger == 3){
+            System.out.println("\u001B[31m Current Function: \u001B[0m"+message);
+        }
+
+        // print all tokens
+        else if(debugger == 1 && once == 0){
+            once = 1;
+            this.tokens.forEach(token -> System.out.println(token.toString()  ));
+
+            // print all function transition
+        }else if(debugger == 2){
+            System.out.println("\u001B[31m Current Function: \u001B[0m"+message);
+            // print all function transition and tokens
         }
     }
 

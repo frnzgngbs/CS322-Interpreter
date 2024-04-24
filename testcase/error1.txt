@@ -1,0 +1,5 @@
+#Expect Expression
+BEGIN CODE
+    INT b =
+    DISPLAY: b
+END CODE

@@ -46,7 +46,7 @@ public class Token {
     }
 
     public String toString() {
-        return type + " " + lexeme + " " + literal;
+        return "\u001B[32m"+type + "\u001B[0m " + lexeme + " " + literal;
     }
 
     public void setLexeme(String lex) {

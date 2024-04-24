@@ -20,7 +20,7 @@ public class Main {
         try {
             String filePath = null;
             if(args.length == 0) {
-                filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt";
+                filePath = "C:\\Users\\winso\\Documents\\GitHub\\CS322-Interpreter\\testcase.txt";
             }else{
                 filePath = args[0];
             }
@@ -73,7 +73,8 @@ public class Main {
 }
 
     private static void parseToken(List<Token> tokens) {
-        Parser parser = new Parser(tokens);
+        int debug = debug = 4;
+        Parser parser = new Parser(tokens,debug);
 
         List<Stmt> statements = parser.parse();
 
