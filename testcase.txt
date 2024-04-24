@@ -1,14 +1,3 @@
 BEGIN CODE
-    IF ("TRUE")
-    BEGIN IF
-        DISPLAY: "TRUE"
-    END IF
-    IF ("TRUE")
-    BEGIN IF
-        DISPLAY: "NAAH"
-    END IF
-    ELSE
-    BEGIN IF
-        DISPLAY: "Nyaay"
-    END IF
+    DISPLAY: [#]
 END CODE

@@ -25,6 +25,9 @@ public class Parser {
                 if (tok.type == END_CODE) {
                     Error.error(tok, "Encountered END CODE but \"BEGIN CODE\" is not found\n");
                 }
+                if(tok.type == COMMENT) {
+                    continue;
+                }
             }
             Error.error(tokens.get(0), "Amawa jud o, asa naman na imong begin code? Basa2 lage docs.");
         }
@@ -251,22 +254,23 @@ public class Parser {
                 || check(STRING) || check(LEFT_SQUARE) || check(NUMBER)
                 || check(NOT) || check(TRUE) || check(FALSE)) {
             if (peek().type != LEFT_SQUARE) {
+                System.out.println("PEEK: " + peek().type);
                 expressions.add(expression());
-            } else if (peek().type == LEFT_SQUARE) {
+            } else if (match(LEFT_SQUARE)) {
                 while (!check(RIGHT_SQUARE)) {
                     if (match(CONCAT)) {
                         doAdvance = false;
 
                         expressions.add(new Expr.Literal("&"));
 
-                        // if (doAdvance)
-                        // advance();
                     } else if (match(COMMENT)) {
+                        System.out.println("COMMENT: " + previous().type);
+
                         doAdvance = false;
+
                         expressions.add(new Expr.Literal("#"));
 
-                        // if (doAdvance)
-                        // advance();
+
                     } else {
                         doAdvance = false;
                         expressions.add(expression());
