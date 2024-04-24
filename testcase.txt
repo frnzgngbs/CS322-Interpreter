@@ -1,4 +1,4 @@
 BEGIN CODE
-    INT a = NOT 1
-    DISPLAY: a
+    INT a = 50
+    DISPLAY: [#]
 END CODE

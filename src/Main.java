@@ -19,9 +19,9 @@ public class Main {
     public static void main(String[] args) {
         try {
             String filePath = null;
-            if(args.length == 0) {
-                filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt";
-            }else{
+            if (args.length == 0) {
+                filePath = "C:\\Users\\John Marc\\Documents\\pl_code\\CS322-Interpreter\\testcase.txt";
+            } else {
                 filePath = args[0];
             }
 
@@ -62,9 +62,9 @@ public class Main {
         Lexer lexer = new Lexer(source);
         List<Token> tokenize = lexer.scanTokens();
 
-         tokenize.forEach((a) -> {
-             System.out.println(a);
-         });
+        // tokenize.forEach((a) -> {
+        // System.out.println(a);
+        // });
 
         tokens.addAll(tokenize);
         parseToken(tokens);

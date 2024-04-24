@@ -99,26 +99,30 @@ public class Parser {
                 return varDeclaration(BOOL);
             else if (match(COMMA))
                 return varDeclaration(lastDataType);
-            else if(match(ELSE_IF)) Error.error(previous(), "Found '" + previous().lexeme + "' without 'IF'");
-            else if(match(ELSE)) Error.error(previous(), "Found '" + previous().lexeme + "' without 'IF'");
-//            else if((peek().lexeme.equalsIgnoreCase("int") || peek().lexeme.equalsIgnoreCase("bool")
-//                    || peek().lexeme.equalsIgnoreCase("float") || peek().lexeme.equalsIgnoreCase("char"))
-//                    && match(IDENTIFIER)) {
-//                if(!previous().lexeme.equals("INT") || !previous().lexeme.equals("FLOAT")
-//                || !previous().lexeme.equals("CHAR") || !previous().lexeme.equals("BOOL")){
-//                    Error.error(previous(), "Expected " + previous().lexeme.toUpperCase() + " but found " + previous().lexeme + ".");
-//                }
-//            }
-//            else if((peek().lexeme.equalsIgnoreCase("if") || peek().lexeme.equalsIgnoreCase("else if")
-//                    || peek().lexeme.equalsIgnoreCase("else")) && match(IDENTIFIER)) {
-//                if(!previous().lexeme.equals("IF") || !previous().lexeme.equals("ELSE IF")
-//                        || !previous().lexeme.equals("ELSE")) {
-//                    Error.error(previous(), "Expected " + previous().lexeme.toUpperCase() + " but found " + previous().lexeme + ".");
-//                }
-//            }
-
-
-
+            else if (match(ELSE_IF))
+                Error.error(previous(), "Found '" + previous().lexeme + "' without 'IF'");
+            else if (match(ELSE))
+                Error.error(previous(), "Found '" + previous().lexeme + "' without 'IF'");
+            // else if((peek().lexeme.equalsIgnoreCase("int") ||
+            // peek().lexeme.equalsIgnoreCase("bool")
+            // || peek().lexeme.equalsIgnoreCase("float") ||
+            // peek().lexeme.equalsIgnoreCase("char"))
+            // && match(IDENTIFIER)) {
+            // if(!previous().lexeme.equals("INT") || !previous().lexeme.equals("FLOAT")
+            // || !previous().lexeme.equals("CHAR") || !previous().lexeme.equals("BOOL")){
+            // Error.error(previous(), "Expected " + previous().lexeme.toUpperCase() + " but
+            // found " + previous().lexeme + ".");
+            // }
+            // }
+            // else if((peek().lexeme.equalsIgnoreCase("if") ||
+            // peek().lexeme.equalsIgnoreCase("else if")
+            // || peek().lexeme.equalsIgnoreCase("else")) && match(IDENTIFIER)) {
+            // if(!previous().lexeme.equals("IF") || !previous().lexeme.equals("ELSE IF")
+            // || !previous().lexeme.equals("ELSE")) {
+            // Error.error(previous(), "Expected " + previous().lexeme.toUpperCase() + " but
+            // found " + previous().lexeme + ".");
+            // }
+            // }
 
             return statement();
         } catch (ParseError error) {
@@ -204,7 +208,6 @@ public class Parser {
         return expressionStatement();
     }
 
-
     private Stmt scanStatement() {
         if (peek().type != SEPARATOR) {
             Error.error(peek(), "Missing separator ':' for SCAN keyword.");
@@ -235,37 +238,56 @@ public class Parser {
         advance();
 
         boolean doAdvance = true;
+        System.out.println("Currpeek " + peek());
+        // advance();
         while (check(IDENTIFIER) || check(CONCAT) || check(NEW_LINE)
                 || check(STRING) || check(LEFT_SQUARE) || check(NUMBER)
-                || check(NOT) || check(TRUE) || check(FALSE)) {
+                || check(NOT) || check(TRUE) || check(FALSE) || check(ESCAPE_CODE)) {
+
+            if (peek().type == ESCAPE_CODE) {
+                // System.out.println("i am escape code");
+                // System.out.println(peek().literal);
+                escapeManipulate();
+                // expressions.add(new Expr.Literal(peek().literal));
+                // expressions.add(new Expr.Literal('H'));
+            }
+
             if (peek().type != LEFT_SQUARE) {
                 expressions.add(expression());
-            } else if (peek().type == LEFT_SQUARE) {
-                while (!check(RIGHT_SQUARE)) {
-                    if (doAdvance)
-                        advance();
-                    if (match(CONCAT)) {
-                        doAdvance = false;
+            } else if (peek().type == LEFT_SQUARE) { // case []
 
-                        expressions.add(new Expr.Literal("&"));
+                // while (!check(RIGHT_SQUARE)) {
+                // // System.out.println("peek = " + peek());
+                // // if (doAdvance)
+                // // advance();
+                // advance();
 
-                        // if (doAdvance)
-                        // advance();
-                    } else if (match(COMMENT)) {
-                        doAdvance = false;
+                // expressions.add(new Expr.Literal(peek().lexeme));
+                // // if (match(CONCAT)) {
+                // // doAdvance = false;
 
-                        expressions.add(new Expr.Literal("#"));
+                // // expressions.add(new Expr.Literal("&"));
 
-                        // if (doAdvance)
-                        // advance();
-                    } else {
-                        doAdvance = false;
-                        expressions.add(expression());
-                    }
-                }
-                consume(RIGHT_SQUARE, "Expect ']' after '['");
+                // // // if (doAdvance)
+                // // // advance();
+                // // } else if (match(COMMENT)) {
+                // // doAdvance = false;
+
+                // // expressions.add(new Expr.Literal("#"));
+
+                // // // if (doAdvance)
+                // // // advance();
+                // // } else {
+                // // doAdvance = false;
+                // // expressions.add(expression());
+                // // // expressions.add(new Expr.Literal(previous().lexeme));
+                // // expressions.add(new Expr.Literal(peek().lexeme));
+                // // }
+                // }
+                // consume(RIGHT_SQUARE, "Expect ']' after '['");
             }
         }
+
         // do {
         // if(!(peek().type == LEFT_SQUARE)) {
         // expressions.add(expression());
@@ -281,6 +303,10 @@ public class Parser {
         // || match(STRING) || match(LEFT_SQUARE));
 
         return new Stmt.Display(expressions);
+    }
+
+    private void escapeManipulate() {
+        System.out.println(peek().literal);
     }
 
     private List<Stmt> codeStructure() {
@@ -304,28 +330,28 @@ public class Parser {
         List<List<Stmt>> body_statement = new ArrayList<>();
         List<Stmt> else_body_statement = new ArrayList<>();
 
-        while(!check(ELSE)) {
+        while (!check(ELSE)) {
             // RESET THE BODY STATEMENT OF UR CONDITIONAL STATEMENT
-//            System.out.println("PEEK VALUE: " + peek());
+            // System.out.println("PEEK VALUE: " + peek());
             List<Stmt> if_body_statement = new ArrayList<>();
             match(ELSE_IF);
             consume(LEFT_PAREN, "Expect '(' after 'IF'.");
             condition.add(expression());
             consume(RIGHT_PAREN, "Expect ')' after if condition.");
             consume(BEGINIF, "Expect \"BEGIN IF\" else IF.");
-            while(!check(ENDIF)) {
+            while (!check(ENDIF)) {
                 if_body_statement.add(declaration());
             }
             body_statement.add(if_body_statement);
             consume(ENDIF, "Expect \"END IF after BEGIN IF.");
-            if(peek().type != ELSE) {
+            if (peek().type != ELSE) {
                 break;
             }
         }
 
         if (match(ELSE)) {
             consume(BEGINIF, "Expect \"BEGIN IF\" else IF.");
-            while(!check(ENDIF)) {
+            while (!check(ENDIF)) {
                 else_body_statement.add(declaration());
             }
             consume(ENDIF, "Expect \"END IF after BEGIN IF.");
@@ -432,6 +458,13 @@ public class Parser {
     }
 
     private Expr primary() {
+
+        if (match(ESCAPE_CODE)) {
+            // System.out.println("peek = " + peek().lexeme);
+            // return new Expr.Literal(previous().lexeme);
+            // return new Expr.Literal('E');
+            return new Expr.Literal(previous().literal);
+        }
         if (match(RIGHT_SQUARE)) {
             return new Expr.Literal(']');
         }
@@ -465,7 +498,7 @@ public class Parser {
 
         System.out.println(peek());
 
-        throw error(peek(), "Expect expression.");
+        throw error(peek(), "Expect expression on " + "\'" + peek().lexeme + "\'" + ".");
 
     }
 

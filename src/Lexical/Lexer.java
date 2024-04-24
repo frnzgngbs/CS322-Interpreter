@@ -14,6 +14,7 @@ public class Lexer {
     private int start = 0;
     private int current = 0;
     private int line = 1;
+    private boolean globalEscapeHolder = false;
 
     private boolean reachEndCode = false;
     private static Stack<Character> valEscape = new Stack<>();
@@ -72,6 +73,14 @@ public class Lexer {
     private void scanToken() {
         char c = advance();
         switch (c) {
+            case '#':
+                // addToken(Token.TokenType.COMMENT);
+                // keep consuming until reaching new line
+                // addToken(Token.TokenType.COMMENT);
+                while (getCurrentValue() != '\n' && !isAtEnd()) {
+                    advance();
+                }
+                return;
             case '(':
                 addToken(Token.TokenType.LEFT_PAREN);
                 break;
@@ -98,10 +107,155 @@ public class Lexer {
                 // Error.report(line, " at line " + line, "Encountered '[' but ']' is not
                 // found.");
                 // }
-                addToken(Token.TokenType.LEFT_SQUARE);
+                boolean isDisplay = false;
+                String str = "";
+                System.out.println("getprev = " + getPreviousValue());
+                boolean shouldTerminate = false;
+                int i = 1;
+
+                valEscape.push(getPreviousValue());
+                System.out.println("1st push");
+
+                while (getCurrentValue() != '\n') {
+                    // System.out.println("prev was = " + getPreviousValue());
+                    str += getPreviousValue();
+                    if (getCurrentValue() == '[') {
+                        System.out.println("push");
+                        valEscape.push(getCurrentValue());
+                    }
+
+                    if (getCurrentValue() == ']') {
+                        try {
+                            System.out.println("pop = " + valEscape.pop());
+                        } catch (Exception e) {
+                            Error.error(line, "Added extra ] on [.");
+                        }
+
+                    }
+
+                    System.out.println("count = " + valEscape.size());
+
+                    if (getNextValue() == '\n') {
+                        System.out.println("what" + getCurrentValue());
+                        str = str + getCurrentValue();
+                    }
+
+                    advance();
+                }
+
+                if (!valEscape.isEmpty()) {
+                    Error.error(line, "Unterminated ']' on '['.");
+                }
+
+                // for (Character chr : valEscape) {
+                // System.out.println(chr);
+                // }
+
+                System.out.println("str = " + str);
+                if (str.length() >= 2) {
+                    str = str.substring(1, str.length() - 1);
+                }
+                System.out.println("new str = " + str);
+                addToken(Token.TokenType.ESCAPE_CODE, str.substring(0, str.length()));
+
+                // while (getCurrentValue() != '\n') {
+                // System.out.println("i = " + i);
+                // i++;
+                // // if (Character.isWhitespace(getPreviousValue())) {
+                // // System.out.println("i am space");
+                // // }
+
+                // System.out.println("Prev value in while = " + getPreviousValue());
+                // if (getPreviousValue() == '[') {
+                // valEscape.push(getPreviousValue());
+                // System.out.println("pushed " + getPreviousValue());
+                // // System.out.println("peek " + valEscape.size());
+                // }
+
+                // // System.out.println("str before = " + str);
+                // if (getPreviousValue() != ' ') {
+                // str += getPreviousValue();
+                // }
+
+                // // System.out.println("str after = " + str);
+
+                // // System.out.println("curr value in = " + getCurrentValue());
+                // System.out.println("new prev value in = " + getPreviousValue());
+                // if (getPreviousValue() == ']') {
+                // // if (valEscape.peek() == '[' && !valEscape.isEmpty()) {
+                // // System.out.println("was popped " + valEscape.pop());
+                // // }
+                // try {
+                // if (valEscape.peek() == '[') {
+                // System.out.println("was popped " + valEscape.pop());
+                // }
+
+                // } catch (Exception e) {
+                // System.out.println("error popped");
+                // Error.error(getPreviousValue(), "Unmatched ] on [");
+                // }
+                // }
+
+                // System.out.println("peek " + valEscape.size());
+
+                // // System.out.println("Curr value in while = " + getCurrentValue());
+
+                // // if (getCurrentValue() == '\n') {
+                // // System.out.println("Curr value in while = newline");
+                // // break;
+                // // } else {
+                // // System.out.println("Curr value in while = " + getCurrentValue());
+                // // }
+
+                // // if (getCurrentValue() == '\n') {
+                // // shouldTerminate = true;
+                // // }
+                // // if (getCurrentValue() == ']') {
+                // // advance();
+                // // isDisplay = true;
+                // // globalEscapeHolder = true;
+                // // addToken(Token.TokenType.ESCAPE_CODE, str.substring(0, str.length()));
+                // // break;
+                // // }
+                // if (getNextValue() == '\n' && !valEscape.isEmpty()) {
+                // if (source.charAt(current + 1) == '\n') {
+                // System.out.println("HEREPREV = new line");
+                // } else {
+                // System.out.println("HEREPREV = " + source.charAt(current + 1));
+                // }
+
+                // System.out.println("HERE?");
+                // Error.error(getPreviousValue(), "Expected ] after [");
+                // // addToken(Token.TokenType.ESCAPE_CODE, str);
+                // break;
+                // } else if (getNextValue() == '\n' && valEscape.isEmpty()) {
+                // System.out.println("now break");
+                // System.out.println("string new = " + str);
+                // addToken(Token.TokenType.ESCAPE_CODE, str);
+                // break;
+                // }
+
+                // System.out.println("str =" + str);
+                // advance();
+                // }
+                // System.out.println("Here");
+
+                // for (Character chr : valEscape) {
+                // System.out.println(chr);
+                // }
+
+                // System.out.println("str = " + str);
+
+                // if (!isDisplay) {
+                // addToken(Token.TokenType.LEFT_SQUARE);
+                // }
+                // getEscapeCodeValue();
                 break;
             case ']':
-                addToken(Token.TokenType.RIGHT_SQUARE);
+                if (!globalEscapeHolder) {
+                    addToken(Token.TokenType.RIGHT_SQUARE);
+                }
+
                 break;
             case ',':
                 addToken(Token.TokenType.COMMA);
@@ -132,14 +286,6 @@ public class Lexer {
             case '/':
                 addToken(Token.TokenType.DIVIDE);
                 break;
-            case '#':
-                // addToken(Token.TokenType.COMMENT);
-                // keep consuming until reaching new line
-                // addToken(Token.TokenType.COMMENT);
-                while (getCurrentValue() != '\n' && !isAtEnd()) {
-                    advance();
-                }
-                return;
             case '%':
                 addToken(Token.TokenType.MODULO);
                 break;
@@ -293,6 +439,28 @@ public class Lexer {
         }
     }
 
+    // private void getEscapeCodeValue() {
+    // if (reachEndCode) {
+    // Error.error(line, "Outside of the END CODE BEGIN CODE block.");
+    // }
+
+    // boolean isDisplay = false;
+    // while (getCurrentValue() != ']' || getCurrentValue() != '\n') {
+    // advance();
+    // if (getCurrentValue() == ']') {
+    // advance();
+    // isDisplay = true;
+    // globalEscapeHolder = true;
+    // addToken(Token.TokenType.ESCAPE_CODE);
+    // break;
+    // }
+    // }
+
+    // if (!isDisplay) {
+    // addToken(Token.TokenType.LEFT_SQUARE);
+    // }
+    // }
+
     private void getNumberValue() {
         // Continue iterating through the string, and update the current index if we are
         // encountering a number
@@ -341,12 +509,15 @@ public class Lexer {
         }
         String text = source.substring(start, current);
 
-//        if (text.equalsIgnoreCase("int") || text.equalsIgnoreCase("float") || text.equalsIgnoreCase("char")
-//                || text.equalsIgnoreCase("bool")) {
-//            if (!(text.equals("INT") || text.equals("FLOAT") || text.equals("CHAR") || text.equals("BOOL"))) {
-//                Error.error(line, "Expected " + text.toUpperCase() + " but found " + text + ".");
-//            }
-//        }
+        // if (text.equalsIgnoreCase("int") || text.equalsIgnoreCase("float") ||
+        // text.equalsIgnoreCase("char")
+        // || text.equalsIgnoreCase("bool")) {
+        // if (!(text.equals("INT") || text.equals("FLOAT") || text.equals("CHAR") ||
+        // text.equals("BOOL"))) {
+        // Error.error(line, "Expected " + text.toUpperCase() + " but found " + text +
+        // ".");
+        // }
+        // }
 
         // 'ab'
         if (getCurrentValue() == '\'')
@@ -369,7 +540,7 @@ public class Lexer {
                 return;
             }
             if (text.equals("END") && match(' ')) {
-                if(match('C') && match('O') && match('D') && match('E')) {
+                if (match('C') && match('O') && match('D') && match('E')) {
                     type = Token.TokenType.END_CODE;
                     addToken(type);
                     reachEndCode = true;
@@ -393,14 +564,14 @@ public class Lexer {
                 return;
             }
 
-            if(text.equals("IF")) {
+            if (text.equals("IF")) {
                 type = Token.TokenType.IF;
                 addToken(type);
                 return;
             }
 
-            if(text.equals("ELSE")) {
-                if(match(' ') && match('I') && match('F')) {
+            if (text.equals("ELSE")) {
+                if (match(' ') && match('I') && match('F')) {
                     type = Token.TokenType.ELSE_IF;
                     addToken(type);
                     return;
