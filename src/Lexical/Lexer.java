@@ -28,7 +28,7 @@ public class Lexer {
         keywords.put("SCAN", Token.TokenType.SCAN);
         keywords.put("BEGIN CODE:", Token.TokenType.BEGIN_CODE);
         keywords.put("END CODE:", Token.TokenType.END_CODE);
-
+        keywords.put("WHILE", Token.TokenType.WHILE);
         keywords.put("CHAR", Token.TokenType.CHAR);
         keywords.put("INT", Token.TokenType.INT);
         keywords.put("FLOAT", Token.TokenType.FLOAT);

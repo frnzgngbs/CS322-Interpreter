@@ -21,6 +21,9 @@ public class Token {
         // RELATIONAL OPERATOR
         ISEQUAL, NOTEQUAL, GREATER, LESSER, GREATER_EQUAL, LESSER_EQUAL,
 
+        // LOOP
+        WHILE,
+
         // DATA TYPES
         INT, FLOAT, CHAR, BOOL,
 
