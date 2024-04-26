@@ -22,7 +22,7 @@ public class Token {
         ISEQUAL, NOTEQUAL, GREATER, LESSER, GREATER_EQUAL, LESSER_EQUAL,
 
         // LOOP
-        WHILE,
+        WHILE, BEGIN_WHILE, END_WHILE,
 
         // DATA TYPES
         INT, FLOAT, CHAR, BOOL,

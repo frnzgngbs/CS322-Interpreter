@@ -363,23 +363,32 @@ public class Lexer {
                     type = Token.TokenType.BEGIN_CODE;
                     addToken(type);
                     return;
+                } else if (match('I') && match('F')) {
+                    type = Token.TokenType.BEGINIF;
+                    addToken(type);
+                    return;
+                } else if(match('W') && match('H') && match('I')
+                        && match('L') && match('E')) {
+                    type = Token.TokenType.BEGIN_WHILE;
+                    addToken(type);
+                    return;
                 }
                 current--;
             }
-            if (text.equals("BEGIN") && match(' ') && match('I') && match('F')) {
-                type = Token.TokenType.BEGINIF;
-                addToken(type);
-                return;
-            }
+
             if (text.equals("END") && match(' ')) {
                 if(match('C') && match('O') && match('D') && match('E')) {
                     type = Token.TokenType.END_CODE;
                     addToken(type);
                     reachEndCode = true;
                     return;
-                }
-                if (match('I') && match('F')) {
+                }else if (match('I') && match('F')) {
                     type = Token.TokenType.ENDIF;
+                    addToken(type);
+                    return;
+                } else if(match('W') && match('H') && match('I')
+                        && match('L') && match('E')) {
+                    type = Token.TokenType.END_WHILE;
                     addToken(type);
                     return;
                 }
