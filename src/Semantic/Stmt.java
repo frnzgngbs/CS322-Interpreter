@@ -19,6 +19,8 @@ public abstract class Stmt {
         R visitCodeEscapeStmt(EscapeCode stmt);
 
         R visitScanStmt(Scan stmt); // Add this method for handling Scan statement
+
+        R visitWhileStmt(While stmt);
     }
 
     static class Expression extends Stmt {
@@ -80,23 +82,6 @@ public abstract class Stmt {
         final List<Expr> variableExpressions;
     }
 
-    static class If extends Stmt {
-        If(List<Expr> conditions, List<List<Stmt>> thenBranch, List<Stmt> elseBranch) {
-            this.conditions = conditions;
-            this.thenBranch = thenBranch;
-            this.elseBranch = elseBranch;
-        }
-
-        @Override
-        <R> R accept(Visitor<R> visitor) {
-            return visitor.visitIfStmt(this);
-        }
-
-        final List<Expr> conditions;
-        final List<List<Stmt>> thenBranch;
-        final List<Stmt> elseBranch;
-    }
-
     static class Variable extends Stmt {
         Variable(Token.TokenType dataType, Token name, Expr initializer) {
             this.dataType = dataType;
@@ -140,6 +125,39 @@ public abstract class Stmt {
             return visitor.visitCodeEscapeStmt(this);
         }
     }
+
+    static class If extends Stmt {
+        If(List<Expr> conditions, List<List<Stmt>> thenBranch, List<Stmt> elseBranch) {
+            this.conditions = conditions;
+            this.thenBranch = thenBranch;
+            this.elseBranch = elseBranch;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitIfStmt(this);
+        }
+
+        final List<Expr> conditions;
+        final List<List<Stmt>> thenBranch;
+        final List<Stmt> elseBranch;
+    }
+
+    static class While extends Stmt {
+        final Expr condition;
+        final List<Stmt> body;
+
+        public While(Expr condition, List<Stmt> body) {
+            this.condition = condition;
+            this.body = body;
+        }
+
+        @Override
+        <R> R accept(Visitor<R> visitor) {
+            return null;
+        }
+    }
+
 
     abstract <R> R accept(Visitor<R> visitor);
 }

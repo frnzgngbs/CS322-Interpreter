@@ -369,6 +369,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     }
 
 
+
 //        Expr.Variable exceptionHolder = new Expr.Variable(null);
 //        Object exceptionDatatypeHolder = new Object();
 //        Object exceptionValueHolder = new Object();
@@ -558,8 +559,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
          */
 
-//        System.out.println(stmt.conditions.get(0));
-
         for(int i = 0; i < stmt.conditions.size(); i++) {
             Expr conditions = stmt.conditions.get(i);
             if (conditions instanceof Expr.Assign) {
@@ -591,6 +590,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             }
         }
 
+        return null;
+    }
+
+    @Override
+    public Void visitWhileStmt(Stmt.While stmt) {
+        while (isTruthy(evaluate(stmt.condition))) {
+            for(Stmt while_body : stmt.body) execute(while_body);
+        }
         return null;
     }
 
