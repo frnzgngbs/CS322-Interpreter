@@ -210,15 +210,6 @@ public class Parser {
         if (match(DISPLAY)) {
             return displayStatement();
         }
-        // if(match(LEFT_SQUARE)) {
-        // List<Expr> expressions = new ArrayList<>();
-        //
-        // while(!match(RIGHT_SQUARE)) {
-        // expressions.add(expression());
-        // }
-        //
-        //
-        // }
         if (match(BEGIN_CODE)) {
             return new Stmt.CodeStructure(codeStructure());
         }
@@ -227,6 +218,8 @@ public class Parser {
         }
         if (match(IF))
             return ifStatement();
+
+        if(match(WHILE)) return whileStatement();
         return expressionStatement();
     }
 
@@ -344,7 +337,7 @@ public class Parser {
             consume(LEFT_PAREN, "Expect '(' after 'IF'.");
             condition.add(expression());
             consume(RIGHT_PAREN, "Expect ')' after if condition.");
-            consume(BEGINIF, "Expect \"BEGIN IF\" else IF.");
+            consume(BEGINIF, "Expect \"BEGIN IF\".");
             while(!check(ENDIF)) {
                 if_body_statement.add(declaration());
             }
@@ -361,6 +354,24 @@ public class Parser {
         }
 
         return new Stmt.If(condition, body_statement, else_body_statement);
+    }
+
+    private Stmt whileStatement() {
+        List<Stmt> while_body = new ArrayList<>();
+        Expr condition = null;
+        while(!check(END_CODE)) {
+            consume(LEFT_PAREN, "Expect '(' after 'WHILE'.");
+            condition = expression();
+            consume(RIGHT_PAREN, "Expect ')' after 'condition'.");
+            consume(BEGIN_WHILE, "Expect \"BEGIN WHILE\". before the body statement");
+            while(!check(END_WHILE)) {
+                while_body.add(declaration());
+            }
+
+            consume(END_WHILE, "Expect \"END WHILE\" at end.");
+
+        }
+        return new Stmt.While(condition, while_body);
     }
 
     private Stmt expressionStatement() {
@@ -508,7 +519,7 @@ public class Parser {
         }
 
         if (match(CONCAT)) {
-            return new Expr.Literal("+");
+            return new Expr.Literal("&");
         }
 
         if (match(IDENTIFIER)) {

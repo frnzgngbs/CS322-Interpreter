@@ -1,6 +1,7 @@
 BEGIN CODE
-	INT a, b
-	a=100
-	b=200
-	DISPLAY:  [$] & a & [$] & b & [$]
+    INT i = 1
+	WHILE("TRUE")
+	BEGIN WHILE
+	    DISPLAY: "Franz"
+	END WHILE
 END CODE

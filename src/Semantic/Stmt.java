@@ -154,7 +154,7 @@ public abstract class Stmt {
 
         @Override
         <R> R accept(Visitor<R> visitor) {
-            return null;
+            return visitor.visitWhileStmt(this);
         }
     }
 

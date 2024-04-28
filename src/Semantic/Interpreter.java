@@ -456,7 +456,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 Error.error(((Expr.Variable) expression).name, "Variable '" + ((Expr.Variable) expression).name.lexeme + "' might not been initialized.");
             }
 
-            if (value != null && value.equals("+"))
+            if (value != null && value.equals("&"))
                 continue;
 
             if(expression instanceof Expr.Unary || (expression instanceof Expr.Literal && value instanceof Boolean)) {
@@ -596,7 +596,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitWhileStmt(Stmt.While stmt) {
         while (isTruthy(evaluate(stmt.condition))) {
-            for(Stmt while_body : stmt.body) execute(while_body);
+            for(Stmt while_body : stmt.body) {
+                System.out.println(while_body);
+                execute(while_body);
+            }
         }
         return null;
     }
