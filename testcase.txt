@@ -1,7 +1,3 @@
 BEGIN CODE
-    INT i = 1
-	WHILE("TRUE")
-	BEGIN WHILE
-	    DISPLAY: "Franz"
-	END WHILE
+    DISPLAY: "FRANZ" $
 END CODE

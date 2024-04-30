@@ -597,7 +597,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     public Void visitWhileStmt(Stmt.While stmt) {
         while (isTruthy(evaluate(stmt.condition))) {
             for(Stmt while_body : stmt.body) {
-                System.out.println(while_body);
                 execute(while_body);
             }
         }

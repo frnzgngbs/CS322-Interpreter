@@ -107,22 +107,22 @@ public class Lexer {
                 addToken(Token.TokenType.RIGHT_SQUARE);
                 break;
             case ',':
-                addToken(Token.TokenType.COMMA);
+                addToken(Token.TokenType.COMMA, ",");
                 break;
             case ':':
                 addToken(Token.TokenType.SEPARATOR);
                 break;
             case '-':
-                addToken(Token.TokenType.MINUS);
+                addToken(Token.TokenType.MINUS, "-");
                 break;
             case '+':
-                addToken(Token.TokenType.PLUS);
+                addToken(Token.TokenType.PLUS, "+");
                 break;
             case '*':
-                addToken(Token.TokenType.MULTIPLY);
+                addToken(Token.TokenType.MULTIPLY, "*");
                 break;
             case '$':
-                addToken(Token.TokenType.NEW_LINE);
+                addToken(Token.TokenType.NEW_LINE, "$");
                 break;
             case '\n':
                 line++;
@@ -130,7 +130,7 @@ public class Lexer {
             case '\t', ' ':
                 break;
             case '&':
-                addToken(Token.TokenType.CONCAT);
+                addToken(Token.TokenType.CONCAT, "&");
                 break;
             case '/':
                 addToken(Token.TokenType.DIVIDE);
