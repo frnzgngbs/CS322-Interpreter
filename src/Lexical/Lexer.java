@@ -99,13 +99,13 @@ public class Lexer {
                 // Error.report(line, " at line " + line, "Encountered '[' but ']' is not
                 // found.");
                 // }
-                addToken(Token.TokenType.LEFT_SQUARE);
+                addToken(Token.TokenType.LEFT_SQUARE, "[");
                 if(getCurrentValue() == '#') {
                     addToken(Token.TokenType.COMMENT);
                 }
                 break;
             case ']':
-                addToken(Token.TokenType.RIGHT_SQUARE);
+                addToken(Token.TokenType.RIGHT_SQUARE, "]");
                 break;
             case ',':
                 addToken(Token.TokenType.COMMA, ",");
@@ -134,7 +134,7 @@ public class Lexer {
                 addToken(Token.TokenType.CONCAT, "&");
                 break;
             case '/':
-                addToken(Token.TokenType.DIVIDE);
+                addToken(Token.TokenType.DIVIDE, "/");
                 break;
             case '#':
                 // addToken(Token.TokenType.COMMENT);

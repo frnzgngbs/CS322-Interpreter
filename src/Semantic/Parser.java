@@ -266,28 +266,10 @@ public class Parser {
                             CONCAT,
                             "Expect \"&\" after \"" + previous().lexeme + "\" but found \"" + peek().lexeme + "\".");
                 }
-            } else if (match(LEFT_SQUARE)) {
-                while (!check(RIGHT_SQUARE)) {
-                    if (match(CONCAT)) {
-                        doAdvance = false;
+            }
+            else if (check(LEFT_SQUARE)) {
+                expressions.add(expression());
 
-                        expressions.add(new Expr.Literal("&"));
-
-                    } else if (match(COMMENT)) {
-                        doAdvance = false;
-
-                        expressions.add(new Expr.Literal("#"));
-                    } else if(match(NEW_LINE)) {
-                        doAdvance = false;
-
-                        expressions.add(new Expr.Literal("$"));
-                    }
-                    else {
-                        doAdvance = false;
-                        expressions.add(expression());
-                    }
-                }
-                consume(RIGHT_SQUARE, "Expect ']' after '['");
             }
         }
         // do {
@@ -509,7 +491,16 @@ public class Parser {
 
 
         if(match(LEFT_SQUARE)) {
-            return new Expr.Literal('[');
+            if (match(RIGHT_SQUARE)) {
+                return new Expr.Literal(""); // Or throw an error
+            } else {
+                System.err.println("DID WE COME IN HERE?");
+                String value = (String) peek().literal;
+                System.out.println(value);
+                advance();
+                consume(RIGHT_SQUARE, "Expect ']' after expression.");
+                return new Expr.Literal(value);
+            }
         }
 
         if (match(LEFT_PAREN)) {
@@ -532,7 +523,7 @@ public class Parser {
 
 //        System.out.println(peek());
 
-        throw error(peek(), "Expect expression.");
+        throw error(peek(), "Expect expression after \"" + peek().lexeme + "\".");
 
     }
 

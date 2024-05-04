@@ -20,7 +20,6 @@ public abstract class Expr {
 
         R visitVariableExpr(Variable expr);
 
-        R visitEscapeCodeExpr(EscapeCode expr);
     }
 
     // Nested Expr classes here...
@@ -153,20 +152,6 @@ public abstract class Expr {
     // }
     // // < escape-variable
 
-    static class EscapeCode extends Expr {
-        EscapeCode(Object name, Object whatever) {
-            this.name = name;
-            this.whatever = whatever;
-        }
-
-        @Override
-        <R> R accept(Visitor<R> visitor) {
-            return visitor.visitEscapeCodeExpr(this);
-        }
-
-        final Object name;
-        final Object whatever;
-    }
 
     abstract <R> R accept(Visitor<R> visitor);
 }

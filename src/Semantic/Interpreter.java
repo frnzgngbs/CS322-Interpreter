@@ -154,58 +154,58 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
-    @Override
-    public Object visitEscapeCodeExpr(Semantic.Expr.EscapeCode expr) {
-        // String sentence = ((Token) expr.whatever).lexeme;
-        // StringBuilder replacedSentence = new StringBuilder(sentence);
-        // // System.err.println("ESCAPE: " + ((Token) expr.whatever).defineEscape());
-        // String[] wordsArray = sentence.split("\\s+"); // Split the sentence by
-        // whitespace
-        // List<String> wordsList = Arrays.asList(wordsArray); // Convert array to list
-        // String newSentence = "";
-        //
-        // int maybeVar = 0;
-        // boolean unInitialized = false;
-        // List<Object> uninitializedValues = new ArrayList<>();
-        // for (String word : wordsList) {
-        // Object valueObj = environment.get(word);
-        // if (valueObj != null) {
-        // String value = valueObj.toString();
-        // // System.out.println("word = " + word + ", return = " + value);
-        // if (!value.equals("0")) {
-        // maybeVar++;
-        // int index = replacedSentence.indexOf(word);
-        // while (index != -1) {
-        // replacedSentence.replace(index, index + word.length(), value);
-        // index = replacedSentence.indexOf(word, index + value.length());
-        // }
-        // // System.out.println("value associated with key = " + value);
-        // }
-        // } else if (valueObj == null) {
-        // uninitializedValues.add(word);
-        // unInitialized = true;
-        // // System.out.println("valueobj is null");
-        // }
-        //
-        // // Convert StringBuilder back to String
-        // newSentence = replacedSentence.toString();
-        // // System.out.println("maybevar = " + maybeVar);
-        // if (unInitialized) {
-        // String finVal = "";
-        // for (Object str : uninitializedValues) {
-        // finVal = finVal + str;
-        // }
-        // Error.report("Unable to print uninitialized variable inside [] => " + finVal
-        // + " ...");
-        // }
-        //
-        // }
-        //
-        // // mutate
-        // ((Token) expr.whatever).lexeme = newSentence;
-        // return ((Token) expr.whatever).defineEscape();
-        return null;
-    }
+//    @Override
+//    public Object visitEscapeCodeExpr(Semantic.Expr.EscapeCode expr) {
+//        // String sentence = ((Token) expr.whatever).lexeme;
+//        // StringBuilder replacedSentence = new StringBuilder(sentence);
+//        // // System.err.println("ESCAPE: " + ((Token) expr.whatever).defineEscape());
+//        // String[] wordsArray = sentence.split("\\s+"); // Split the sentence by
+//        // whitespace
+//        // List<String> wordsList = Arrays.asList(wordsArray); // Convert array to list
+//        // String newSentence = "";
+//        //
+//        // int maybeVar = 0;
+//        // boolean unInitialized = false;
+//        // List<Object> uninitializedValues = new ArrayList<>();
+//        // for (String word : wordsList) {
+//        // Object valueObj = environment.get(word);
+//        // if (valueObj != null) {
+//        // String value = valueObj.toString();
+//        // // System.out.println("word = " + word + ", return = " + value);
+//        // if (!value.equals("0")) {
+//        // maybeVar++;
+//        // int index = replacedSentence.indexOf(word);
+//        // while (index != -1) {
+//        // replacedSentence.replace(index, index + word.length(), value);
+//        // index = replacedSentence.indexOf(word, index + value.length());
+//        // }
+//        // // System.out.println("value associated with key = " + value);
+//        // }
+//        // } else if (valueObj == null) {
+//        // uninitializedValues.add(word);
+//        // unInitialized = true;
+//        // // System.out.println("valueobj is null");
+//        // }
+//        //
+//        // // Convert StringBuilder back to String
+//        // newSentence = replacedSentence.toString();
+//        // // System.out.println("maybevar = " + maybeVar);
+//        // if (unInitialized) {
+//        // String finVal = "";
+//        // for (Object str : uninitializedValues) {
+//        // finVal = finVal + str;
+//        // }
+//        // Error.report("Unable to print uninitialized variable inside [] => " + finVal
+//        // + " ...");
+//        // }
+//        //
+//        // }
+//        //
+//        // // mutate
+//        // ((Token) expr.whatever).lexeme = newSentence;
+//        // return ((Token) expr.whatever).defineEscape();
+//        return null;
+//    }
 
     @Override
     public Object visitLogicalExpr(Expr.Logical expr) {
@@ -452,6 +452,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 //        System.out.println("KA SUD DIRI");
         StringBuilder builder = new StringBuilder();
         for (Expr expression : stmt.expression) {
+            System.out.println(expression);
             Object value = evaluate(expression);
 
             if(value == null && expression instanceof Expr.Variable) {
