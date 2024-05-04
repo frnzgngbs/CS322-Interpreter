@@ -260,11 +260,12 @@ public class Parser {
             if (peek().type != LEFT_SQUARE) {
 //                System.out.println("PEEK: " + peek().type);
                 expressions.add(expression());
-//                if(peek().type != END_CODE) {
-//                    consume(
-//                            CONCAT,
-//                            "Expect \"&\" after \"" + previous().literal + "\" but found \"" + peek().literal + "\".");
-//                }
+                if(peek().type != EOD) {
+//                    System.out.println(previous().lexeme);
+                    consume(
+                            CONCAT,
+                            "Expect \"&\" after \"" + previous().lexeme + "\" but found \"" + peek().lexeme + "\".");
+                }
             } else if (match(LEFT_SQUARE)) {
                 while (!check(RIGHT_SQUARE)) {
                     if (match(CONCAT)) {
@@ -457,7 +458,7 @@ public class Parser {
         expressiondebug("Expr term()");
         Expr expr = factor();
 
-        while (match(MINUS, PLUS)) {
+        while (match(MINUS, PLUS, CONCAT)) {
             Token operator = previous();
             Expr right = factor();
             expr = new Expr.Binary(expr, operator, right);

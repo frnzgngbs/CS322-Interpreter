@@ -1,4 +1,4 @@
 BEGIN CODE
     INT a = 10, b = 10
-    DISPLAY: b & a
+    DISPLAY: a & "Franz T. Genegobis" & b
 END CODE

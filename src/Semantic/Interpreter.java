@@ -115,6 +115,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 }
                 throw new RuntimeError(expr.operator,
                         "Operands must be two numbers or two strings.");
+            case CONCAT:
+                return left.toString() + right.toString();
             case DIVIDE:
                 checkNumberOperands(expr.operator, left, right);
                 if (left instanceof Float && right instanceof Float)
@@ -455,9 +457,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             if(value == null && expression instanceof Expr.Variable) {
                 Error.error(((Expr.Variable) expression).name, "Variable '" + ((Expr.Variable) expression).name.lexeme + "' might not been initialized.");
             }
-
-            if (value != null && value.equals("&"))
-                continue;
 
             if(expression instanceof Expr.Unary || (expression instanceof Expr.Literal && value instanceof Boolean)) {
                 builder.append(stringify(value.toString().toUpperCase()));

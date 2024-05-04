@@ -82,7 +82,7 @@ public class Main {
              System.out.println(a);
          });
 
-        tokens.addAll(tokenize);
+         tokens.addAll(tokenize);
         parseToken(tokens);
 
 }
