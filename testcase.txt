@@ -1,4 +1,4 @@
 BEGIN CODE
-    INT a, b = 10
+    INT a = 10, b = 10
     DISPLAY: b & a
 END CODE

@@ -256,9 +256,7 @@ public class Parser {
         advance();
 
         boolean doAdvance = true;
-        while (check(IDENTIFIER) || check(CONCAT) || check(NEW_LINE)
-                || check(STRING) || check(LEFT_SQUARE) || check(NUMBER)
-                || check(NOT) || check(TRUE) || check(FALSE) || check(RIGHT_SQUARE)) {
+        while (!match(EOD)) {
             if (peek().type != LEFT_SQUARE) {
 //                System.out.println("PEEK: " + peek().type);
                 expressions.add(expression());

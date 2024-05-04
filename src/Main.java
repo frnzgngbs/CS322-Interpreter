@@ -83,7 +83,7 @@ public class Main {
          });
 
         tokens.addAll(tokenize);
-//        parseToken(tokens);
+        parseToken(tokens);
 
 }
 
