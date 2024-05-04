@@ -1,3 +1,4 @@
 BEGIN CODE
-    DISPLAY: "FRANZ" $
+    INT a, b = 10
+    DISPLAY: b & a
 END CODE

@@ -33,7 +33,7 @@ public class Token {
         // KEYWORDS
         IF, ELSE_IF, ELSE, DISPLAY, BEGIN_CODE, END_CODE, BEGINIF, ENDIF, SCAN,
 
-        EOF
+        EOD, EOF
     }
 
     public final TokenType type;

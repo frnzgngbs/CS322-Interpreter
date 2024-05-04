@@ -26,6 +26,7 @@ public class Main {
             }
 
             String source = readFile(filePath);
+            System.out.println(source);
             tokenize(source);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
             System.out.println(fe.getMessage());
@@ -48,13 +49,27 @@ public class Main {
 
         boolean firstLine = true;
         while ((line = reader.readLine()) != null) {
+
             if (!firstLine) {
                 source.append('\n');
             } else {
                 firstLine = false;
             }
-            source.append(line);
+
+            if (line.trim().startsWith("DISPLAY:")) {
+                StringBuilder display_builder = new StringBuilder();
+
+                for(char c : line.toCharArray()) {
+                    display_builder.append(c);
+                }
+
+                display_builder.append(" EOD");
+                source.append(display_builder.toString());
+            } else {
+                source.append(line);
+            }
         }
+
         reader.close();
         return source.toString();
     }
@@ -68,7 +83,7 @@ public class Main {
          });
 
         tokens.addAll(tokenize);
-        parseToken(tokens);
+//        parseToken(tokens);
 
 }
 

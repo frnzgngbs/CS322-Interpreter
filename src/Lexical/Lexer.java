@@ -33,6 +33,7 @@ public class Lexer {
         keywords.put("INT", Token.TokenType.INT);
         keywords.put("FLOAT", Token.TokenType.FLOAT);
         keywords.put("BOOL", Token.TokenType.BOOL);
+        keywords.put("EOD", Token.TokenType.EOD);
     }
 
     public Lexer(String source) {

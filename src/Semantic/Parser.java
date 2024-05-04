@@ -262,11 +262,11 @@ public class Parser {
             if (peek().type != LEFT_SQUARE) {
 //                System.out.println("PEEK: " + peek().type);
                 expressions.add(expression());
-                if(peek().type != END_CODE) {
-                    consume(
-                            CONCAT,
-                            "Expect \"&\" after \"" + previous().literal + "\" but found \"" + peek().literal + "\".");
-                }
+//                if(peek().type != END_CODE) {
+//                    consume(
+//                            CONCAT,
+//                            "Expect \"&\" after \"" + previous().literal + "\" but found \"" + peek().literal + "\".");
+//                }
             } else if (match(LEFT_SQUARE)) {
                 while (!check(RIGHT_SQUARE)) {
                     if (match(CONCAT)) {
