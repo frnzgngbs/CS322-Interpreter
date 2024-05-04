@@ -251,6 +251,13 @@ public class Lexer {
                 error = 2;
             }
             while (getCurrentValue() != '\'') {
+                if(getCurrentValue() == '[') {
+                    advance();
+                    character = getCurrentValue();
+                    if(getCurrentValue() == '\'') advance();
+                    if(getCurrentValue() != ']') Error.error(line, "Expected ']'");
+                }
+
                 if (getCurrentValue() == '\n') {
                     Error.error(line, "Missing ' right character literal");
                 }

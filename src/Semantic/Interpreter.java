@@ -452,7 +452,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 //        System.out.println("KA SUD DIRI");
         StringBuilder builder = new StringBuilder();
         for (Expr expression : stmt.expression) {
-            System.out.println(expression);
+//            System.out.println(expression);
             Object value = evaluate(expression);
 
             if(value == null && expression instanceof Expr.Variable) {

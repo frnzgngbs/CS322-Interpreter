@@ -475,7 +475,6 @@ public class Parser {
     private Expr primary() {
         expressiondebug("Expr primary()");
         if (match(RIGHT_SQUARE)) {
-            System.err.println("SUD RIGHT ESCAPE");
             return new Expr.Literal(']');
         }
 
@@ -494,7 +493,6 @@ public class Parser {
             if (match(RIGHT_SQUARE)) {
                 return new Expr.Literal(""); // Or throw an error
             } else {
-                System.err.println("DID WE COME IN HERE?");
                 String value = (String) peek().literal;
                 System.out.println(value);
                 advance();
