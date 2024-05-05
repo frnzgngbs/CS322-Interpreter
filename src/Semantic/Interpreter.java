@@ -117,6 +117,14 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                         "Operands must be two numbers or two strings.");
             case CONCAT:
                 return left.toString() + right.toString();
+            case MODULO:
+
+//                System.out.println(Integer.parseInt(String.valueOf(left)) % Integer.parseInt(String.valueOf(right)));
+                checkNumberOperands(expr.operator, left, right);
+                if (left instanceof Float && right instanceof Float)
+                    return (float) left % (float) right;
+                if (left instanceof Integer && right instanceof Integer)
+                    return (int) left % (int) right;
             case DIVIDE:
                 checkNumberOperands(expr.operator, left, right);
                 if (left instanceof Float && right instanceof Float)

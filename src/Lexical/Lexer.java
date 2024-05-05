@@ -145,7 +145,7 @@ public class Lexer {
                 }
                 return;
             case '%':
-                addToken(Token.TokenType.MODULO);
+                addToken(Token.TokenType.MODULO, "%");
                 break;
             case '"':
                 getLogicalValue();

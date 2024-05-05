@@ -1,16 +1,4 @@
 BEGIN CODE
-    IF("TRUE")
-    BEGIN IF
-        DISPLAY: "TRUE"
-        IF ("TRUE")
-        BEGIN IF
-            DISPLAY: "TRUE"
-        END IF
-        DISPLAY: "GENEGOBIS"
-    END IF
-
-    IF ("TRUE")
-    BEGIN IF
-        DISPLAY: "FRANZ GWAPO"
-    END IF
+    INT i = 11 % 5
+    DISPLAY: i
 END CODE

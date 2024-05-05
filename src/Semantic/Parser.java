@@ -455,7 +455,7 @@ public class Parser {
 //        expressiondebug("Expr factor()");
         Expr expr = unary();
 
-        while (match(DIVIDE, MULTIPLY)) {
+        while (match(DIVIDE, MULTIPLY, MODULO)) {
             Token operator = previous();
             Expr right = unary();
             expr = new Expr.Binary(expr, operator, right);
