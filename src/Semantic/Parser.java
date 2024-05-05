@@ -1,6 +1,7 @@
 package Semantic;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import ErrorHandling.Error;
@@ -41,7 +42,7 @@ public class Parser {
 
     public List<Stmt> parse() {
         List<Stmt> statements = new ArrayList<>();
-        debug("List<Stmt> parse(");
+//        debug("List<Stmt> parse(");
 
         while (!isAtEnd()) {
 
@@ -51,12 +52,12 @@ public class Parser {
     }
 
     private Expr expression() {
-        debug("Expr expression()");
+//        debug("Expr expression()");
         return assignment();
     }
 
     private Expr assignment() {
-        expressiondebug("Expr assignment()");
+//        expressiondebug("Expr assignment()");
         Expr expr = OR();
 
         if (match(EQUAL)) {
@@ -75,7 +76,7 @@ public class Parser {
     }
 
     private Expr OR() {
-        expressiondebug("Expr OR()");
+//        expressiondebug("Expr OR()");
         Expr expr = AND();
 
         while (match(OR)) {
@@ -88,7 +89,7 @@ public class Parser {
     }
 
     private Expr AND() {
-        expressiondebug("Expr AND()");
+//        expressiondebug("Expr AND()");
         Expr expr = equality();
 
         while (match(AND)) {
@@ -101,7 +102,7 @@ public class Parser {
     }
 
     private Stmt declaration() {
-        debug("Stmt declaration()");
+//        debug("Stmt declaration()");
         try {
 
             // System.out.println("DID WE COME IN HERE?");
@@ -141,7 +142,7 @@ public class Parser {
     }
 
     private Stmt varDeclaration(Token.TokenType dataType) {
-        debug("Stmt varDeclaration()");
+//        debug("Stmt varDeclaration()");
         lastDataType = dataType;
 
         Token type = peek();
@@ -206,7 +207,7 @@ public class Parser {
     }
 
     private Stmt statement() {
-        debug("Stmt statement()");
+//        debug("Stmt statement()");
         if (match(DISPLAY)) {
             return displayStatement();
         }
@@ -225,7 +226,7 @@ public class Parser {
 
 
     private Stmt scanStatement() {
-        debug("Stmt scanStatement()");
+//        debug("Stmt scanStatement()");
         if (peek().type != SEPARATOR) {
             Error.error(peek(), "Missing separator ':' for SCAN keyword.");
         }
@@ -244,7 +245,7 @@ public class Parser {
     }
 
     private Stmt displayStatement() {
-        debug("Stmt displayStatement()");
+//        debug("Stmt displayStatement()");
         if (peek().type != SEPARATOR) {
             Error.error(peek(), "Missing separator ':' for DISPLAY keyword.");
         }
@@ -290,7 +291,7 @@ public class Parser {
     }
 
     private List<Stmt> codeStructure() {
-        debug("List<Stmt> codeStructure()");
+//        debug("List<Stmt> codeStructure()");
         List<Stmt> statements = new ArrayList<>();
 
         while (!check(END_CODE) && !isAtEnd()) {
@@ -307,14 +308,15 @@ public class Parser {
     }
 
     private Stmt ifStatement() {
-        debug("Stmt ifStatement()");
+//        System.out.println("HERE");
+//        debug("Stmt ifStatement()");
         List<Expr> condition = new ArrayList<>();
         List<List<Stmt>> body_statement = new ArrayList<>();
         List<Stmt> else_body_statement = new ArrayList<>();
 
         while(!check(ELSE) && !(check(END_CODE) || check(IDENTIFIER)
             || check(SCAN) || check(DISPLAY) || check(INT)
-            || check(FLOAT) || check(CHAR) || check(BOOL) || check(IF))) {
+            || check(FLOAT) || check(CHAR) || check(BOOL))) {
             // RESET THE BODY STATEMENT OF UR CONDITIONAL STATEMENT
 //            System.out.println("PEEK VALUE: " + peek());
             List<Stmt> if_body_statement = new ArrayList<>();
@@ -325,10 +327,29 @@ public class Parser {
             consume(RIGHT_PAREN, "Expect ')' after if condition.");
             consume(BEGINIF, "Expect \"BEGIN IF\".");
             while(!check(ENDIF)) {
-                if_body_statement.add(declaration());
+                if(match(IF)) {
+                    List<Stmt> inside_if = new ArrayList<>();
+                    consume(LEFT_PAREN, "Expect '(' after 'IF'.");
+                    condition.add(expression());
+                    consume(RIGHT_PAREN, "Expect ')' after if condition.");
+                    consume(BEGINIF, "Expect \"BEGIN IF\".");
+                    while(!check(ENDIF)) {
+                        inside_if.add(declaration());
+                    }
+                    consume(ENDIF, "Expect \"END IF after BEGIN IF.");
+                    if_body_statement.addAll(inside_if);
+                }
+                else {
+                    if_body_statement.add(declaration());
+                }
+
             }
             body_statement.add(if_body_statement);
             consume(ENDIF, "Expect \"END IF after BEGIN IF.");
+
+            if(check(IF)) {
+                break;
+            }
         }
 
         if (match(ELSE)) {
@@ -350,24 +371,20 @@ public class Parser {
             condition = expression();
             consume(RIGHT_PAREN, "Expect ')' after 'condition'.");
             consume(BEGIN_WHILE, "Expect \"BEGIN WHILE\". before the body statement");
-            while(!check(END_WHILE)) {
-                while_body.add(declaration());
-            }
-
+            while_body.add(declaration());
             consume(END_WHILE, "Expect \"END WHILE\" at end.");
-
         }
         return new Stmt.While(condition, while_body);
     }
 
     private Stmt expressionStatement() {
-        debug("Stmt expressionStatement()");
+//        debug("Stmt expressionStatement()");
         Expr expr = expression();
         return new Stmt.Expression(expr);
     }
 
     private Expr equality() {
-        expressiondebug("Expr equality()");
+//        expressiondebug("Expr equality()");
         Expr expr = comparison();
 
         while (match(Token.TokenType.NOTEQUAL, Token.TokenType.ISEQUAL)) {
@@ -380,7 +397,7 @@ public class Parser {
     }
 
     private boolean match(Token.TokenType... types) {
-        smalldebug("match()");
+//        smalldebug("match()");
         for (Token.TokenType type : types) {
             if (check(type)) {
                 advance();
@@ -392,7 +409,7 @@ public class Parser {
     }
 
     private boolean check(Token.TokenType type) {
-        smalldebug("check()");
+//        smalldebug("check()");
         if (isAtEnd())
             return false;
         return peek().type == type;
@@ -402,16 +419,16 @@ public class Parser {
         if (!isAtEnd()){
             current++;
         }
-        if(debugger >= 3){
-            System.out.println("\u001B[32m Current Token: \u001B[0m"+this.peek());
-        }
+//        if(debugger >= 3){
+//            System.out.println("\u001B[32m Current Token: \u001B[0m"+this.peek());
+//        }
         return previous();
     }
 
 
 
     private boolean isAtEnd() {
-        smalldebug("isAtEnd()");
+//        smalldebug("isAtEnd()");
         return peek().type == EOF;
     }
 
@@ -424,7 +441,7 @@ public class Parser {
     }
 
     private Expr comparison() {
-        expressiondebug("Expr comparison()");
+//        expressiondebug("Expr comparison()");
         Expr expr = term();
 
         while (match(GREATER, GREATER_EQUAL, LESSER, LESSER_EQUAL)) {
@@ -437,7 +454,7 @@ public class Parser {
     }
 
     private Expr term() {
-        expressiondebug("Expr term()");
+//        expressiondebug("Expr term()");
         Expr expr = factor();
 
         while (match(MINUS, PLUS, CONCAT)) {
@@ -450,7 +467,7 @@ public class Parser {
     }
 
     private Expr factor() {
-        expressiondebug("Expr factor()");
+//        expressiondebug("Expr factor()");
         Expr expr = unary();
 
         while (match(DIVIDE, MULTIPLY)) {
@@ -463,7 +480,7 @@ public class Parser {
     }
 
     private Expr unary() {
-        expressiondebug("Expr unary()");
+//        expressiondebug("Expr unary()");
         if (match(NOT, MINUS)) {
             Token operator = previous();
             Expr right = unary();
@@ -473,7 +490,7 @@ public class Parser {
     }
 
     private Expr primary() {
-        expressiondebug("Expr primary()");
+//        expressiondebug("Expr primary()");
         if (match(RIGHT_SQUARE)) {
             return new Expr.Literal(']');
         }
@@ -526,7 +543,7 @@ public class Parser {
     }
 
     private Token consume(Token.TokenType type, String message) {
-        smalldebug("Token consume()");
+//        smalldebug("Token consume()");
         if (check(type))
             return advance();
 
@@ -534,13 +551,13 @@ public class Parser {
     }
 
     private ParseError error(Token token, String message) {
-        smalldebug("ParseError error()");
+//        smalldebug("ParseError error()");
         Error.error(token, message);
         return new ParseError();
     }
 
     private void synchronize() {
-        smalldebug("synchronize()");
+//        smalldebug("synchronize()");
         advance();
 
         while (!isAtEnd()) {

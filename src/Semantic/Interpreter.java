@@ -578,9 +578,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             }
             if(isTruthy(evaluate(stmt.conditions.get(i)))) {
                 for(Stmt st : stmt.thenBranch.get(i)) {
+//                    System.out.println(st);
                     execute(st);
                 }
-                // STOP, AS WE ALREADY FOUND THE FIRST STATEMENT THAT WAS EVALUATED TO TRUE!
+                // STOP, AS WE ALREADY FOUND THE FIRST IF STATEMENT THAT WAS EVALUATED TO TRUE!
                 return null;
             }
         }

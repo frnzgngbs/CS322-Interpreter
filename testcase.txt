@@ -1,4 +1,15 @@
 BEGIN CODE
-    CHAR c = '1
-    DISPLAY: c
+    IF("FALSE")
+    BEGIN IF
+        DISPLAY: "TRUE"
+    END IF
+    ELSE IF("TRUE")
+    BEGIN IF
+        DISPLAY: "ELSE IF"
+    END IF
+
+    IF("TRUE")
+    BEGIN IF
+        DISPLAY: "Another " & "TRUE"
+    END IF
 END CODE

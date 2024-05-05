@@ -26,7 +26,7 @@ public class Main {
             }
 
             String source = readFile(filePath);
-            System.out.println(source);
+//            System.out.println(source);
             tokenize(source);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
             System.out.println(fe.getMessage());
@@ -79,7 +79,7 @@ public class Main {
         List<Token> tokenize = lexer.scanTokens();
 
          tokenize.forEach((a) -> {
-             System.out.println(a);
+              System.out.println(a);
          });
 
          tokens.addAll(tokenize);
