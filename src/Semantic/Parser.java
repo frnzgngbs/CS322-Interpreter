@@ -349,17 +349,26 @@ public class Parser {
     }
 
     private Stmt whileStatement() {
-        List<Stmt> while_body = new ArrayList<>();
-        Expr condition = null;
-        while(!check(END_CODE)) {
-            consume(LEFT_PAREN, "Expect '(' after 'WHILE'.");
-            condition = expression();
-            consume(RIGHT_PAREN, "Expect ')' after 'condition'.");
-            consume(BEGIN_WHILE, "Expect \"BEGIN WHILE\". before the body statement");
-            while_body.add(declaration());
-            consume(END_WHILE, "Expect \"END WHILE\" at end.");
+        List<List<Stmt>> while_body = new ArrayList<>();
+        List<Expr> conditions = new ArrayList<>();
+        List<Stmt> body = new ArrayList<>();
+
+        consume(LEFT_PAREN, "Expect '(' after 'WHILE'.");
+
+        conditions.add(expression());
+
+        consume(RIGHT_PAREN, "Expect ')' after 'condition'.");
+        consume(BEGIN_WHILE, "Expect \"BEGIN WHILE\". before the body statement");
+
+        while (!check(END_WHILE)) {
+            body.add(declaration());
         }
-        return new Stmt.While(condition, while_body);
+
+        consume(END_WHILE, "Expect \"END WHILE\" at end.");
+
+        while_body.add(body);
+
+        return new Stmt.While(conditions, while_body);
     }
 
     private Stmt expressionStatement() {

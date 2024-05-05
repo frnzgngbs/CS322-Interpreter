@@ -144,10 +144,10 @@ public abstract class Stmt {
     }
 
     static class While extends Stmt {
-        final Expr condition;
-        final List<Stmt> body;
+        final List<Expr> condition;
+        final List<List<Stmt>> body;
 
-        public While(Expr condition, List<Stmt> body) {
+        public While(List<Expr> condition, List<List<Stmt>> body) {
             this.condition = condition;
             this.body = body;
         }

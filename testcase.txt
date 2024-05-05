@@ -1,4 +1,14 @@
 BEGIN CODE
-    INT i = 11 % 5
-    DISPLAY: i
+    INT i = 0, j = 0
+    WHILE (i <= 2)
+    BEGIN WHILE
+        DISPLAY: "i = " & i & $
+        j = i
+        WHILE (j <= 2)
+        BEGIN WHILE
+            DISPLAY: "j = " & j & $
+            j = j + 1
+        END WHILE
+        i = i + 1
+    END WHILE
 END CODE

@@ -569,21 +569,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
         for(int i = 0; i < stmt.conditions.size(); i++) {
             Expr conditions = stmt.conditions.get(i);
-            if (conditions instanceof Expr.Assign) {
-                Object dataType = environment.getDataType(((Expr.Assign) conditions).name);
-                Error.error(
-                        ((Expr.Assign) conditions).name,
-                        "Incompatible type: Expected BOOL but provided '" + dataType + "'.");
-            }
-            if(conditions instanceof Expr.Variable) {
-                Object value = environment.get(((Expr.Variable) conditions).name.lexeme);
-//                System.out.println("Here: " + value);
-                if(value == null) {
-                    Error.error(
-                            ((Expr.Variable) conditions).name,
-                            "Variable '" +  ((Expr.Variable) conditions).name.lexeme + "' might not have been initialized.");
-                }
-            }
+
+            checkExpr(conditions);
+
             if(isTruthy(evaluate(stmt.conditions.get(i)))) {
                 for(Stmt st : stmt.thenBranch.get(i)) {
 //                    System.out.println(st);
@@ -604,12 +592,37 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitWhileStmt(Stmt.While stmt) {
-        while (isTruthy(evaluate(stmt.condition))) {
-            for(Stmt while_body : stmt.body) {
-                execute(while_body);
+        for(int i = 0; i < stmt.condition.size(); i++) {
+
+            Expr conditions = stmt.condition.get(i);
+
+            checkExpr(conditions);
+
+            while (isTruthy(evaluate(stmt.condition.get(i)))) {
+                for(Stmt while_body : stmt.body.get(i)) {
+                    execute(while_body);
+                }
             }
         }
         return null;
+    }
+
+    private void checkExpr(Expr conditions) {
+        if (conditions instanceof Expr.Assign) {
+            Object dataType = environment.getDataType(((Expr.Assign) conditions).name);
+            Error.error(
+                    ((Expr.Assign) conditions).name,
+                    "Incompatible type: Expected BOOL but provided '" + dataType + "'.");
+        }
+        if(conditions instanceof Expr.Variable) {
+            Object value = environment.get(((Expr.Variable) conditions).name.lexeme);
+//                System.out.println("Here: " + value);
+            if(value == null) {
+                Error.error(
+                        ((Expr.Variable) conditions).name,
+                        "Variable '" +  ((Expr.Variable) conditions).name.lexeme + "' might not have been initialized.");
+            }
+        }
     }
 
 }
