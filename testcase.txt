@@ -1,15 +1,16 @@
 BEGIN CODE
-    IF("FALSE")
-    BEGIN IF
-        DISPLAY: "TRUE"
-    END IF
-    ELSE IF("TRUE")
-    BEGIN IF
-        DISPLAY: "ELSE IF"
-    END IF
-
     IF("TRUE")
     BEGIN IF
-        DISPLAY: "Another " & "TRUE"
+        DISPLAY: "TRUE"
+        IF ("TRUE")
+        BEGIN IF
+            DISPLAY: "TRUE"
+        END IF
+        DISPLAY: "GENEGOBIS"
+    END IF
+
+    IF ("TRUE")
+    BEGIN IF
+        DISPLAY: "FRANZ GWAPO"
     END IF
 END CODE

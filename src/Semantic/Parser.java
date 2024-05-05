@@ -316,7 +316,7 @@ public class Parser {
 
         while(!check(ELSE) && !(check(END_CODE) || check(IDENTIFIER)
             || check(SCAN) || check(DISPLAY) || check(INT)
-            || check(FLOAT) || check(CHAR) || check(BOOL))) {
+            || check(FLOAT) || check(CHAR) || check(BOOL)) && !check(ENDIF)) {
             // RESET THE BODY STATEMENT OF UR CONDITIONAL STATEMENT
 //            System.out.println("PEEK VALUE: " + peek());
             List<Stmt> if_body_statement = new ArrayList<>();
@@ -327,22 +327,7 @@ public class Parser {
             consume(RIGHT_PAREN, "Expect ')' after if condition.");
             consume(BEGINIF, "Expect \"BEGIN IF\".");
             while(!check(ENDIF)) {
-                if(match(IF)) {
-                    List<Stmt> inside_if = new ArrayList<>();
-                    consume(LEFT_PAREN, "Expect '(' after 'IF'.");
-                    condition.add(expression());
-                    consume(RIGHT_PAREN, "Expect ')' after if condition.");
-                    consume(BEGINIF, "Expect \"BEGIN IF\".");
-                    while(!check(ENDIF)) {
-                        inside_if.add(declaration());
-                    }
-                    consume(ENDIF, "Expect \"END IF after BEGIN IF.");
-                    if_body_statement.addAll(inside_if);
-                }
-                else {
-                    if_body_statement.add(declaration());
-                }
-
+                if_body_statement.add(declaration());
             }
             body_statement.add(if_body_statement);
             consume(ENDIF, "Expect \"END IF after BEGIN IF.");
