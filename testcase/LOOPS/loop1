@@ -1,0 +1,13 @@
+BEGIN CODE
+    INT i = 0, j = 0
+    WHILE (i <= 5)
+    BEGIN WHILE
+        DISPLAY: "i = " & i & $
+        j = i
+        i = i + 1
+        IF (i>1)
+        BEGIN IF
+            DISPLAY: "I AM GREATER THAN 1"
+        END IF
+    END WHILE
+END CODE
