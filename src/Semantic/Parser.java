@@ -316,7 +316,7 @@ public class Parser {
 
         while(!check(ELSE) && !(check(END_CODE) || check(IDENTIFIER)
             || check(SCAN) || check(DISPLAY) || check(INT)
-            || check(FLOAT) || check(CHAR) || check(BOOL)) && !check(ENDIF)) {
+            || check(FLOAT) || check(CHAR) || check(BOOL) || check(END_WHILE))  && !check(ENDIF)) {
             // RESET THE BODY STATEMENT OF UR CONDITIONAL STATEMENT
 //            System.out.println("PEEK VALUE: " + peek());
             List<Stmt> if_body_statement = new ArrayList<>();
