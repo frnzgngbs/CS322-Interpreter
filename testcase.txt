@@ -1,14 +1,10 @@
 BEGIN CODE
-    INT i = 0, j = 0
-    WHILE (i <= 2)
+    INT i = 0
+    INT a
+    WHILE (i < 2)
     BEGIN WHILE
-        DISPLAY: "i = " & i & $
-        j = i
-        WHILE (j <= 2)
-        BEGIN WHILE
-            DISPLAY: "j = " & j & $
-            j = j + 1
-        END WHILE
+        a = i
+        DISPLAY: "i = " & i & " , a = " & a & $
         i = i + 1
     END WHILE
 END CODE

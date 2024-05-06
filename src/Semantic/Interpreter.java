@@ -17,6 +17,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     final Environment globals = new Environment();
     private Environment environment = globals;
 
+
     public void interpret(List<Stmt> statements) {
         try {
             for (Stmt statement : statements) {
@@ -567,6 +568,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
          */
 
+//        List<Object> list_of_definedVariable = new ArrayList<>();
         for(int i = 0; i < stmt.conditions.size(); i++) {
             Expr conditions = stmt.conditions.get(i);
 
@@ -574,9 +576,16 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
             if(isTruthy(evaluate(stmt.conditions.get(i)))) {
                 for(Stmt st : stmt.thenBranch.get(i)) {
-//                    System.out.println(st);
-                    execute(st);
+//                    if(st instanceof Stmt.Variable temp) {
+//                        list_of_definedVariable.add(temp.name.lexeme);
+//                    }
+//                    execute(st);
                 }
+
+//                for(Object o : list_of_definedVariable) {
+//                    environment.removeDataType(String.valueOf(o));
+//                    environment.removeValue(String.valueOf(o));
+//                }
                 // STOP, AS WE ALREADY FOUND THE FIRST IF STATEMENT THAT WAS EVALUATED TO TRUE!
                 return null;
             }
@@ -592,6 +601,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitWhileStmt(Stmt.While stmt) {
+        List<Object> list_of_definedVariable = new ArrayList<>();
         for(int i = 0; i < stmt.condition.size(); i++) {
 
             Expr conditions = stmt.condition.get(i);
@@ -600,9 +610,21 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
             while (isTruthy(evaluate(stmt.condition.get(i)))) {
                 for(Stmt while_body : stmt.body.get(i)) {
+                    if(while_body instanceof Stmt.Variable temp) {
+                        list_of_definedVariable.add(temp.name.lexeme);
+
+                    }
                     execute(while_body);
                 }
+
+
+                for(Object o : list_of_definedVariable) {
+                    environment.removeDataType(String.valueOf(o));
+                    environment.removeValue(String.valueOf(o));
+                }
+
             }
+
         }
         return null;
     }
