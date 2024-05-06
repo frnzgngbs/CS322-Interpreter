@@ -14,7 +14,6 @@ public class Environment {
 
     Environment() {
         enclosing = null;
-        // values.put("sample", null);
     }
 
     Environment(Environment enclosing) {
@@ -37,6 +36,13 @@ public class Environment {
                 "'" + name.lexeme + "' is undefined.");
     }
 
+    public void removeValue(String identifier){
+        values.remove(identifier);
+    }
+
+    public void removeDataType(String dataType) {
+        this.dataType.remove(dataType);
+    }
     void define(String name, Object value) {
         values.put(name, value);
     }
@@ -63,24 +69,9 @@ public class Environment {
             return values.get(key);
         }
 
-        // if (enclosing != null)
-        // return enclosing.get(key);
-
-        // Error.report("No values");
         return "0";
     }
 
-    public String printValues() {
-        for (Object value : values.values()) {
-            System.out.println("Value: " + value);
-        }
-
-        return "";
-    }
-
-    public int countValues() {
-        return values.size();
-    }
 
     void assign(Token name, Object value) {
         if (values.containsKey(name.lexeme)) {
