@@ -1,8 +1,4 @@
 BEGIN CODE
-    INT i = 0
-    IF(i == 0)
-    BEGIN IF
-        INT a = 0
-    END IF
-    DISPLAY: a
+    BOOL a = "TRUE"
+    DISPLAY: INTEGER a
 END CODE

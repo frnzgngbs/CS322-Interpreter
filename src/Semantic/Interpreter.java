@@ -12,11 +12,9 @@ import java.util.Scanner;
 
 import static Lexical.Token.TokenType.*;
 
-
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     final Environment globals = new Environment();
     private Environment environment = globals;
-
 
     public void interpret(List<Stmt> statements) {
         try {
@@ -120,7 +118,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 return left.toString() + right.toString();
             case MODULO:
 
-//                System.out.println(Integer.parseInt(String.valueOf(left)) % Integer.parseInt(String.valueOf(right)));
+                // System.out.println(Integer.parseInt(String.valueOf(left)) %
+                // Integer.parseInt(String.valueOf(right)));
                 checkNumberOperands(expr.operator, left, right);
                 if (left instanceof Float && right instanceof Float)
                     return (float) left % (float) right;
@@ -163,67 +162,72 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
-//    @Override
-//    public Object visitEscapeCodeExpr(Semantic.Expr.EscapeCode expr) {
-//        // String sentence = ((Token) expr.whatever).lexeme;
-//        // StringBuilder replacedSentence = new StringBuilder(sentence);
-//        // // System.err.println("ESCAPE: " + ((Token) expr.whatever).defineEscape());
-//        // String[] wordsArray = sentence.split("\\s+"); // Split the sentence by
-//        // whitespace
-//        // List<String> wordsList = Arrays.asList(wordsArray); // Convert array to list
-//        // String newSentence = "";
-//        //
-//        // int maybeVar = 0;
-//        // boolean unInitialized = false;
-//        // List<Object> uninitializedValues = new ArrayList<>();
-//        // for (String word : wordsList) {
-//        // Object valueObj = environment.get(word);
-//        // if (valueObj != null) {
-//        // String value = valueObj.toString();
-//        // // System.out.println("word = " + word + ", return = " + value);
-//        // if (!value.equals("0")) {
-//        // maybeVar++;
-//        // int index = replacedSentence.indexOf(word);
-//        // while (index != -1) {
-//        // replacedSentence.replace(index, index + word.length(), value);
-//        // index = replacedSentence.indexOf(word, index + value.length());
-//        // }
-//        // // System.out.println("value associated with key = " + value);
-//        // }
-//        // } else if (valueObj == null) {
-//        // uninitializedValues.add(word);
-//        // unInitialized = true;
-//        // // System.out.println("valueobj is null");
-//        // }
-//        //
-//        // // Convert StringBuilder back to String
-//        // newSentence = replacedSentence.toString();
-//        // // System.out.println("maybevar = " + maybeVar);
-//        // if (unInitialized) {
-//        // String finVal = "";
-//        // for (Object str : uninitializedValues) {
-//        // finVal = finVal + str;
-//        // }
-//        // Error.report("Unable to print uninitialized variable inside [] => " + finVal
-//        // + " ...");
-//        // }
-//        //
-//        // }
-//        //
-//        // // mutate
-//        // ((Token) expr.whatever).lexeme = newSentence;
-//        // return ((Token) expr.whatever).defineEscape();
-//        return null;
-//    }
+    // @Override
+    // public Object visitEscapeCodeExpr(Semantic.Expr.EscapeCode expr) {
+    // // String sentence = ((Token) expr.whatever).lexeme;
+    // // StringBuilder replacedSentence = new StringBuilder(sentence);
+    // // // System.err.println("ESCAPE: " + ((Token)
+    // expr.whatever).defineEscape());
+    // // String[] wordsArray = sentence.split("\\s+"); // Split the sentence by
+    // // whitespace
+    // // List<String> wordsList = Arrays.asList(wordsArray); // Convert array to
+    // list
+    // // String newSentence = "";
+    // //
+    // // int maybeVar = 0;
+    // // boolean unInitialized = false;
+    // // List<Object> uninitializedValues = new ArrayList<>();
+    // // for (String word : wordsList) {
+    // // Object valueObj = environment.get(word);
+    // // if (valueObj != null) {
+    // // String value = valueObj.toString();
+    // // // System.out.println("word = " + word + ", return = " + value);
+    // // if (!value.equals("0")) {
+    // // maybeVar++;
+    // // int index = replacedSentence.indexOf(word);
+    // // while (index != -1) {
+    // // replacedSentence.replace(index, index + word.length(), value);
+    // // index = replacedSentence.indexOf(word, index + value.length());
+    // // }
+    // // // System.out.println("value associated with key = " + value);
+    // // }
+    // // } else if (valueObj == null) {
+    // // uninitializedValues.add(word);
+    // // unInitialized = true;
+    // // // System.out.println("valueobj is null");
+    // // }
+    // //
+    // // // Convert StringBuilder back to String
+    // // newSentence = replacedSentence.toString();
+    // // // System.out.println("maybevar = " + maybeVar);
+    // // if (unInitialized) {
+    // // String finVal = "";
+    // // for (Object str : uninitializedValues) {
+    // // finVal = finVal + str;
+    // // }
+    // // Error.report("Unable to print uninitialized variable inside [] => " +
+    // finVal
+    // // + " ...");
+    // // }
+    // //
+    // // }
+    // //
+    // // // mutate
+    // // ((Token) expr.whatever).lexeme = newSentence;
+    // // return ((Token) expr.whatever).defineEscape();
+    // return null;
+    // }
 
     @Override
     public Object visitLogicalExpr(Expr.Logical expr) {
         Object left = evaluate(expr.left);
 
         if (expr.operator.type == OR) {
-            if (isTruthy(left)) return left;
+            if (isTruthy(left))
+                return left;
         } else {
-            if (!isTruthy(left)) return left;
+            if (!isTruthy(left))
+                return left;
         }
 
         return evaluate(expr.right);
@@ -235,28 +239,87 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
         switch (expr.operator.type) {
             case NOT:
-                if(right instanceof Integer)
-                    Error.error(
-                        expr.operator,
-                        "Bad operand type INT for unary operator '" + expr.operator.type + "'.");
-                else if(right instanceof Float)
+                if (right instanceof Integer)
                     Error.error(
                             expr.operator,
                             "Bad operand type INT for unary operator '" + expr.operator.type + "'.");
-                else if(right instanceof Character)
+                else if (right instanceof Float)
                     Error.error(
                             expr.operator,
                             "Bad operand type INT for unary operator '" + expr.operator.type + "'.");
-                else if(right instanceof String)
+                else if (right instanceof Character)
+                    Error.error(
+                            expr.operator,
+                            "Bad operand type INT for unary operator '" + expr.operator.type + "'.");
+                else if (right instanceof String)
                     Error.error(
                             expr.operator,
                             "Bad operand type INT for unary operator '" + expr.operator.type + "'.");
                 return !isTruthy(right);
             case MINUS:
-                if(right instanceof Integer) {
-                    return -(int)right;
+                if (right instanceof Integer) {
+                    return -(int) right;
                 }
-                return -(float)right;
+                return -(float) right;
+            case CHAR_CAST:
+                if (right instanceof Integer value) {
+                    // << optional >>
+                    // if(value < 0)
+                    // {
+                    // Error.error(expr.operator, "Cannot convert lesser than 0 or greater than
+                    // 10");
+                    // }
+                    return (char) value.intValue();
+                }
+
+                if (right instanceof Float value) {
+                    return (char) ((float) value);
+                }
+
+                if (right instanceof Boolean) {
+                    // throw error " "TRUE" | "FALSE" " is greater than 4 char
+                    Error.error(expr.operator, "Incompatible types: BOOL cannot be converted to CHAR");
+                }
+            case INTEGER_CAST:
+                if (right instanceof Float value) {
+                    return (float) Math.floor(value);
+                }
+
+                if (right instanceof Character value) {
+                    return (int) value.charValue();
+                }
+
+                if (right instanceof Boolean) {
+                    boolean boolValue = (boolean) right;
+                    return boolValue ? 1 : 0;
+                }
+            case REAL_CAST:
+                if (right instanceof Integer) {
+                    return (int) right;
+                }
+
+                if (right instanceof Character) {
+                    return (int) ((char) right);
+                }
+
+                if (right instanceof Boolean) {
+                    boolean boolValue = (boolean) right;
+                    return boolValue ? 1 : 0;
+                }
+            case BOOLEAN_CAST:
+                if (right instanceof Integer) {
+                    boolean boolValue = (int) right > 0 ? true : false;
+                    return boolValue ? "TRUE" : "FALSE";
+                }
+
+                if (right instanceof Character) {
+                    Error.error(expr.operator, "Incompatible types: CHAR cannot be converted to BOOL");
+                }
+
+                if (right instanceof Float) {
+                    boolean boolValue = (float) right > 0 ? true : false;
+                    return boolValue ? "TRUE" : "FALSE";
+                }
         }
 
         // Unreachable.
@@ -269,7 +332,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             return;
         if (left instanceof Integer && right instanceof Integer)
             return;
-        throw new RuntimeError(operator, left.getClass().getTypeName() + " cannot be compared with " + right.getClass().getTypeName());
+        throw new RuntimeError(operator,
+                left.getClass().getTypeName() + " cannot be compared with " + right.getClass().getTypeName());
     }
 
     private boolean isTruthy(Object object) {
@@ -379,62 +443,63 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
+    // Expr.Variable exceptionHolder = new Expr.Variable(null);
+    // Object exceptionDatatypeHolder = new Object();
+    // Object exceptionValueHolder = new Object();
+    //
+    // try {
+    //
+    // int i = 0;
+    // for (Expr variableExpression : stmt.variableExpressions) {
+    // if (!(variableExpression instanceof Expr.Variable)) {
+    // throw new RuntimeException("Invalid variable expression in scan statement.");
+    // }
+    // Expr.Variable variable = (Expr.Variable) variableExpression;
+    //
+    // Object dataType = environment.getDataType(variable.name);
+    //
+    // // case when it throws exception make a copy
+    // exceptionHolder = variable;
+    // exceptionDatatypeHolder = dataType;
+    //
+    // Object value;
+    // String inputValue = inputValues[i++];
+    // if (dataType == Token.TokenType.INT) {
+    // exceptionValueHolder = Integer.parseInt(inputValue);
+    // value = Integer.parseInt(inputValue);
+    // } else if (dataType == Token.TokenType.FLOAT) {
+    // exceptionValueHolder = Float.parseFloat(inputValue);
+    // value = Float.parseFloat(inputValue);
+    // } else if (dataType == Token.TokenType.CHAR) {
+    // if (inputValue.length() != 1) {
+    // Error.error(variable.name, "'" + inputValue + "' is an invalid character
+    // input.");
+    // }
+    // exceptionValueHolder = inputValue.charAt(0);
+    // value = inputValue.charAt(0);
+    // } else if (dataType == Token.TokenType.BOOL) {
+    // exceptionValueHolder = inputValue;
+    // value = inputValue;
+    // if (!(value.equals("TRUE") || value.equals("FALSE"))) {
+    // Error.error(variable.name, "'" + value + "' is an invalid value for BOOL
+    // type.");
+    // }
+    //
+    // } else {
+    // throw new RuntimeException("Unsupported variable type in scan statement.");
+    // }
+    //
+    // environment.define(variable.name.lexeme, value);
+    // }
+    //
+    // } catch (NumberFormatException e) {
+    // Error.error(exceptionHolder.name,
+    // "'" + exceptionHolder.name.lexeme + "' identifier expects a value of " +
+    // exceptionDatatypeHolder
+    // + " but received other data type.");
+    // }
 
-
-//        Expr.Variable exceptionHolder = new Expr.Variable(null);
-//        Object exceptionDatatypeHolder = new Object();
-//        Object exceptionValueHolder = new Object();
-//
-//        try {
-//
-//            int i = 0;
-//            for (Expr variableExpression : stmt.variableExpressions) {
-//                if (!(variableExpression instanceof Expr.Variable)) {
-//                    throw new RuntimeException("Invalid variable expression in scan statement.");
-//                }
-//                Expr.Variable variable = (Expr.Variable) variableExpression;
-//
-//                Object dataType = environment.getDataType(variable.name);
-//
-//                // case when it throws exception make a copy
-//                exceptionHolder = variable;
-//                exceptionDatatypeHolder = dataType;
-//
-//                Object value;
-//                String inputValue = inputValues[i++];
-//                if (dataType == Token.TokenType.INT) {
-//                    exceptionValueHolder = Integer.parseInt(inputValue);
-//                    value = Integer.parseInt(inputValue);
-//                } else if (dataType == Token.TokenType.FLOAT) {
-//                    exceptionValueHolder = Float.parseFloat(inputValue);
-//                    value = Float.parseFloat(inputValue);
-//                } else if (dataType == Token.TokenType.CHAR) {
-//                    if (inputValue.length() != 1) {
-//                        Error.error(variable.name, "'" + inputValue + "' is an invalid character input.");
-//                    }
-//                    exceptionValueHolder = inputValue.charAt(0);
-//                    value = inputValue.charAt(0);
-//                } else if (dataType == Token.TokenType.BOOL) {
-//                    exceptionValueHolder = inputValue;
-//                    value = inputValue;
-//                    if (!(value.equals("TRUE") || value.equals("FALSE"))) {
-//                        Error.error(variable.name, "'" + value + "' is an invalid value for BOOL type.");
-//                    }
-//
-//                } else {
-//                    throw new RuntimeException("Unsupported variable type in scan statement.");
-//                }
-//
-//                environment.define(variable.name.lexeme, value);
-//            }
-//
-//        } catch (NumberFormatException e) {
-//            Error.error(exceptionHolder.name,
-//                    "'" + exceptionHolder.name.lexeme + "' identifier expects a value of " + exceptionDatatypeHolder
-//                            + " but received other data type.");
-//        }
-
-//        return null;
+    // return null;
 
     void executeCodeStructure(List<Stmt> statements,
             Environment environment) {
@@ -458,17 +523,18 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Void visitDisplayStmt(Stmt.Display stmt) {
-//        System.out.println("KA SUD DIRI");
+        // System.out.println("KA SUD DIRI");
         StringBuilder builder = new StringBuilder();
         for (Expr expression : stmt.expression) {
-//            System.out.println(expression);
+            // System.out.println(expression);
             Object value = evaluate(expression);
 
-            if(value == null && expression instanceof Expr.Variable) {
-                Error.error(((Expr.Variable) expression).name, "Variable '" + ((Expr.Variable) expression).name.lexeme + "' might not been initialized.");
+            if (value == null && expression instanceof Expr.Variable) {
+                Error.error(((Expr.Variable) expression).name,
+                        "Variable '" + ((Expr.Variable) expression).name.lexeme + "' might not been initialized.");
             }
 
-            if(expression instanceof Expr.Unary || (expression instanceof Expr.Literal && value instanceof Boolean)) {
+            if (expression instanceof Expr.Unary || (expression instanceof Expr.Literal && value instanceof Boolean)) {
                 builder.append(stringify(value.toString().toUpperCase()));
                 continue;
             }
@@ -509,7 +575,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 } else if (initialValue instanceof Float) {
                     value = initialValue; // No need for conversion
                 } else {
-                    Error.error(stmt.name, "'"+ initialValue + "'Invalid value for FLOAT type.");
+                    Error.error(stmt.name, "'" + initialValue + "'Invalid value for FLOAT type.");
                 }
             } else if (dataType == Token.TokenType.INT) {
                 if (initialValue instanceof Float) {
@@ -517,13 +583,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 } else if (initialValue instanceof Integer) {
                     value = initialValue; // No need for conversion
                 } else {
-                    Error.error(stmt.name, "'"+ initialValue + "' is annvalid value for INT type.");
+                    Error.error(stmt.name, "'" + initialValue + "' is annvalid value for INT type.");
                 }
             } else if (dataType == Token.TokenType.CHAR) {
                 value = initialValue;
                 if (initialValue instanceof Boolean || initialValue instanceof Integer || initialValue instanceof Float
                         || initialValue instanceof String) {
-                    Error.error(stmt.name, "'"+ value + "' is an invalid value for CHAR type.");
+                    Error.error(stmt.name, "'" + value + "' is an invalid value for CHAR type.");
                 }
             } else {
                 value = initialValue;
@@ -531,8 +597,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                         || initialValue instanceof Float) {
                     Error.error(stmt.name, "'" + value + "' is an invalid value for BOOL type.");
                 }
-                if ((value.equals(true) || value.equals(false) || (value.equals("TRUE") || value.equals("FALSE")))) {}
-                else {
+                if ((value.equals(true) || value.equals(false) || (value.equals("TRUE") || value.equals("FALSE")))) {
+                } else {
                     Error.error(stmt.name, "'" + value + "' is an invalid value for a BOOL type");
                 }
             }
@@ -544,47 +610,50 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitIfStmt(Stmt.If stmt) {
         /*
-
-            CONDITIONS = [
-                FALSE,
-                TRUE
-            ]
-
-            EXPLANATION: Based on the index of which it is true, it determines which conditional if and else if statement
-                         are evaluated as true. So my approach here is that if we meet a true value, we should stop iterating.
-                         as to avoid executing the other else if statement that would have the potential to get evaluated.
-                         as true.
-
-
-             BRANCH = [
-                [
-                    DISPLAY: a
-                ],
-                [
-                    DISPLAY: c, DISPLAY: "JM CHOY"
-                ],
-             ]
-
-
+         * 
+         * CONDITIONS = [
+         * FALSE,
+         * TRUE
+         * ]
+         * 
+         * EXPLANATION: Based on the index of which it is true, it determines which
+         * conditional if and else if statement
+         * are evaluated as true. So my approach here is that if we meet a true value,
+         * we should stop iterating.
+         * as to avoid executing the other else if statement that would have the
+         * potential to get evaluated.
+         * as true.
+         * 
+         * 
+         * BRANCH = [
+         * [
+         * DISPLAY: a
+         * ],
+         * [
+         * DISPLAY: c, DISPLAY: "JM CHOY"
+         * ],
+         * ]
+         * 
+         * 
          */
 
         List<Object> list_of_definedVariable = new ArrayList<>();
-        for(int i = 0; i < stmt.conditions.size(); i++) {
+        for (int i = 0; i < stmt.conditions.size(); i++) {
             Expr conditions = stmt.conditions.get(i);
 
             checkExpr(conditions);
 
-            if(isTruthy(evaluate(stmt.conditions.get(i)))) {
-                for(Stmt st : stmt.thenBranch.get(i)) {
+            if (isTruthy(evaluate(stmt.conditions.get(i)))) {
+                for (Stmt st : stmt.thenBranch.get(i)) {
 
-                    if(st instanceof Stmt.Variable temp) {
+                    if (st instanceof Stmt.Variable temp) {
                         list_of_definedVariable.add(temp.name.lexeme);
                     }
 
                     execute(st);
                 }
 
-                for(Object o : list_of_definedVariable) {
+                for (Object o : list_of_definedVariable) {
                     environment.removeDataType(String.valueOf(o));
                     environment.removeValue(String.valueOf(o));
                 }
@@ -593,7 +662,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             }
         }
         if (stmt.elseBranch != null) {
-            for(Stmt s : stmt.elseBranch) {
+            for (Stmt s : stmt.elseBranch) {
                 execute(s);
             }
         }
@@ -604,23 +673,22 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Void visitWhileStmt(Stmt.While stmt) {
         List<Object> list_of_definedVariable = new ArrayList<>();
-        for(int i = 0; i < stmt.condition.size(); i++) {
+        for (int i = 0; i < stmt.condition.size(); i++) {
 
             Expr conditions = stmt.condition.get(i);
 
             checkExpr(conditions);
 
             while (isTruthy(evaluate(stmt.condition.get(i)))) {
-                for(Stmt while_body : stmt.body.get(i)) {
-                    if(while_body instanceof Stmt.Variable temp) {
+                for (Stmt while_body : stmt.body.get(i)) {
+                    if (while_body instanceof Stmt.Variable temp) {
                         list_of_definedVariable.add(temp.name.lexeme);
 
                     }
                     execute(while_body);
                 }
 
-
-                for(Object o : list_of_definedVariable) {
+                for (Object o : list_of_definedVariable) {
                     environment.removeDataType(String.valueOf(o));
                     environment.removeValue(String.valueOf(o));
                 }
@@ -638,13 +706,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     ((Expr.Assign) conditions).name,
                     "Incompatible type: Expected BOOL but provided '" + dataType + "'.");
         }
-        if(conditions instanceof Expr.Variable) {
+        if (conditions instanceof Expr.Variable) {
             Object value = environment.get(((Expr.Variable) conditions).name.lexeme);
-//                System.out.println("Here: " + value);
-            if(value == null) {
+            // System.out.println("Here: " + value);
+            if (value == null) {
                 Error.error(
                         ((Expr.Variable) conditions).name,
-                        "Variable '" +  ((Expr.Variable) conditions).name.lexeme + "' might not have been initialized.");
+                        "Variable '" + ((Expr.Variable) conditions).name.lexeme + "' might not have been initialized.");
             }
         }
     }

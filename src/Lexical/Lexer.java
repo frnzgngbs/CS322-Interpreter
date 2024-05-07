@@ -34,6 +34,10 @@ public class Lexer {
         keywords.put("FLOAT", Token.TokenType.FLOAT);
         keywords.put("BOOL", Token.TokenType.BOOL);
         keywords.put("EOD", Token.TokenType.EOD);
+        keywords.put("INTEGER", Token.TokenType.INTEGER_CAST);
+        keywords.put("REAL", Token.TokenType.REAL_CAST);
+        keywords.put("CHARACTER", Token.TokenType.CHAR_CAST);
+        keywords.put("BOOLEAN", Token.TokenType.BOOLEAN_CAST);
     }
 
     public Lexer(String source) {
@@ -100,7 +104,7 @@ public class Lexer {
                 // found.");
                 // }
                 addToken(Token.TokenType.LEFT_SQUARE, "[");
-                if(getCurrentValue() == '#') {
+                if (getCurrentValue() == '#') {
                     addToken(Token.TokenType.COMMENT);
                 }
                 break;
@@ -251,11 +255,13 @@ public class Lexer {
                 error = 2;
             }
             while (getCurrentValue() != '\'') {
-                if(getCurrentValue() == '[') {
+                if (getCurrentValue() == '[') {
                     advance();
                     character = getCurrentValue();
-                    if(getCurrentValue() == '\'') advance();
-                    if(getCurrentValue() != ']') Error.error(line, "Expected ']'");
+                    if (getCurrentValue() == '\'')
+                        advance();
+                    if (getCurrentValue() != ']')
+                        Error.error(line, "Expected ']'");
                 }
 
                 if (getCurrentValue() == '\n') {
@@ -352,12 +358,15 @@ public class Lexer {
         }
         String text = source.substring(start, current);
 
-//        if (text.equalsIgnoreCase("int") || text.equalsIgnoreCase("float") || text.equalsIgnoreCase("char")
-//                || text.equalsIgnoreCase("bool")) {
-//            if (!(text.equals("INT") || text.equals("FLOAT") || text.equals("CHAR") || text.equals("BOOL"))) {
-//                Error.error(line, "Expected " + text.toUpperCase() + " but found " + text + ".");
-//            }
-//        }
+        // if (text.equalsIgnoreCase("int") || text.equalsIgnoreCase("float") ||
+        // text.equalsIgnoreCase("char")
+        // || text.equalsIgnoreCase("bool")) {
+        // if (!(text.equals("INT") || text.equals("FLOAT") || text.equals("CHAR") ||
+        // text.equals("BOOL"))) {
+        // Error.error(line, "Expected " + text.toUpperCase() + " but found " + text +
+        // ".");
+        // }
+        // }
 
         // 'ab'
         if (getCurrentValue() == '\'')
@@ -375,7 +384,7 @@ public class Lexer {
                     type = Token.TokenType.BEGINIF;
                     addToken(type);
                     return;
-                } else if(match('W') && match('H') && match('I')
+                } else if (match('W') && match('H') && match('I')
                         && match('L') && match('E')) {
                     type = Token.TokenType.BEGIN_WHILE;
                     addToken(type);
@@ -385,16 +394,16 @@ public class Lexer {
             }
 
             if (text.equals("END") && match(' ')) {
-                if(match('C') && match('O') && match('D') && match('E')) {
+                if (match('C') && match('O') && match('D') && match('E')) {
                     type = Token.TokenType.END_CODE;
                     addToken(type);
                     reachEndCode = true;
                     return;
-                }else if (match('I') && match('F')) {
+                } else if (match('I') && match('F')) {
                     type = Token.TokenType.ENDIF;
                     addToken(type);
                     return;
-                } else if(match('W') && match('H') && match('I')
+                } else if (match('W') && match('H') && match('I')
                         && match('L') && match('E')) {
                     type = Token.TokenType.END_WHILE;
                     addToken(type);
@@ -413,14 +422,14 @@ public class Lexer {
                 return;
             }
 
-            if(text.equals("IF")) {
+            if (text.equals("IF")) {
                 type = Token.TokenType.IF;
                 addToken(type);
                 return;
             }
 
-            if(text.equals("ELSE")) {
-                if(match(' ') && match('I') && match('F')) {
+            if (text.equals("ELSE")) {
+                if (match(' ') && match('I') && match('F')) {
                     type = Token.TokenType.ELSE_IF;
                     addToken(type);
                     return;
