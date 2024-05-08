@@ -32,10 +32,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         Object value = evaluate(expr.value);
         Object variableType = environment.getDataType(expr.name);
 
-        //// System.out.println("NAA DIRI ANG LINE 2");
+        // System.out.println("NAA DIRI ANG LINE 2");
         //
-        // System.out.println(value);
-        // System.out.println(variableType);
+        System.out.println("value" + value);
+        System.out.println("variableType" + variableType);
 
         if (variableType == Token.TokenType.FLOAT && value instanceof Integer) {
             value = ((Integer) value).floatValue();
@@ -290,8 +290,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 }
 
                 if (right instanceof Boolean) {
-                    boolean boolValue = (boolean) right;
-                    return boolValue ? 1 : 0;
+                    Error.error(expr.operator, "Incompatible types: BOOL cannot be converted to INT");
+                    // boolean boolValue = (boolean) right;
+                    // return boolValue ? 1 : 0;
                 }
             case REAL_CAST:
                 if (right instanceof Integer) {
@@ -303,13 +304,15 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 }
 
                 if (right instanceof Boolean) {
-                    boolean boolValue = (boolean) right;
-                    return boolValue ? 1 : 0;
+                    Error.error(expr.operator, "Incompatible types: BOOL cannot be converted to FLOAT");
+                    // boolean boolValue = (boolean) right;
+                    // return boolValue ? 1 : 0;
                 }
             case BOOLEAN_CAST:
                 if (right instanceof Integer) {
-                    boolean boolValue = (int) right > 0 ? true : false;
-                    return boolValue ? "TRUE" : "FALSE";
+                    Error.error(expr.operator, "Incompatible types: INT cannot be converted to BOOL");
+                    // boolean boolValue = (int) right > 0 ? true : false;
+                    // return boolValue ? "TRUE" : "FALSE";
                 }
 
                 if (right instanceof Character) {
@@ -317,8 +320,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 }
 
                 if (right instanceof Float) {
-                    boolean boolValue = (float) right > 0 ? true : false;
-                    return boolValue ? "TRUE" : "FALSE";
+                    Error.error(expr.operator, "Incompatible types: FLOAT cannot be converted to BOOL");
+                    // boolean boolValue = (float) right > 0 ? true : false;
+                    // return boolValue ? "TRUE" : "FALSE";
                 }
         }
 

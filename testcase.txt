@@ -1,4 +1,6 @@
 BEGIN CODE
-    BOOL a = "TRUE"
-    DISPLAY: INTEGER a
+    INT a = 1
+    # cast int a to bool b (error)
+    BOOL b = BOOLEAN a
+    DISPLAY: b
 END CODE
