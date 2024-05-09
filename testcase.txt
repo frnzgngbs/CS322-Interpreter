@@ -1,6 +1,7 @@
 BEGIN CODE
     INT a = 1
-    # cast int a to bool b (error)
-    BOOL b = BOOLEAN a
+
     DISPLAY: b
+
+    INT b = 10
 END CODE

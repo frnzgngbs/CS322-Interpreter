@@ -19,7 +19,9 @@ public class Parser {
     // debugging tools
     private int debugger = 0;
     private static int once = 0;
-    private static int tokenviewerreset = 0;
+//    private static int tokenviewerreset = 0;
+
+    private boolean isExecutable = false;
 
     private static class ParseError extends RuntimeException {
     }
@@ -148,6 +150,10 @@ public class Parser {
 
     private Stmt varDeclaration(Token.TokenType dataType) {
         // debug("Stmt varDeclaration()");
+        if(isExecutable) {
+            Error.error(peek(), "Defining of variables should be before an executable statement.");
+        }
+
         lastDataType = dataType;
 
         Token type = peek();
@@ -231,6 +237,7 @@ public class Parser {
     }
 
     private Stmt scanStatement() {
+        isExecutable = true;
         // debug("Stmt scanStatement()");
         if (peek().type != SEPARATOR) {
             Error.error(peek(), "Missing separator ':' for SCAN keyword.");
@@ -250,6 +257,8 @@ public class Parser {
     }
 
     private Stmt displayStatement() {
+        isExecutable = true;
+
         // debug("Stmt displayStatement()");
         if (peek().type != SEPARATOR) {
             Error.error(peek(), "Missing separator ':' for DISPLAY keyword.");
@@ -312,6 +321,8 @@ public class Parser {
     }
 
     private Stmt ifStatement() {
+        isExecutable = true;
+
         // System.out.println("HERE");
         // debug("Stmt ifStatement()");
         List<Expr> condition = new ArrayList<>();
@@ -353,6 +364,8 @@ public class Parser {
     }
 
     private Stmt whileStatement() {
+        isExecutable = true;
+
         List<List<Stmt>> while_body = new ArrayList<>();
         List<Expr> conditions = new ArrayList<>();
         List<Stmt> body = new ArrayList<>();
