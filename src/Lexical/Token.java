@@ -33,6 +33,9 @@ public class Token {
         // KEYWORDS
         IF, ELSE_IF, ELSE, DISPLAY, BEGIN_CODE, END_CODE, BEGINIF, ENDIF, SCAN,
 
+        // Typecasting (INTEGER), (REAL), (CHARACTER), (BOOLEAN)
+        INTEGER_CAST, REAL_CAST, CHAR_CAST, BOOLEAN_CAST,
+
         EOD, EOF
     }
 

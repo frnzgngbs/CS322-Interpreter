@@ -19,14 +19,14 @@ public class Main {
     public static void main(String[] args) {
         try {
             String filePath = null;
-            if(args.length == 0) {
-                filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt";
-            }else{
+            if (args.length == 0) {
+                filePath = "C:\\Users\\John Marc\\Documents\\pl_code\\CS322-Interpreter\\testcase.txt";
+            } else {
                 filePath = args[0];
             }
 
             String source = readFile(filePath);
-//            System.out.println(source);
+            // System.out.println(source);
             tokenize(source);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
             System.out.println(fe.getMessage());
@@ -41,10 +41,10 @@ public class Main {
         String line;
 
         /*
-         Track if it's the first line
-         If it is the first line, do not add a new line
-         as it will increment the line attribute in our lexer.java
-
+         * Track if it's the first line
+         * If it is the first line, do not add a new line
+         * as it will increment the line attribute in our lexer.java
+         * 
          */
 
         boolean firstLine = true;
@@ -59,7 +59,7 @@ public class Main {
             if (line.trim().startsWith("DISPLAY:")) {
                 StringBuilder display_builder = new StringBuilder();
 
-                for(char c : line.toCharArray()) {
+                for (char c : line.toCharArray()) {
                     display_builder.append(c);
                 }
 
@@ -78,18 +78,18 @@ public class Main {
         Lexer lexer = new Lexer(source);
         List<Token> tokenize = lexer.scanTokens();
 
-         tokenize.forEach((a) -> {
-              System.out.println(a);
-         });
+        tokenize.forEach((a) -> {
+            System.out.println(a);
+        });
 
-         tokens.addAll(tokenize);
+        tokens.addAll(tokenize);
         parseToken(tokens);
 
-}
+    }
 
     private static void parseToken(List<Token> tokens) {
-        int debug = debug = 4;
-        Parser parser = new Parser(tokens,debug);
+        int debug = 0;
+        Parser parser = new Parser(tokens, debug);
 
         List<Stmt> statements = parser.parse();
 

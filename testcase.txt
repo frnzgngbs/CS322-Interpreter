@@ -1,8 +1,6 @@
 BEGIN CODE
-    INT i = 0
-    IF(i == 0)
-    BEGIN IF
-        INT a = 0
-    END IF
-    DISPLAY: a
+    INT a = 1
+    # cast int a to bool b (error)
+    BOOL b = BOOLEAN a
+    DISPLAY: b
 END CODE
