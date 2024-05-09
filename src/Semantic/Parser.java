@@ -180,7 +180,6 @@ public class Parser {
                 Error.error(type, "Cannot use AND keyword as a variable name.");
                 break;
             case OR:
-
                 Error.error(type, "Cannot use OR keyword as a variable name.");
                 break;
             case NOT:
@@ -206,6 +205,9 @@ public class Parser {
                 break;
             case INTEGER_CAST:
                 Error.error(type, "Cannot use INTEGER keyword as a variable name.");
+                break;
+            case WHILE:
+                Error.error(type, "Cannot use WHILE keyword as a variable name.");
                 break;
             case NUMBER:
                 Error.error(type, "Identifiers starts with " + type.literal + " and is not supported.");
