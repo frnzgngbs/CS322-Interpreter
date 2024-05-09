@@ -195,9 +195,22 @@ public class Parser {
             case ELSE:
                 Error.error(type, "Cannot use ELSE keyword as a variable name.");
                 break;
+            case CHARACTER:
+                Error.error(type, "Cannot use CHARACTER keyword as a variable name.");
+                break;
+            case REAL_CAST:
+                Error.error(type, "Cannot use REAL keyword as a variable name.");
+                break;
+            case BOOLEAN_CAST:
+                Error.error(type, "Cannot use BOOLEAN keyword as a variable name.");
+                break;
+            case INTEGER_CAST:
+                Error.error(type, "Cannot use INTEGER keyword as a variable name.");
+                break;
             case NUMBER:
                 Error.error(type, "Identifiers starts with " + type.literal + " and is not supported.");
                 break;
+
             case SEPARATOR,
                     COMMA,
                     CONCAT,

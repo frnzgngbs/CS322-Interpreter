@@ -4,17 +4,18 @@ BEGIN CODE
     INT currentRow = 1
     INT spaces = rows - 1
     INT hashes = 1
-
+    INT spaceCount = 0
+    INT hashCount = 0
     WHILE (currentRow <= rows)
     BEGIN WHILE
-         INT spaceCount = 0
+         spaceCount = 0
          WHILE (spaceCount < spaces)
          BEGIN WHILE
             DISPLAY: " "
             spaceCount = spaceCount + 1
          END WHILE
 
-         INT hashCount = 0
+         hashCount = 0
          WHILE (hashCount < hashes)
          BEGIN WHILE
              DISPLAY: "#"

@@ -34,8 +34,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
         // System.out.println("NAA DIRI ANG LINE 2");
         //
-        System.out.println("value" + value);
-        System.out.println("variableType" + variableType);
+//        System.out.println("value" + value);
+//        System.out.println("variableType" + variableType);
 
         if (variableType == Token.TokenType.FLOAT && value instanceof Integer) {
             value = ((Integer) value).floatValue();

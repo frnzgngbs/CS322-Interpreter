@@ -1,0 +1,4 @@
+BEGIN CODE
+    FLOAT b = -32
+    DISPLAY: b
+END CODE

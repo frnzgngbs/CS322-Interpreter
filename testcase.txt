@@ -1,7 +1,4 @@
 BEGIN CODE
-    INT a = 1
-
-    DISPLAY: b
-
-    INT b = 10
+    INT a = 1000
+    DISPLAY: CHARACTER a
 END CODE
