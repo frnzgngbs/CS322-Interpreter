@@ -165,7 +165,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     }
                }
 
-
                 float evaluate = 1.0f;
 
                 if (left instanceof Float && right instanceof Float) {
@@ -206,6 +205,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 checkNumberOperands(expr.operator, left, right);
                 if (left instanceof Float && right instanceof Float)
                     return (float) left * (float) right;
+                if (left instanceof Float && right instanceof Integer) {
+                    return (float) left * (int) right;
+                }
+                if (left instanceof Integer && right instanceof Float) {
+                    return (int) left * (float) right;
+                }
                 if (left instanceof Integer && right instanceof Integer)
                     return (int) left * (int) right;
         }
