@@ -1,3 +1,5 @@
 BEGIN CODE
-    DISPLAY: 0.5 * 5
+    INT a = (INTEGER 1)
+
+    DISPLAY: a
 END CODE
