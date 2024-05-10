@@ -1,0 +1,9 @@
+BEGIN CODE
+
+    # Mo generate nig error idk nganu sa karon
+
+   INT a = ((10*2) + 5.0) * 2.5
+
+   DISPLAY: a
+
+END CODE

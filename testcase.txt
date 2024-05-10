@@ -1,4 +1,6 @@
 BEGIN CODE
-    INT WHILE
 
+   INT a = INTEGER 10.5
+
+   DISPLAY: a
 END CODE

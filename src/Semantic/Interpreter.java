@@ -37,10 +37,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 //        System.out.println("value" + value);
 //        System.out.println("variableType" + variableType);
 
-        if (variableType == Token.TokenType.FLOAT && value instanceof Integer) {
+        if (variableType == Token.TokenType.FLOAT && value instanceof Float) {
             value = ((Integer) value).floatValue();
         } else if (variableType == Token.TokenType.INT && value instanceof Float) {
-            value = ((Float) value).intValue();
+            Error.error(expr.name, "'" + value + "' is an invalid value for INT type.");
         } else if (variableType == Token.TokenType.CHAR
                 && (value instanceof Float || value instanceof Boolean || value instanceof Integer)) {
             Error.error(expr.name, "'" + value + "' is an invalid value for CHAR type.");
@@ -282,7 +282,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 }
             case INTEGER_CAST:
                 if (right instanceof Float value) {
-                    return (float) Math.floor(value);
+                    return (int) Math.floor(value);
                 }
 
                 if (right instanceof Character value) {
@@ -577,13 +577,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 if (initialValue instanceof Integer) {
                     value = (float) ((Integer) initialValue);
                 } else if (initialValue instanceof Float) {
-                    value = initialValue; // No need for conversion
+                    value = initialValue;
                 } else {
-                    Error.error(stmt.name, "'" + initialValue + "'Invalid value for FLOAT type.");
+                    Error.error(stmt.name, "'" + initialValue + "' Invalid value for FLOAT type.");
                 }
             } else if (dataType == Token.TokenType.INT) {
                 if (initialValue instanceof Float) {
-                    value = (int) Math.floor((Float) initialValue);
+                    Error.error(stmt.name, "'" + initialValue + "' Invalid value for INT type.");
                 } else if (initialValue instanceof Integer) {
                     value = initialValue; // No need for conversion
                 } else {
