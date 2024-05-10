@@ -71,6 +71,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             return (String) left + (String) right;
         }
 
+        float result;
         switch (expr.operator.type) {
             case GREATER:
                 checkNumberOperands(expr.operator, left, right);
@@ -129,8 +130,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                         "Operands must be two numbers or two strings.");
             case CONCAT:
                 return left.toString() + right.toString();
-            case MODULO:
-
+            case MODULO: {
                 // System.out.println(Integer.parseInt(String.valueOf(left)) %
                 // Integer.parseInt(String.valueOf(right)));
                 checkNumberOperands(expr.operator, left, right);
@@ -140,16 +140,68 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     return (int) left % (int) right;
 
                 // adding float and int
-                if (left instanceof Float && right instanceof Integer)
-                    return (float) ((float) left % (float) ((int) right));
+                if (left instanceof Float && right instanceof Integer) {
+                    result = (float) ((float) left % (float) ((int) right));
+                    String format = String.format("%.2f", result);
+                    return Float.parseFloat(format);
+                }
                 if (left instanceof Integer && right instanceof Float)
                     return (int) ((int) left % (float) right);
-            case DIVIDE:
+            }
+            case DIVIDE: {
                 checkNumberOperands(expr.operator, left, right);
-                if (left instanceof Float && right instanceof Float)
-                    return (float) left / (float) right;
-                if (left instanceof Integer && right instanceof Integer)
-                    return (int) left / (int) right;
+
+               if(right instanceof Float) {
+                   if(((Float) right).intValue() == 0) {
+                       Error.error(expr.operator, "0 as dividend is not allowed.");
+
+                   }
+               }
+
+                if(right instanceof Integer) {
+                    if(((Integer) right).intValue() == 0) {
+                        Error.error(expr.operator, "0 as dividend is not allowed.");
+
+                    }
+               }
+
+
+                float evaluate = 1.0f;
+
+                if (left instanceof Float && right instanceof Float) {
+                    evaluate = (float) left % (float) right;
+                    if (evaluate == 0) {
+                        return (int) ((float) left / (float) right);
+                    }
+                    result = ((float) left / (float) right);
+                    return Float.parseFloat(String.format("%.2f", result));
+                }
+                if (left instanceof Integer && right instanceof Integer) {
+                    evaluate = (int) left % (int) right;
+                    if (evaluate == 0) {
+                        return (int) ((int) left / (int) right);
+                    }
+                    result = (float) ((int) left / (int) right);
+                    return Float.parseFloat(String.format("%.2f", result));
+                }
+                if ((left instanceof Float && right instanceof Integer)) {
+                    evaluate = (float) left % (int) right;
+                    if(evaluate == 0) {
+                        return (int) ((float) left / (int) right);
+                    }
+                    result = ((float) left / (int) right);
+                    return Float.parseFloat(String.format("%.2f", result));
+                }
+                if ((left instanceof Integer && right instanceof Float)) {
+                    evaluate = (int) left % (float) right;
+                    if(evaluate == 0) {
+                        return (int) ((int) left / (float) right);
+                    }
+                    result = ((int) left / (float) right);
+                    return Float.parseFloat(String.format("%.2f", result));
+
+                }
+            }
             case MULTIPLY:
                 checkNumberOperands(expr.operator, left, right);
                 if (left instanceof Float && right instanceof Float)
