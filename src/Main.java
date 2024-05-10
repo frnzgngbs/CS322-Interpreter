@@ -20,7 +20,7 @@ public class Main {
         try {
             String filePath = null;
             if (args.length == 0) {
-                filePath = "C:\\Users\\ardon\\Documents\\CS322-Interpreter\\testcase.txt";
+                filePath = "C:\\Users\\John Marc\\Documents\\pl_code\\CS322-Interpreter\\testcase.txt";
             } else {
                 filePath = args[0];
             }

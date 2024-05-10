@@ -5,10 +5,12 @@ import ErrorHandling.RuntimeError;
 import Lexical.Token;
 import Semantic.Stmt.EscapeCode;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.text.DecimalFormat;
 
 import static Lexical.Token.TokenType.*;
 
@@ -34,8 +36,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
         // System.out.println("NAA DIRI ANG LINE 2");
         //
-//        System.out.println("value" + value);
-//        System.out.println("variableType" + variableType);
+        // System.out.println("value" + value);
+        // System.out.println("variableType" + variableType);
 
         if (variableType == Token.TokenType.FLOAT && value instanceof Float) {
             value = ((Integer) value).floatValue();
@@ -104,6 +106,11 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     return (float) left - (float) right;
                 if (left instanceof Integer && right instanceof Integer)
                     return (int) left - (int) right;
+                // subtracting float and int
+                if (left instanceof Float && right instanceof Integer)
+                    return (float) left - (float) ((int) right);
+                if (left instanceof Integer && right instanceof Float)
+                    return (float) (int) left - (float) right;
             case PLUS:
                 if (left instanceof Float && right instanceof Float)
                     return (float) left + (float) right;
@@ -112,6 +119,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 if (left instanceof String && right instanceof String) {
                     return (String) left + (String) right;
                 }
+                // adding float and int
+                if (left instanceof Float && right instanceof Integer)
+                    return (float) left + (float) ((int) right);
+                if (left instanceof Integer && right instanceof Float)
+                    return (float) (int) left + (float) right;
+
                 throw new RuntimeError(expr.operator,
                         "Operands must be two numbers or two strings.");
             case CONCAT:
@@ -125,6 +138,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     return (float) left % (float) right;
                 if (left instanceof Integer && right instanceof Integer)
                     return (int) left % (int) right;
+
+                // adding float and int
+                if (left instanceof Float && right instanceof Integer)
+                    return (float) ((float) left % (float) ((int) right));
+                if (left instanceof Integer && right instanceof Float)
+                    return (int) ((int) left % (float) right);
             case DIVIDE:
                 checkNumberOperands(expr.operator, left, right);
                 if (left instanceof Float && right instanceof Float)
@@ -335,6 +354,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if (left instanceof Float && right instanceof Float)
             return;
         if (left instanceof Integer && right instanceof Integer)
+            return;
+        if (left instanceof Float && right instanceof Integer)
+            return;
+        if (left instanceof Integer && right instanceof Float)
             return;
         throw new RuntimeError(operator,
                 left.getClass().getTypeName() + " cannot be compared with " + right.getClass().getTypeName());
@@ -677,7 +700,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 for (Stmt while_body : stmt.body.get(i)) {
                     execute(while_body);
                 }
-
 
             }
 
