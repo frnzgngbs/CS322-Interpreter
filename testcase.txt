@@ -1,5 +1,4 @@
 BEGIN CODE
-    INT a = (INTEGER 1)
-
+    BOOL a = "TRUE"
     DISPLAY: a
 END CODE

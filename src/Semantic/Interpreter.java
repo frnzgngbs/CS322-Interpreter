@@ -647,8 +647,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                         "Variable '" + ((Expr.Variable) expression).name.lexeme + "' might not been initialized.");
             }
 
-            if (expression instanceof Expr.Unary || (expression instanceof Expr.Literal && value instanceof Boolean)) {
-                builder.append(stringify(value.toString().toUpperCase()));
+
+            if ((expression instanceof Expr.Unary || expression instanceof Expr.Variable)
+                    || (expression instanceof Expr.Literal && value instanceof Boolean)) {
+                builder.append(stringify(String.valueOf(value).toUpperCase()));
                 continue;
             }
             // Check if value is not null before using it
