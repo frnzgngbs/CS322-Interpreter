@@ -1,7 +1,4 @@
 BEGIN CODE
-    INT i, j
-    WHILE (0 == j)
-    BEGIN WHILE
-        DISPLAY: i
-    END WHILE
+    BOOL b = NOT (BOOLEAN "TRUE")
+    DISPLAY: b
 END CODE

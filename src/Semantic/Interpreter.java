@@ -68,12 +68,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if(left == null) {
             Object get_identifier;
             if(expr.left instanceof Expr.Variable var_left) {
-                Error.error(expr.operator, "Cannot perform '" + expr.operator.lexeme + "' when '" +  var_left.name.lexeme + "' is null.");
+                Error.error(expr.operator, "Cannot perform '" + expr.operator.lexeme + "' when '" +  var_left.name.lexeme + "' is uninitialized.");
             }
         }
         if(right == null) {
             if(expr.right instanceof Expr.Variable var_right) {
-                Error.error(expr.operator, "Cannot perform '" + expr.operator.lexeme + "' when '" +  var_right.name.lexeme + "' is null.");
+                Error.error(expr.operator, "Cannot perform '" + expr.operator.lexeme + "' when '" +  var_right.name.lexeme + "' is uninitialized.");
             }
         }
 
@@ -156,7 +156,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                         "Operands must be two numbers or two strings.");
             case CONCAT:
                 if(left == null || right == null) {
-                    Error.error(expr.operator, "Cannot CONCAT null values.");
+                    Error.error(expr.operator, "Cannot CONCAT uninitialized identifier.");
                 }
                 return left.toString() + right.toString();
             case MODULO: {
@@ -343,6 +343,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 //        System.out.println("RIGHT" + expr.right);
         Object right = evaluate(expr.right);
 
+        if(right == null) {
+            if(expr.right instanceof Expr.Variable var) {
+                Error.error(expr.operator, "Cannot perform '" + expr.operator.lexeme + "' when '" + var.name.lexeme + "' is uninitialized.");
+            }
+        }
+
         switch (expr.operator.type) {
             case NOT:
                 if (right instanceof Integer)
@@ -385,6 +391,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     return (char) ((float) value);
                 }
 
+                if(right instanceof Character value) {
+                    return value;
+                }
+
                 if (right instanceof Boolean) {
                     // throw error " "TRUE" | "FALSE" " is greater than 4 char
                     Error.error(expr.operator, "Incompatible types: BOOL cannot be converted to CHAR");
@@ -392,7 +402,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 break;
             case INTEGER_CAST:
                 if(right instanceof Integer value) {
-                    return (int) value;
+                    return value;
                 }
 
                 if (right instanceof Float value) {
@@ -419,7 +429,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 }
 
                 if(right instanceof Float) {
-                    return ((float) right);
+                    return right;
                 }
                 if (right instanceof Boolean) {
                     Error.error(expr.operator, "Incompatible types: BOOL cannot be converted to FLOAT");
@@ -442,6 +452,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     Error.error(expr.operator, "Incompatible types: FLOAT cannot be converted to BOOL");
                     // boolean boolValue = (float) right > 0 ? true : false;
                     // return boolValue ? "TRUE" : "FALSE";
+                }
+
+                if(right instanceof Boolean) {
+                    return right;
                 }
                 break;
         }
