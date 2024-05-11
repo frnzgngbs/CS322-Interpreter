@@ -70,7 +70,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         if (expr.operator.type == Token.TokenType.CONCAT && left instanceof String && right instanceof String) {
             return (String) left + (String) right;
         }
-
         float result;
         switch (expr.operator.type) {
             case GREATER:
@@ -103,15 +102,30 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 return isEqual(left, right);
             case MINUS:
                 checkNumberOperands(expr.operator, left, right);
-                if (left instanceof Float && right instanceof Float)
-                    return (float) left - (float) right;
+                if (left instanceof Float && right instanceof Float) {
+                    result = (float) left - (float) right;
+                    if (result == 0) {
+                        return (int) ((float) left - (float) right);
+                    }
+                    return result;
+                }
                 if (left instanceof Integer && right instanceof Integer)
                     return (int) left - (int) right;
                 // subtracting float and int
-                if (left instanceof Float && right instanceof Integer)
-                    return (float) left - (float) ((int) right);
-                if (left instanceof Integer && right instanceof Float)
-                    return (float) (int) left - (float) right;
+                if (left instanceof Float && right instanceof Integer) {
+                    result = (float) left - (int) right;
+                    if (result == 0) {
+                        return (int) ((float) left - (int) right);
+                    }
+                    return result;
+                }
+                if (left instanceof Integer && right instanceof Float) {
+                    result = (float) (int) left - (float) right;
+                    if (result == 0) {
+                        return (int) ((int) left - (float) right);
+                    }
+                    return result;
+                }
             case PLUS:
                 if (left instanceof Float && right instanceof Float)
                     return (float) left + (float) right;
@@ -165,7 +179,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     }
                }
 
-
                 float evaluate = 1.0f;
 
                 if (left instanceof Float && right instanceof Float) {
@@ -206,6 +219,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 checkNumberOperands(expr.operator, left, right);
                 if (left instanceof Float && right instanceof Float)
                     return (float) left * (float) right;
+                if (left instanceof Float && right instanceof Integer) {
+                    return (float) left * (int) right;
+                }
+                if (left instanceof Integer && right instanceof Float) {
+                    return (int) left * (float) right;
+                }
                 if (left instanceof Integer && right instanceof Integer)
                     return (int) left * (int) right;
         }
@@ -306,6 +325,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitUnaryExpr(Expr.Unary expr) {
+        System.out.println("RIGHT" + expr.right);
         Object right = evaluate(expr.right);
 
         switch (expr.operator.type) {
@@ -331,7 +351,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 if (right instanceof Integer) {
                     return -(int) right;
                 }
-                return -(float) right;
+                if(right instanceof Float) {
+                    return -(float) right;
+                }
+                break;
             case CHAR_CAST:
                 if (right instanceof Integer value) {
                     // << optional >>
@@ -351,7 +374,12 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     // throw error " "TRUE" | "FALSE" " is greater than 4 char
                     Error.error(expr.operator, "Incompatible types: BOOL cannot be converted to CHAR");
                 }
+                break;
             case INTEGER_CAST:
+                if(right instanceof Integer value) {
+                    return (int) value;
+                }
+
                 if (right instanceof Float value) {
                     return (int) Math.floor(value);
                 }
@@ -365,6 +393,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     // boolean boolValue = (boolean) right;
                     // return boolValue ? 1 : 0;
                 }
+                break;
             case REAL_CAST:
                 if (right instanceof Integer) {
                     return (int) right;
@@ -374,11 +403,15 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     return (int) ((char) right);
                 }
 
+                if(right instanceof Float) {
+                    return ((float) right);
+                }
                 if (right instanceof Boolean) {
                     Error.error(expr.operator, "Incompatible types: BOOL cannot be converted to FLOAT");
                     // boolean boolValue = (boolean) right;
                     // return boolValue ? 1 : 0;
                 }
+                break;
             case BOOLEAN_CAST:
                 if (right instanceof Integer) {
                     Error.error(expr.operator, "Incompatible types: INT cannot be converted to BOOL");
@@ -395,6 +428,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     // boolean boolValue = (float) right > 0 ? true : false;
                     // return boolValue ? "TRUE" : "FALSE";
                 }
+                break;
         }
 
         // Unreachable.
@@ -613,8 +647,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                         "Variable '" + ((Expr.Variable) expression).name.lexeme + "' might not been initialized.");
             }
 
-            if (expression instanceof Expr.Unary || (expression instanceof Expr.Literal && value instanceof Boolean)) {
-                builder.append(stringify(value.toString().toUpperCase()));
+
+            if ((expression instanceof Expr.Unary || expression instanceof Expr.Variable)
+                    || (expression instanceof Expr.Literal && value instanceof Boolean)) {
+                builder.append(stringify(String.valueOf(value).toUpperCase()));
                 continue;
             }
             // Check if value is not null before using it
