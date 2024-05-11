@@ -12,6 +12,7 @@ public class Environment {
     private final Map<String, Object> dataType = new HashMap<>();
     final Environment enclosing;
 
+
     Environment() {
         enclosing = null;
     }
@@ -36,13 +37,13 @@ public class Environment {
                 "'" + name.lexeme + "' is undefined.");
     }
 
-    public void removeValue(String identifier){
-        values.remove(identifier);
-    }
-
-    public void removeDataType(String dataType) {
-        this.dataType.remove(dataType);
-    }
+//    public void removeValue(String identifier){
+//        values.remove(identifier);
+//    }
+//
+//    public void removeDataType(String dataType) {
+//        this.dataType.remove(dataType);
+//    }
     void define(String name, Object value) {
         values.put(name, value);
     }

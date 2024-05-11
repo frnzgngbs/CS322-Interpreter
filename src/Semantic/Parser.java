@@ -104,7 +104,11 @@ public class Parser {
     }
 
     private Stmt declaration() {
+
         // debug("Stmt declaration()");
+
+        if(peek().type == EOV) advance();
+
         try {
 
             // System.out.println("DID WE COME IN HERE?");
@@ -212,6 +216,7 @@ public class Parser {
             case NUMBER:
                 Error.error(type, "Identifiers starts with " + type.literal + " and is not supported.");
                 break;
+
 
             case SEPARATOR,
                     COMMA,
@@ -561,7 +566,7 @@ public class Parser {
 
         // System.out.println(peek());
 
-        throw error(peek(), "Expect expression after \"" + peek().lexeme + "\".");
+        throw error(peek(), "Expect expression before \"" + peek().lexeme + "\".");
 
     }
 

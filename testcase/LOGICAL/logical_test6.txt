@@ -1,0 +1,22 @@
+BEGIN CODE
+	IF("TRUE")
+	BEGIN IF
+	    DISPLAY: "TRUE"
+	    IF("TRUE")
+	    BEGIN IF
+	        DISPLAY: $ & "TRUE"
+	        IF("FALSE")
+	        BEGIN IF
+	            DISPLAY: $ & "TRUE"
+	        END IF
+	        ELSE IF(1 <> 0)
+	        BEGIN IF
+	            DISPLAY: $ & "FALSE"
+	        END IF
+	        ELSE
+	        BEGIN IF
+	            DISPLAY: $ & "ELSE"
+	        END IF
+	    END IF
+	END IF
+END CODE

@@ -1,7 +1,7 @@
 BEGIN CODE
-    BOOL flag = "FALSE"
-    BOOL a = NOT flag
-    BOOL b = (a AND flag) OR "TRUE"
-
-    DISPLAY: b
+    INT i, j
+    WHILE (0 == j)
+    BEGIN WHILE
+        DISPLAY: i
+    END WHILE
 END CODE

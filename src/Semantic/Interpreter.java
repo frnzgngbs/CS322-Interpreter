@@ -68,10 +68,15 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         Object right = evaluate(expr.right);
 
         if(left == null) {
-            Error.error(expr.operator, "Cannot perform '" + expr.operator.lexeme + "' when left is null.");
+            Object get_identifier;
+            if(expr.left instanceof Expr.Variable var_left) {
+                Error.error(expr.operator, "Cannot perform '" + expr.operator.lexeme + "' when '" +  var_left.name.lexeme + "' is null.");
+            }
         }
         if(right == null) {
-            Error.error(expr.operator, "Cannot perform '" + expr.operator.lexeme + "' when right is null.");
+            if(expr.right instanceof Expr.Variable var_right) {
+                Error.error(expr.operator, "Cannot perform '" + expr.operator.lexeme + "' when '" +  var_right.name.lexeme + "' is null.");
+            }
         }
 
 

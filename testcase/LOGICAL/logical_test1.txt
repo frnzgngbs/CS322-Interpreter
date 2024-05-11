@@ -1,5 +1,5 @@
 BEGIN CODE
 	BOOL a = "TRUE", b 
 	SCAN: b
-	DISPLAY: a AND b
+	DISPLAY: NOT a AND b
 END CODE

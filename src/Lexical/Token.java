@@ -36,7 +36,7 @@ public class Token {
         // Typecasting (INTEGER), (REAL), (CHARACTER), (BOOLEAN)
         INTEGER_CAST, REAL_CAST, CHAR_CAST, BOOLEAN_CAST,
 
-        EOD, EOF
+        EOD, EOF, EOV,
     }
 
     public final TokenType type;

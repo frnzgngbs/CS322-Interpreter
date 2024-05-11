@@ -56,7 +56,21 @@ public class Main {
                 firstLine = false;
             }
 
-            if (line.trim().startsWith("DISPLAY:")) {
+            String declaration = line.trim();
+
+            if(declaration.startsWith("INT") || declaration.startsWith("FLOAT")
+            || declaration.startsWith("BOOL") || declaration.startsWith("CHAR")) {
+                StringBuilder var_builder = new StringBuilder();
+
+                for(char c : line.toCharArray()) {
+                    var_builder.append(c);
+                }
+
+                var_builder.append(" EOV");
+                source.append(var_builder.toString());
+            }
+
+            else if (line.trim().startsWith("DISPLAY:")) {
                 StringBuilder display_builder = new StringBuilder();
 
                 for (char c : line.toCharArray()) {
