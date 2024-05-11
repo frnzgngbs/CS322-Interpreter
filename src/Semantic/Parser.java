@@ -534,7 +534,7 @@ public class Parser {
                 return new Expr.Literal(""); // Or throw an error
             } else {
                 String value = (String) peek().literal;
-                System.out.println(value);
+//                System.out.println(value);
                 advance();
                 consume(RIGHT_SQUARE, "Expect ']' after expression.");
                 return new Expr.Literal(value);

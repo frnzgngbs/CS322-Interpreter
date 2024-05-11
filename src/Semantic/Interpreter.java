@@ -67,9 +67,18 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         Object left = evaluate(expr.left);
         Object right = evaluate(expr.right);
 
+        if(left == null) {
+            Error.error(expr.operator, "Cannot perform '" + expr.operator.lexeme + "' when left is null.");
+        }
+        if(right == null) {
+            Error.error(expr.operator, "Cannot perform '" + expr.operator.lexeme + "' when right is null.");
+        }
+
+
         if (expr.operator.type == Token.TokenType.CONCAT && left instanceof String && right instanceof String) {
             return (String) left + (String) right;
         }
+
         float result;
         switch (expr.operator.type) {
             case GREATER:
@@ -143,6 +152,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 throw new RuntimeError(expr.operator,
                         "Operands must be two numbers or two strings.");
             case CONCAT:
+                if(left == null || right == null) {
+                    Error.error(expr.operator, "Cannot CONCAT null values.");
+                }
                 return left.toString() + right.toString();
             case MODULO: {
                 // System.out.println(Integer.parseInt(String.valueOf(left)) %
@@ -248,7 +260,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         // TODO Auto-generated method stub
         // throw new UnsupportedOperationException("Unimplemented method
         // 'visitCodeEscapeStmt'");
-        System.err.println("is it here?");
+//        System.err.println("is it here?");
         return null;
     }
 
@@ -325,7 +337,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     @Override
     public Object visitUnaryExpr(Expr.Unary expr) {
-        System.out.println("RIGHT" + expr.right);
+//        System.out.println("RIGHT" + expr.right);
         Object right = evaluate(expr.right);
 
         switch (expr.operator.type) {
@@ -647,8 +659,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                         "Variable '" + ((Expr.Variable) expression).name.lexeme + "' might not been initialized.");
             }
 
+//            System.out.println(expression);
 
-            if ((expression instanceof Expr.Unary || expression instanceof Expr.Variable)
+            if ((expression instanceof Expr.Unary || expression instanceof Expr.Variable
+                    || expression instanceof Expr.Logical || expression instanceof Expr.Binary)
                     || (expression instanceof Expr.Literal && value instanceof Boolean)) {
                 builder.append(stringify(String.valueOf(value).toUpperCase()));
                 continue;
