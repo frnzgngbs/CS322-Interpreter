@@ -1,0 +1,5 @@
+# NO ERROR
+BEGIN CODE
+    INT int = 5
+    DISPLAY: int
+END CODE

@@ -1,0 +1,6 @@
+BEGIN CODE
+
+   INT a = (10 + (INTEGER 10.5)) + 5
+
+   DISPLAY: a
+END CODE

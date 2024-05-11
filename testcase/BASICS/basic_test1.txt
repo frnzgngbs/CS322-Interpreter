@@ -1,0 +1,7 @@
+BEGIN CODE
+    INT a = 5
+    INT b
+    DISPLAY: "Enter value b "
+    SCAN: b
+    DISPLAY: a & " " & -5 & " " & b
+END CODE

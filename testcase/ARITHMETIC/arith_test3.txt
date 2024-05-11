@@ -1,0 +1,5 @@
+BEGIN CODE
+    INT a = INTEGER 2.5
+    FLOAT b = REAL 3
+    DISPLAY: a % b
+END CODE
