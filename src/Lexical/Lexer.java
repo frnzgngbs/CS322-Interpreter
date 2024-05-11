@@ -34,6 +34,7 @@ public class Lexer {
         keywords.put("FLOAT", Token.TokenType.FLOAT);
         keywords.put("BOOL", Token.TokenType.BOOL);
         keywords.put("EOD", Token.TokenType.EOD);
+        keywords.put("EOV", Token.TokenType.EOV);
         keywords.put("INTEGER", Token.TokenType.INTEGER_CAST);
         keywords.put("REAL", Token.TokenType.REAL_CAST);
         keywords.put("CHARACTER", Token.TokenType.CHAR_CAST);
@@ -105,7 +106,8 @@ public class Lexer {
                 // }
                 addToken(Token.TokenType.LEFT_SQUARE, "[");
                 if (getCurrentValue() == '#') {
-                    addToken(Token.TokenType.COMMENT);
+                    addToken(Token.TokenType.COMMENT, "#");
+                    advance();
                 }
                 break;
             case ']':
@@ -144,8 +146,8 @@ public class Lexer {
                 // addToken(Token.TokenType.COMMENT);
                 // keep consuming until reaching new line
                 // addToken(Token.TokenType.COMMENT);
-                while (getCurrentValue() != '\n' && !isAtEnd() && getCurrentValue() != ']') {
-                    advance();
+                while (getCurrentValue() != '\n' && !isAtEnd()) {
+                   advance();
                 }
                 return;
             case '%':
