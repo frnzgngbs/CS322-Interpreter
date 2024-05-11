@@ -1,0 +1,10 @@
+BEGIN CODE
+
+    IF(1 AND 0)
+    BEGIN IF
+        DISPLAY: "INSIDE "
+    END IF
+
+    DISPLAY: 1 AND 0
+
+END CODE

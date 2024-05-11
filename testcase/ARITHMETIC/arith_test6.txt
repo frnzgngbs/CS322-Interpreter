@@ -1,0 +1,5 @@
+BEGIN CODE
+    INT a = 10 * 4
+    FLOAT b = 2.5 / 3
+    DISPLAY: a + b
+END CODE

@@ -1,0 +1,6 @@
+BEGIN CODE
+    BOOL a = "FALSE"
+    BOOL b = NOT a
+
+    DISPLAY: b
+END CODE

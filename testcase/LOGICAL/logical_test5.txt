@@ -1,7 +1,9 @@
 BEGIN CODE
+
     BOOL flag = "FALSE"
     BOOL a = NOT flag
     BOOL b = (a AND flag) OR "TRUE"
 
     DISPLAY: b
+
 END CODE

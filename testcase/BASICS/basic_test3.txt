@@ -1,0 +1,6 @@
+# ERROR (Cannot use FLOAT type as a variable name.)
+BEGIN CODE
+    INT FLOAT = 5
+    FLOAT b = 2.56
+    DISPLAY: FLOAT + b
+END CODE

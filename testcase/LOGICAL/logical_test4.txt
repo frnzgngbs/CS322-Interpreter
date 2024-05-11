@@ -1,0 +1,6 @@
+BEGIN CODE
+
+    BOOL a = "FALSE" OR ("FALSE" AND "TRUE")
+    DISPLAY: a
+
+END CODE

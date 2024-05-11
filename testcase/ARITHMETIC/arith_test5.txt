@@ -1,0 +1,5 @@
+BEGIN CODE
+    INT a = -(INTEGER -(10.3))
+    FLOAT b = 5.3
+    DISPLAY: a & b
+END CODE
