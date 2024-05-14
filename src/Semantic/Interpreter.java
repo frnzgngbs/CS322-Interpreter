@@ -675,12 +675,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 Error.error(((Expr.Variable) expression).name,
                         "Variable '" + ((Expr.Variable) expression).name.lexeme + "' might not been initialized.");
             }
-
 //            System.out.println(expression);
 
             if ((expression instanceof Expr.Unary || expression instanceof Expr.Variable
-                    || expression instanceof Expr.Logical || expression instanceof Expr.Binary)
-                    || (expression instanceof Expr.Literal && value instanceof Boolean)) {
+                    || expression instanceof Expr.Logical || expression instanceof Expr.Binary
+                    || (expression instanceof Expr.Literal)) && value instanceof Boolean) {
+                System.out.println(expression);
+                System.out.println(value.getClass().getTypeName());
                 builder.append(stringify(String.valueOf(value).toUpperCase()));
                 continue;
             }

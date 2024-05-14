@@ -1,4 +1,6 @@
 BEGIN CODE
-    BOOL b = NOT (BOOLEAN "TRUE")
-    DISPLAY: b
+    INT x = 0
+    CHAR d = 'd'
+
+    DISPLAY: x & d
 END CODE
