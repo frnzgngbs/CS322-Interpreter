@@ -234,6 +234,10 @@ public class Parser {
             initializer = expression();
         }
 
+        if(match(EOV)) {
+
+        }
+
         return new Stmt.Variable(lastDataType, name, initializer);
     }
 

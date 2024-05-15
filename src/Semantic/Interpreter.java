@@ -27,6 +27,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
     }
 
+    // DECLARATion
     @Override
     public Object visitAssignExpr(Expr.Assign expr) {
         Object value = evaluate(expr.value);
@@ -38,8 +39,9 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         // System.out.println("variableType" + variableType);
 
         if (variableType == Token.TokenType.FLOAT && value instanceof Float) {
-            value = ((Integer) value).floatValue();
+
         } else if (variableType == Token.TokenType.INT && value instanceof Float) {
+//            System.out.println("VALUE:" + value);
             Error.error(expr.name, "'" + value + "' is an invalid value for INT type.");
         } else if (variableType == Token.TokenType.CHAR
                 && (value instanceof Float || value instanceof Boolean || value instanceof Integer)) {
@@ -54,7 +56,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 Error.error(expr.name, "'" + value + "' is an invalid value for BOOL type.");
             }
         }
-
         environment.assign(expr.name, value);
         return value;
 
@@ -167,7 +168,6 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     return (float) left % (float) right;
                 if (left instanceof Integer && right instanceof Integer)
                     return (int) left % (int) right;
-
                 // adding float and int
                 if (left instanceof Float && right instanceof Integer) {
                     result = (float) ((float) left % (float) ((int) right));
@@ -207,9 +207,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 if (left instanceof Integer && right instanceof Integer) {
                     evaluate = (int) left % (int) right;
                     if (evaluate == 0) {
-                        return (int) ((int) left / (int) right);
+                        return (((Integer) left).intValue() /  ((Integer) right).intValue());
                     }
-                    result = (float) ((int) left / (int) right);
+                    result = ((int) left / (float) (int) right);
+                    System.out.println(result);
                     return Float.parseFloat(String.format("%.2f", result));
                 }
                 if ((left instanceof Float && right instanceof Integer)) {
@@ -229,6 +230,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                     return Float.parseFloat(String.format("%.2f", result));
 
                 }
+                break;
             }
             case MULTIPLY:
                 checkNumberOperands(expr.operator, left, right);
@@ -242,6 +244,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 }
                 if (left instanceof Integer && right instanceof Integer)
                     return (int) left * (int) right;
+                break;
         }
 
         // Unreachable.
@@ -326,6 +329,13 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     @Override
     public Object visitLogicalExpr(Expr.Logical expr) {
         Object left = evaluate(expr.left);
+        Object right = evaluate(expr.right);
+
+        if(((expr.left instanceof Expr.Literal && expr.right instanceof Expr.Literal)
+            || (expr.left instanceof Expr.Variable && expr.right instanceof Expr.Variable))
+            && (!(left instanceof Boolean) || !(right instanceof Boolean))) {
+            Error.error(expr.operator, "Invalid statement using logical " + expr.operator.lexeme + ".");
+        }
 
         if (expr.operator.type == OR) {
             if (isTruthy(left))
@@ -337,6 +347,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
         return evaluate(expr.right);
     }
+
 
     @Override
     public Object visitUnaryExpr(Expr.Unary expr) {
@@ -406,6 +417,10 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 }
 
                 if (right instanceof Float value) {
+//                    System.out.println("VALUE:" + value);
+                    if(value < 0) {
+                        return (int) Math.ceil(value);
+                    }
                     return (int) Math.floor(value);
                 }
 
@@ -522,6 +537,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
     private void execute(Stmt stmt) {
         stmt.accept(this);
     }
+
 
     @Override
     public Void visitCodeStructureStmt(Stmt.CodeStructure stmt) {
@@ -680,8 +696,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
             if ((expression instanceof Expr.Unary || expression instanceof Expr.Variable
                     || expression instanceof Expr.Logical || expression instanceof Expr.Binary
                     || (expression instanceof Expr.Literal)) && value instanceof Boolean) {
-                System.out.println(expression);
-                System.out.println(value.getClass().getTypeName());
+//                System.out.println(expression);
+//                System.out.println(value.getClass().getTypeName());
                 builder.append(stringify(String.valueOf(value).toUpperCase()));
                 continue;
             }
@@ -693,6 +709,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         return null;
     }
 
+    // DATA TYPe
     @Override
     public Void visitVariableStmt(Stmt.Variable stmt) {
 
@@ -714,6 +731,7 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
         Object value = null;
         if (stmt.initializer != null) {
             Object initialValue = evaluate(stmt.initializer);
+
             Object dataType = environment.getDataType(stmt.name);
             // System.out.println(dataType);
             if (dataType == Token.TokenType.FLOAT) {
@@ -750,6 +768,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
                 }
             }
         }
+
+
         environment.define(stmt.name.lexeme, value);
         return null;
     }

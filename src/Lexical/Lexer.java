@@ -109,6 +109,12 @@ public class Lexer {
                     addToken(Token.TokenType.COMMENT, "#");
                     advance();
                 }
+//                if (getCurrentValue() == '&') {
+//                    addToken(Token.TokenType.CONCAT, "&");
+//                    advance();
+//                }
+
+
                 break;
             case ']':
                 addToken(Token.TokenType.RIGHT_SQUARE, "]");
@@ -147,7 +153,13 @@ public class Lexer {
                 // keep consuming until reaching new line
                 // addToken(Token.TokenType.COMMENT);
                 while (getCurrentValue() != '\n' && !isAtEnd()) {
-                   advance();
+                    advance();
+                    if(getCurrentValue() == 'E' && getNextValue() == 'O') {
+                        advance();
+                        if(getNextValue() == 'D') {
+                            addToken(Token.TokenType.EOD);
+                        }
+                    }
                 }
                 return;
             case '%':
@@ -443,6 +455,7 @@ public class Lexer {
 
             type = Token.TokenType.IDENTIFIER;
         }
+
 
         addToken(type);
     }

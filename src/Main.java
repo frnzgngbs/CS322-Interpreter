@@ -26,7 +26,7 @@ public class Main {
             }
 
             String source = readFile(filePath);
-            // System.out.println(source);
+//            System.out.println(source);
             tokenize(source);
         } catch (FileNotFoundException | StringIndexOutOfBoundsException fe) {
             System.out.println(fe.getMessage());
@@ -49,13 +49,12 @@ public class Main {
 
         boolean firstLine = true;
         while ((line = reader.readLine()) != null) {
-
             if (!firstLine) {
                 source.append('\n');
             } else {
                 firstLine = false;
             }
-
+    
             String declaration = line.trim();
 
             if(declaration.startsWith("INT") || declaration.startsWith("FLOAT")
@@ -93,9 +92,9 @@ public class Main {
         Lexer lexer = new Lexer(source);
         List<Token> tokenize = lexer.scanTokens();
 
-        tokenize.forEach((a) -> {
-            System.out.println(a);
-        });
+//        tokenize.forEach((a) -> {
+//            System.out.println(a);
+//        });
 
         tokens.addAll(tokenize);
         parseToken(tokens);

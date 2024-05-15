@@ -1,0 +1,4 @@
+BEGIN CODE
+    # Error
+   DISPLAY: 1 AND "TRUE"
+END CODE

@@ -5,23 +5,6 @@ import Lexical.Token;
 import java.util.List;
 
 public abstract class Expr {
-    interface Visitor<R> {
-        R visitAssignExpr(Assign expr);
-
-        R visitBinaryExpr(Binary expr);
-
-        R visitGroupingExpr(Grouping expr);
-
-        R visitLiteralExpr(Literal expr);
-
-        R visitLogicalExpr(Logical expr);
-
-        R visitUnaryExpr(Unary expr);
-
-        R visitVariableExpr(Variable expr);
-
-    }
-
     // Nested Expr classes here...
     // > expr-assign
     static class Assign extends Expr {
@@ -152,6 +135,23 @@ public abstract class Expr {
     // }
     // // < escape-variable
 
+
+    interface Visitor<R> {
+        R visitAssignExpr(Assign expr);
+
+        R visitBinaryExpr(Binary expr);
+
+        R visitGroupingExpr(Grouping expr);
+
+        R visitLiteralExpr(Literal expr);
+
+        R visitLogicalExpr(Logical expr);
+
+        R visitUnaryExpr(Unary expr);
+
+        R visitVariableExpr(Variable expr);
+
+    }
 
     abstract <R> R accept(Visitor<R> visitor);
 }
